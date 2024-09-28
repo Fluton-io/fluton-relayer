@@ -1,13 +1,28 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
 import { io } from "socket.io-client";
+import { privateKeyToAddress } from "viem/accounts";
+import { isAddress } from "viem";
+import axios from "axios";
 
 dotenv.config();
+
+// env variables
+const PRIVATE_KEY = process.env.PRIVATE_KEY as `0x${string}`;
+if (!PRIVATE_KEY) {
+  throw new Error("Private key is not given. Please define it in .env");
+}
+const BACKEND_URL = process.env.BACKEND_URL;
+if (!BACKEND_URL) {
+  throw new Error("Backend URL is not given. Please define it in .env");
+}
+
+const walletAddress = privateKeyToAddress(PRIVATE_KEY);
 
 const app: Express = express();
 const port = process.env.PORT || 3001;
 
-const socket = io("http://localhost:3000");
+const socket = io(BACKEND_URL);
 
 socket.on("connect", () => {
   console.log(`Relayer connected with ID: ${socket.id}`);
@@ -30,6 +45,19 @@ socket.on("giveOffers", (intent) => {
   console.log(`Calculated targetAmount: ${targetAmount}, fee: ${fee}`);
 });
 
-app.listen(port, () => {
+const server = app.listen(port, async () => {
+  // save relayer address to backend
+  await axios.post(`${BACKEND_URL}/save-relayer`, {
+    walletAddress,
+  });
+
   console.log(`[relayer]: Relayer is running at http://localhost:${port}`);
+});
+
+process.on("SIGINT", async () => {
+  // delete relayer address on backend
+  console.log("About to close");
+  await axios.delete(`${BACKEND_URL}/delete-relayer?walletAddress=${walletAddress}`);
+  server.close();
+  socket.close();
 });
