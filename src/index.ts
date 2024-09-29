@@ -2,7 +2,6 @@ import express, { Express } from "express";
 import dotenv from "dotenv";
 import { io } from "socket.io-client";
 import { privateKeyToAddress } from "viem/accounts";
-import { isAddress } from "viem";
 import axios from "axios";
 
 dotenv.config();
@@ -32,17 +31,19 @@ socket.on("disconnect", () => {
   console.log("Relayer disconnected");
 });
 
-socket.on("giveOffers", (intent) => {
+socket.on("giveOffers", (intent, callback) => {
   console.log("Received intent:", intent);
-
-  const parsedIntent = JSON.parse(intent);
 
   const fee = Math.floor(Math.random() * 10) + 1;
   const price = 1.01;
-  const targetAmount = price * Number(parsedIntent.amount) - fee;
+  const targetAmount = price * Number(intent.amount) - fee;
 
-  console.log(`Parsed intent:`, parsedIntent);
   console.log(`Calculated targetAmount: ${targetAmount}, fee: ${fee}`);
+  callback({
+    status: "ok",
+    walletAddress,
+    targetAmount,
+  });
 });
 
 const server = app.listen(port, async () => {
