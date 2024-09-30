@@ -3,7 +3,7 @@ import { PRIVATE_KEY, BACKEND_URL } from "../config/env";
 import { privateKeyToAddress } from "viem/accounts";
 
 import feeSchemaData from "../config/feeSchema.json";
-import { FeeSchema } from "../config/types";
+import { FeeSchema, Intent } from "../config/types";
 
 const feeSchema: FeeSchema = feeSchemaData;
 
@@ -20,17 +20,17 @@ export const createSocket = () => {
     console.log("Relayer disconnected");
   });
 
-  socket.on("giveOffers", (intent, callback) => {
+  socket.on("giveOffers", (intent: Intent, callback) => {
     console.log("Received intent:", intent);
 
     const targetChainId = String(intent.targetNetwork);
-    const targetToken = intent.targetToken as string;
+    const targetToken = intent.targetToken as `0x${string}`;
 
     const schemaForTargetChain = feeSchema[targetChainId];
 
     if (!schemaForTargetChain || !schemaForTargetChain[targetToken]) {
       console.error("Fee schema not found for this chain or token.");
-      callback({ status: "error", message: "Fee schema not found." });
+      callback({ status: "error", walletAddress, message: "Fee schema not found." });
       return;
     }
 
