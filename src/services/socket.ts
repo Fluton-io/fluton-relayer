@@ -2,6 +2,11 @@ import { io } from "socket.io-client";
 import { PRIVATE_KEY, BACKEND_URL } from "../config/env";
 import { privateKeyToAddress } from "viem/accounts";
 
+import feeSchemaData from "../config/feeSchema.json";
+import { FeeSchema } from "../config/types";
+
+const feeSchema: FeeSchema = feeSchemaData;
+
 const walletAddress = privateKeyToAddress(PRIVATE_KEY);
 
 export const createSocket = () => {
@@ -18,9 +23,32 @@ export const createSocket = () => {
   socket.on("giveOffers", (intent, callback) => {
     console.log("Received intent:", intent);
 
-    const fee = Math.floor(Math.random() * 10) + 1;
-    const price = 1.01;
-    const targetAmount = price * Number(intent.amount) - fee;
+    const targetChainId = String(intent.targetNetwork);
+    const targetToken = intent.targetToken as string;
+
+    const schemaForTargetChain = feeSchema[targetChainId];
+
+    if (!schemaForTargetChain || !schemaForTargetChain[targetToken]) {
+      console.error("Fee schema not found for this chain or token.");
+      callback({ status: "error", message: "Fee schema not found." });
+      return;
+    }
+
+    const { baseFee, percentageFee } = schemaForTargetChain[targetToken];
+
+    const baseFeeValue = parseFloat(baseFee) * 10 ** 18;
+    const percentageFeeValue = parseFloat(percentageFee) / 100;
+
+    const intentAmount = parseFloat(intent.amount);
+    const fee = baseFeeValue + intentAmount * percentageFeeValue;
+
+    const targetAmount = intentAmount - fee;
+
+    console.log(`baseFeeValue ${baseFeeValue}`);
+    console.log(`percentageFeeValue ${percentageFeeValue}`);
+    console.log(`intentAmount ${intentAmount}`);
+    console.log(`fee ${fee}`);
+    console.log(`targetAmount ${targetAmount}`);
 
     console.log(`Calculated targetAmount: ${targetAmount}, fee: ${fee}`);
     callback({
