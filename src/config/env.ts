@@ -4,6 +4,7 @@ dotenv.config();
 
 export const PRIVATE_KEY = process.env.PRIVATE_KEY as `0x${string}`;
 export const BACKEND_URL = process.env.BACKEND_URL;
+export const ODOS_QUOTE_URL = process.env.ODOS_QUOTE_URL;
 export const PORT = process.env.PORT || 3001;
 
 if (!PRIVATE_KEY) {

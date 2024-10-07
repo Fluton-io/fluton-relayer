@@ -1,14 +1,16 @@
-export interface FeeDetails {
+export interface TokenDetails {
   baseFee: string;
   percentageFee: string;
+  swappable: boolean;
+  decimals: number;
 }
 
-export interface TargetNetworkFees {
-  [tokenAddress: `0x${string}`]: FeeDetails;
+export interface TargetNetworkDetails {
+  [tokenAddress: `0x${string}`]: TokenDetails;
 }
 
 export interface FeeSchema {
-  [targetChainId: string]: TargetNetworkFees;
+  [targetChainId: string]: TargetNetworkDetails;
 }
 export interface Intent {
   sourceNetwork: string;

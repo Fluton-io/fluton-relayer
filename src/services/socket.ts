@@ -4,6 +4,7 @@ import { privateKeyToAddress } from "viem/accounts";
 
 import feeSchemaData from "../config/feeSchema.json";
 import { FeeSchema, Intent } from "../config/types";
+import { calculateAmountWithOdos } from "./aggregatorQuote";
 
 const feeSchema: FeeSchema = feeSchemaData;
 
@@ -20,37 +21,50 @@ export const createSocket = () => {
     console.log("Relayer disconnected");
   });
 
-  socket.on("giveOffers", (intent: Intent, callback) => {
+  socket.on("giveOffers", async (intent: Intent, callback) => {
     console.log("Received intent:", intent);
 
     const targetChainId = String(intent.targetNetwork);
     const targetToken = intent.targetToken as `0x${string}`;
-
     const schemaForTargetChain = feeSchema[targetChainId];
 
-    if (!schemaForTargetChain || !schemaForTargetChain[targetToken]) {
-      console.error("Fee schema not found for this chain or token.");
-      callback({ status: "error", walletAddress, message: "Fee schema not found." });
+    let targetAmount: number;
+
+    // Chain is not supported by the relayer
+    if (!schemaForTargetChain) {
+      console.error(`Chain ID ${targetChainId} not supported by the relayer.`);
+      callback({ status: "error", walletAddress, message: `Chain ID ${targetChainId} not supported.` });
       return;
     }
 
-    const { baseFee, percentageFee } = schemaForTargetChain[targetToken];
+    // Chain is supported but the token is not found on feeSchema
+    if (!schemaForTargetChain[targetToken]) {
+      console.log(
+        `Token ${targetToken} not found in fee schema for chain ID ${targetChainId}. Attempting ODOS quote...`
+      );
 
-    const baseFeeValue = parseFloat(baseFee) * 10 ** 18;
-    const percentageFeeValue = parseFloat(percentageFee) / 100;
+      try {
+        targetAmount = Number(await calculateAmountWithOdos(targetChainId, intent, walletAddress));
+      } catch (error) {
+        console.error("Error calculating via ODOS", error);
+        callback({ status: "error", walletAddress, message: "Error calculating via ODOS" });
+        return;
+      }
+    } else {
+      // Chain and token both supported, normal fee calculation based on feeSchema
 
-    const intentAmount = parseFloat(intent.amount);
-    const fee = baseFeeValue + intentAmount * percentageFeeValue;
+      const { baseFee, percentageFee, decimals } = schemaForTargetChain[targetToken];
 
-    const targetAmount = intentAmount - fee;
+      const intentAmount = Number(intent.amount);
+      const baseFeeValue = parseFloat(baseFee);
 
-    console.log(`baseFeeValue ${baseFeeValue}`);
-    console.log(`percentageFeeValue ${percentageFeeValue}`);
-    console.log(`intentAmount ${intentAmount}`);
-    console.log(`fee ${fee}`);
-    console.log(`targetAmount ${targetAmount}`);
+      const percentageFeeValue = parseFloat(percentageFee) / 100;
 
-    console.log(`Calculated targetAmount: ${targetAmount}, fee: ${fee}`);
+      const totalFee = baseFeeValue + intentAmount * percentageFeeValue;
+      targetAmount = intentAmount - totalFee;
+    }
+
+    console.log(`Calculated targetAmount: ${targetAmount}`);
     callback({
       status: "ok",
       walletAddress,
