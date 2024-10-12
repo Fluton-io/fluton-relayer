@@ -3,6 +3,7 @@ export interface TokenDetails {
   percentageFee: string;
   swappable: boolean;
   decimals: number;
+  balance: number;
 }
 
 export interface TargetNetworkDetails {

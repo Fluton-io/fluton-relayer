@@ -53,7 +53,7 @@ export const createSocket = () => {
     } else {
       // Chain and token both supported, normal fee calculation based on feeSchema
 
-      const { baseFee, percentageFee, decimals } = schemaForTargetChain[targetToken];
+      const { baseFee, percentageFee } = schemaForTargetChain[targetToken];
 
       const intentAmount = Number(intent.amount);
       const baseFeeValue = parseFloat(baseFee);

@@ -23,11 +23,14 @@ const generateFeeSchema = () => {
 
       const decimals = parseInt(prompt(`Enter the decimals for ${tokenAddress} on chain ${targetChainId}: `), 10);
 
+      const balance = parseInt(prompt(`Enter your balance for ${tokenAddress} on chain ${targetChainId}: `), 10);
+
       tokensFees[tokenAddress as `0x${string}`] = {
         baseFee,
         percentageFee: `${percentageFee}%`,
         swappable,
         decimals,
+        balance,
       };
     }
 
