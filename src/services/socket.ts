@@ -11,14 +11,26 @@ const feeSchema: FeeSchema = feeSchemaData;
 const walletAddress = privateKeyToAddress(PRIVATE_KEY);
 
 export const createSocket = () => {
-  const socket = io(BACKEND_URL);
+  const socket = io(BACKEND_URL, {
+    query: { walletAddress },
+  });
 
   socket.on("connect", () => {
-    console.log(`Relayer connected with ID: ${socket.id}`);
+    console.log(`Relayer connected with ID: ${socket.id}, Wallet: ${walletAddress}`);
   });
 
   socket.on("disconnect", () => {
     console.log("Relayer disconnected");
+  });
+
+  socket.on("ping", () => {
+    console.log("Received ping from backend, sending pong...");
+    socket.emit("pong");
+  });
+
+  socket.on("removed", (data) => {
+    console.log("Received removal notification:", data.message);
+    socket.disconnect();
   });
 
   socket.on("giveOffers", async (intent: Intent, callback) => {
