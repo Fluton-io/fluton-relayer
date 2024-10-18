@@ -1,6 +1,6 @@
 import express, { Express } from "express";
-import { createSocket } from "./services/socket";
 import { PORT } from "./config/env";
+import { createSocket } from "./services/socketService";
 
 const app: Express = express();
 const port = PORT;

@@ -9,6 +9,16 @@ const mainnets = [
       url: "https://etherscan.io",
     },
   },
+  {
+    name: "Arbitrum Mainnet",
+    chainId: 42161,
+    rpcUrl: "https://arbitrum.llamarpc.com",
+    explorer: {
+      name: "Arbiscan",
+      apiKey: "6DS9FIXUN1N31GG6W7BXT3FG3846MT3I5Z",
+      url: "https://arbiscan.io",
+    },
+  },
 ];
 
 const testnets = [

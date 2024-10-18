@@ -1,4 +1,5 @@
 export interface TokenDetails {
+  name: string;
   baseFee: string;
   percentageFee: string;
   swappable: boolean;
