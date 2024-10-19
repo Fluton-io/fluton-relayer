@@ -28,8 +28,7 @@ export const handleGiveOffers = async (
 ) => {
   const startTime = Date.now();
   console.log("Received intent:", intent);
-  const targetChainId = String(intent.targetNetwork);
-  const targetToken = intent.targetToken as `0x${string}`;
+  const { targetNetwork: targetChainId, targetToken, amount, sourceNetwork, sourceToken } = intent;
   const schemaForTargetChain = feeSchema[targetChainId];
 
   if (!schemaForTargetChain) {
@@ -41,14 +40,15 @@ export const handleGiveOffers = async (
   let targetAmount: number;
 
   try {
-    const sourceTokenPrice = await getOdosPrice(parseInt(intent.sourceNetwork), intent.sourceToken);
-    const sourceAmountInUSD = sourceTokenPrice * Number(intent.amount);
+    const sourceTokenPrice = await getOdosPrice(parseInt(sourceNetwork), sourceToken);
+    const sourceAmountInUSD = sourceTokenPrice * Number(amount);
 
     const relayerTargetToken = schemaForTargetChain[targetToken];
-    const relayerTargetTokenPrice = await getOdosPrice(parseInt(intent.targetNetwork), targetToken);
+    const relayerTargetTokenPrice = await getOdosPrice(parseInt(targetChainId), targetToken);
     const relayerTargetTokenValue = relayerTargetTokenPrice * Number(relayerTargetToken.balance);
 
     if (relayerTargetToken && relayerTargetTokenValue >= Number(sourceAmountInUSD)) {
+      // if relayer has enough target token, calculate the target amount
       const { baseFee, percentageFee } = relayerTargetToken;
       const targetTokenTransferAmount = sourceAmountInUSD / relayerTargetTokenPrice;
       const baseFeeValue = parseFloat(baseFee);
@@ -56,6 +56,7 @@ export const handleGiveOffers = async (
       const totalFee = baseFeeValue + targetTokenTransferAmount * percentageFeeValue;
       targetAmount = targetTokenTransferAmount - totalFee;
     } else {
+      // if relayer doesn't have enough target token, find token combinations and calculate the target amount
       const tokenCombination = await findTokenCombinations(targetChainId, String(sourceAmountInUSD));
       console.log("Token combinations:", tokenCombination);
       targetAmount = Number(await calculateAmountWithOdos(targetChainId, intent, walletAddress, tokenCombination));

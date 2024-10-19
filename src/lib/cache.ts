@@ -1,8 +1,8 @@
-const priceCache = new Map();
+const priceCache = new Map<string, number>();
 
 export const getCachedPrice = (cacheKey: string) => {
   if (priceCache.has(cacheKey)) {
-    return priceCache.get(cacheKey);
+    return priceCache.get(cacheKey) as number;
   }
   return null;
 };

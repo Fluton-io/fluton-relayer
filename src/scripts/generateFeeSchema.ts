@@ -2,6 +2,7 @@ import { FeeSchema, TokenDetails } from "../config/types";
 import networks from "../config/networks";
 import fs from "fs";
 import promptSync from "prompt-sync";
+import { isAddress } from "viem";
 
 const prompt = promptSync({ sigint: true });
 
@@ -14,6 +15,15 @@ const generateFeeSchema = () => {
 
     for (let i = 0; i < numTokens; i++) {
       const tokenAddress = prompt(`Enter token address #${i + 1} for chain ${targetChainId} in 0x{string} format: `);
+
+      if (!isAddress(tokenAddress)) {
+        console.error("Invalid token address. Please enter a valid address.");
+        i--;
+        continue;
+      }
+
+      const name = prompt(`Enter the symbol of the token at address ${tokenAddress} on chain ${targetChainId}: `);
+
       const baseFee = prompt(`Enter base fee for ${tokenAddress} on chain ${targetChainId}: `);
       const percentageFee = prompt(
         `Enter percentage fee for ${tokenAddress} on chain ${targetChainId} (as a percentage): `
@@ -25,7 +35,8 @@ const generateFeeSchema = () => {
 
       const balance = parseInt(prompt(`Enter your balance for ${tokenAddress} on chain ${targetChainId}: `), 10);
 
-      tokensFees[tokenAddress as `0x${string}`] = {
+      tokensFees[tokenAddress] = {
+        name,
         baseFee,
         percentageFee: `${percentageFee}%`,
         swappable,
