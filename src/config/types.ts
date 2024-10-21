@@ -23,3 +23,17 @@ export interface Intent {
   targetTokenSymbol: string;
   amount: string;
 }
+
+export interface ContractIntent {
+  sender: `0x${string}`;
+  receiver: `0x${string}`;
+  relayer: `0x${string}`;
+  inputToken: `0x${string}`;
+  outputToken: `0x${string}`;
+  inputAmount: bigint;
+  outputAmount: bigint;
+  id: bigint;
+  originChainId: number;
+  destinationChainId: number;
+  filledStatus: number;
+}
