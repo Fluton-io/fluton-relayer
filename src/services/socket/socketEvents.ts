@@ -1,6 +1,8 @@
 import { Socket } from "socket.io-client";
 import { FeeSchema, Intent } from "../../config/types";
 import { calculateAmountWithOdos, findTokenCombinations, getOdosPrice } from "../aggregatorService";
+import testnetToMainnet from "../../config/testnetToMainnet";
+import testnetToMainnetToken from "../../config/testnetToMainnetToken";
 
 export const handleConnect = (socket: Socket, walletAddress: `0x${string}`) => {
   console.log(`Relayer connected with ID: ${socket.id}, Wallet: ${walletAddress}`);
@@ -38,14 +40,20 @@ export const handleGiveOffers = async (
     return;
   }
 
+  const sourceNetworkForOdos = testnetToMainnet[sourceNetwork] || sourceNetwork;
+  const targetNetworkForOdos = testnetToMainnet[targetChainId] || targetChainId;
+
+  const sourceTokenForOdos = testnetToMainnetToken[sourceToken] || sourceToken;
+  const targetTokenForOdos = testnetToMainnetToken[targetToken] || targetToken;
+
   let targetAmount: number;
 
   try {
-    const sourceTokenPrice = await getOdosPrice(parseInt(sourceNetwork), sourceToken);
+    const sourceTokenPrice = await getOdosPrice(parseInt(sourceNetworkForOdos), sourceTokenForOdos);
     const sourceAmountInUSD = sourceTokenPrice * Number(amount);
 
     const relayerTargetToken = schemaForTargetChain[targetToken];
-    const relayerTargetTokenPrice = await getOdosPrice(parseInt(targetChainId), targetToken);
+    const relayerTargetTokenPrice = await getOdosPrice(parseInt(targetNetworkForOdos), targetTokenForOdos);
     const relayerTargetTokenValue = relayerTargetTokenPrice * Number(relayerTargetToken.balance);
 
     if (relayerTargetToken && relayerTargetTokenValue >= Number(sourceAmountInUSD)) {

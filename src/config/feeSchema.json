@@ -50,5 +50,57 @@
       "decimals": 18,
       "balance": 1
     }
+  },
+  "11155111": {
+    "0x9F1210757915bf7aEE3B5D82F99dac70828Bad77": {
+      "name": "USDT",
+      "baseFee": "0.35",
+      "percentageFee": "0.2%",
+      "swappable": false,
+      "decimals": 6,
+      "balance": 0
+    },
+    "0x2831d2b6b7bd5Ca9E2EEe932055a91f5a6cEBe2f": {
+      "name": "USDC",
+      "baseFee": "0.50",
+      "percentageFee": "0.3%",
+      "swappable": true,
+      "decimals": 6,
+      "balance": 1000
+    },
+    "0x7b79995e5f793a07bc00c21412e50ecae098e7f9": {
+      "name": "WETH",
+      "baseFee": "0.40",
+      "percentageFee": "0.25%",
+      "swappable": true,
+      "decimals": 18,
+      "balance": 1
+    }
+  },
+  "421614": {
+    "0xf065447aE1b6597410c4Ef0990F83C5F37bfD5B4": {
+      "name": "USDT",
+      "baseFee": "0.35",
+      "percentageFee": "0.2%",
+      "swappable": false,
+      "decimals": 6,
+      "balance": 0
+    },
+    "0x1746FB6484647F83E27Ed43460bbE30883F8F5b5": {
+      "name": "USDC",
+      "baseFee": "0.50",
+      "percentageFee": "0.3%",
+      "swappable": true,
+      "decimals": 6,
+      "balance": 1000
+    },
+    "0x64BC0Baad7371ece4B6467715bE75f3aa2FBBF0c": {
+      "name": "WETH",
+      "baseFee": "0.40",
+      "percentageFee": "0.25%",
+      "swappable": true,
+      "decimals": 18,
+      "balance": 1
+    }
   }
 }
