@@ -1,26 +1,27 @@
+import { Socket } from "socket.io-client";
 import { FeeSchema, Intent } from "../../config/types";
 import { calculateAmountWithOdos, findTokenCombinations, getOdosPrice } from "../aggregatorService";
 
-export const handleConnect = (socket: any, walletAddress: `0x${string}`) => {
+export const handleConnect = (socket: Socket, walletAddress: `0x${string}`) => {
   console.log(`Relayer connected with ID: ${socket.id}, Wallet: ${walletAddress}`);
 };
 
-export const handleDisconnect = (socket: any) => {
+export const handleDisconnect = (socket: Socket) => {
   console.log("Relayer disconnected");
 };
 
-export const handlePing = (socket: any) => {
+export const handlePing = (socket: Socket) => {
   console.log("Received ping from backend, sending pong...");
   socket.emit("pong");
 };
 
-export const handleRemoved = (socket: any, data: any) => {
+export const handleRemoved = (socket: Socket, data: any) => {
   console.log("Received removal notification:", data.message);
   socket.disconnect();
 };
 
 export const handleGiveOffers = async (
-  socket: any,
+  socket: Socket,
   intent: Intent,
   callback: any,
   walletAddress: `0x${string}`,
