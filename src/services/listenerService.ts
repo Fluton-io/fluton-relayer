@@ -2,7 +2,7 @@ import BridgeABI from "../config/bridgeABI";
 import networks from "../config/networks";
 import { publicClients } from "../config/client";
 import { walletAddress } from "../config/env";
-import { handleFullfillIntent } from "./listener/listenerUtils";
+import { handleFulfillIntent } from "./listener/listenerUtils";
 import { PublicClient } from "viem";
 
 export const listenBridgeEvents = () => {
@@ -18,7 +18,7 @@ export const listenBridgeEvents = () => {
         eventName: "IntentCreated",
         onLogs: (logs) => {
           if (logs[0].args.intent!.relayer === walletAddress) {
-            handleFullfillIntent(logs[0].args.intent!, network.bridgeContract as `0x${string}`, client as PublicClient);
+            handleFulfillIntent(logs[0].args.intent!, network.bridgeContract as `0x${string}`, client as PublicClient);
           }
         },
       });
