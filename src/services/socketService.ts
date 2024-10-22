@@ -1,6 +1,5 @@
 import { io } from "socket.io-client";
-import { PRIVATE_KEY, BACKEND_URL, walletAddress } from "../config/env";
-import { privateKeyToAddress } from "viem/accounts";
+import { BACKEND_URL, walletAddress } from "../config/env";
 import { FeeSchema } from "../config/types";
 import feeSchemaData from "../config/feeSchema.json";
 import { handleConnect, handleDisconnect, handlePing, handleRemoved, handleGiveOffers } from "./socket/socketEvents";

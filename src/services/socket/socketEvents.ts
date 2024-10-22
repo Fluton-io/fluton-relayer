@@ -29,7 +29,6 @@ export const handleGiveOffers = async (
   walletAddress: `0x${string}`,
   feeSchema: FeeSchema
 ) => {
-  const startTime = Date.now();
   console.log("Received intent:", intent);
   const { targetNetwork: targetChainId, targetToken, amount, sourceNetwork, sourceToken } = intent;
   const schemaForTargetChain = feeSchema[targetChainId];
