@@ -39,20 +39,14 @@ export const handleGiveOffers = async (
     return;
   }
 
-  const sourceNetworkForOdos = testnetToMainnet[sourceNetwork] || sourceNetwork;
-  const targetNetworkForOdos = testnetToMainnet[targetChainId] || targetChainId;
-
-  const sourceTokenForOdos = testnetToMainnetToken[sourceToken] || sourceToken;
-  const targetTokenForOdos = testnetToMainnetToken[targetToken] || targetToken;
-
   let targetAmount: number;
 
   try {
-    const sourceTokenPrice = await getOdosPrice(parseInt(sourceNetworkForOdos), sourceTokenForOdos);
+    const sourceTokenPrice = await getOdosPrice(parseInt(sourceNetwork), sourceToken);
     const sourceAmountInUSD = sourceTokenPrice * Number(amount);
 
     const relayerTargetToken = schemaForTargetChain[targetToken];
-    const relayerTargetTokenPrice = await getOdosPrice(parseInt(targetNetworkForOdos), targetTokenForOdos);
+    const relayerTargetTokenPrice = await getOdosPrice(parseInt(targetChainId), targetToken);
     const relayerTargetTokenValue = relayerTargetTokenPrice * Number(relayerTargetToken.balance);
 
     if (relayerTargetToken && relayerTargetTokenValue >= Number(sourceAmountInUSD)) {

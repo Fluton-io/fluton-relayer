@@ -5,6 +5,8 @@ import feeSchemaData from "../config/feeSchema.json";
 import { fetchTokenDecimals } from "../lib/utils";
 import { SAFE_SWAP_RATE } from "../config/constants";
 import { getCachedPrice, setCachedPrice } from "../lib/cache";
+import testnetToMainnet from "../config/testnetToMainnet";
+import testnetToMainnetToken from "../config/testnetToMainnetToken";
 
 const feeSchema: FeeSchema = feeSchemaData;
 
@@ -48,6 +50,9 @@ export const getOdosQuote = async (
 };
 
 export const getOdosPrice = async (chainId: number, tokenAddress: `0x${string}`) => {
+  chainId = +testnetToMainnet[chainId] || chainId;
+  tokenAddress = testnetToMainnetToken[tokenAddress] || tokenAddress;
+
   const cacheKey = `${chainId}-${tokenAddress}`;
   const cachedPrice = getCachedPrice(cacheKey);
   if (cachedPrice) {
