@@ -39,8 +39,6 @@ export const handleGiveOffers = async (
     return;
   }
 
-  let targetAmount: number;
-
   try {
     const sourceTokenPrice = await getOdosPrice(parseInt(sourceNetwork), sourceToken);
     const sourceAmountInUSD = sourceTokenPrice * Number(amount);
@@ -49,6 +47,7 @@ export const handleGiveOffers = async (
     const relayerTargetTokenPrice = await getOdosPrice(parseInt(targetChainId), targetToken);
     const relayerTargetTokenValue = relayerTargetTokenPrice * Number(relayerTargetToken.balance);
 
+    let result;
     if (relayerTargetToken && relayerTargetTokenValue >= Number(sourceAmountInUSD)) {
       // if relayer has enough target token, calculate the target amount
       const { baseFee, percentageFee } = relayerTargetToken;
@@ -56,19 +55,23 @@ export const handleGiveOffers = async (
       const baseFeeValue = parseFloat(baseFee);
       const percentageFeeValue = parseFloat(percentageFee) / 100;
       const totalFee = baseFeeValue + targetTokenTransferAmount * percentageFeeValue;
-      targetAmount = targetTokenTransferAmount - totalFee;
+      const targetAmount = targetTokenTransferAmount - totalFee;
+
+      result = { finalTargetAmount: targetAmount, pathVizImage: null };
     } else {
-      // if relayer doesn't have enough target token, find token combinations and calculate the target amount
+      // If relayer doesn't have enough target token, find token combinations and calculate the target amount
       const tokenCombination = await findTokenCombinations(targetChainId, String(sourceAmountInUSD));
       console.log("Token combinations:", tokenCombination);
-      targetAmount = Number(await calculateAmountWithOdos(targetChainId, intent, walletAddress, tokenCombination));
+
+      result = await calculateAmountWithOdos(targetChainId, intent, walletAddress, tokenCombination);
     }
 
-    console.log(`Calculated targetAmount: ${targetAmount}`);
+    console.log(`Calculated targetAmount: ${result.finalTargetAmount}`);
     callback({
       status: "ok",
       walletAddress,
-      targetAmount,
+      targetAmount: result.finalTargetAmount,
+      pathVizImage: result.pathVizImage,
     });
   } catch (error) {
     console.error("Error in giveOffers:", error);
