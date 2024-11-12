@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { FeeSchema, Intent } from "../../config/types";
-import { calculateAmountWithOdos, findTokenCombinations, getOdosPrice } from "../aggregatorService";
+import { calculateAmountWithAggregator, findTokenCombinations, getPrice } from "../aggregatorService";
 import testnetToMainnet from "../../config/testnetToMainnet";
 import testnetToMainnetToken from "../../config/testnetToMainnetToken";
 
@@ -31,7 +31,7 @@ export const handleGiveOffers = async (
 ) => {
   console.log("Received intent:", intent);
   const { targetNetwork: targetChainId, targetToken, amount, sourceNetwork, sourceToken } = intent;
-  const schemaForTargetChain = feeSchema[targetChainId];
+  const schemaForTargetChain = feeSchema.chains[targetChainId];
 
   if (!schemaForTargetChain) {
     console.error(`Chain ID ${targetChainId} not supported by the relayer.`);
@@ -40,13 +40,19 @@ export const handleGiveOffers = async (
   }
 
   try {
-    const sourceTokenPrice = await getOdosPrice(parseInt(sourceNetwork), sourceToken);
+    const sourceTokenPrice = (await getPrice(parseInt(sourceNetwork), sourceToken))[sourceToken];
+    console.log("Source token price:", sourceTokenPrice);
+
     const sourceAmountInUSD = sourceTokenPrice * Number(amount);
+    console.log("sourceAmountInUSD:", sourceAmountInUSD);
 
+    console.log("schemaForTargetChain:", schemaForTargetChain);
     const relayerTargetToken = schemaForTargetChain[targetToken];
-    const relayerTargetTokenPrice = await getOdosPrice(parseInt(targetChainId), targetToken);
+    console.log("relayer target token:", relayerTargetToken);
+    const relayerTargetTokenPrice = await getPrice(parseInt(targetChainId), targetToken);
+    console.log("relayer target token price:", relayerTargetTokenPrice);
     const relayerTargetTokenValue = relayerTargetTokenPrice * Number(relayerTargetToken.balance);
-
+    console.log("relayer target token value:", relayerTargetTokenValue);
     let result;
     if (relayerTargetToken && relayerTargetTokenValue >= Number(sourceAmountInUSD)) {
       // if relayer has enough target token, calculate the target amount
@@ -63,7 +69,7 @@ export const handleGiveOffers = async (
       const tokenCombination = await findTokenCombinations(targetChainId, String(sourceAmountInUSD));
       console.log("Token combinations:", tokenCombination);
 
-      result = await calculateAmountWithOdos(targetChainId, intent, walletAddress, tokenCombination);
+      result = await calculateAmountWithAggregator(targetChainId, intent, walletAddress, tokenCombination);
     }
 
     console.log(`Calculated targetAmount: ${result.finalTargetAmount}`);
