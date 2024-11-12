@@ -11,9 +11,15 @@ export interface TargetNetworkDetails {
   [tokenAddress: `0x${string}`]: TokenDetails;
 }
 
-export interface FeeSchema {
+export interface Chains {
   [targetChainId: string]: TargetNetworkDetails;
 }
+
+export interface FeeSchema {
+  aggregator: string;
+  chains: Chains;
+}
+
 export interface Intent {
   sourceNetwork: string;
   targetNetwork: string;
