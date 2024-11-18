@@ -254,6 +254,19 @@ export const calculateAmountWithAggregator = async (
   return { finalTargetAmount, pathViz };
 };
 
+/**
+ * Filters the token combination to get the input tokens for the swap, excluding the target token.
+ *
+ * This function takes a list of tokens (with amounts) that are available for swapping and filters out the target token,
+ * as it is already intended to be the output. The function also converts the amount of each input token to a value that
+ * represents its smallest unit (based on its decimals) to ensure accuracy during the swap process.
+ *
+ * @param tokenCombination Array of token objects, each containing a token address and amount.
+ * @param targetToken The token address that is the target of the swap.
+ * @param schemaForTargetChain Object containing details about each token for the given target chain.
+ *
+ * @return Array of input tokens for the swap, including their token addresses and adjusted amounts based on decimals.
+ */
 const getInputTokensForSwap = (
   tokenCombination: { token: `0x${string}`; amount: string }[],
   targetToken: `0x${string}`,
@@ -266,6 +279,17 @@ const getInputTokensForSwap = (
       amount: (parseFloat(amount) * 10 ** schemaForTargetChain[token].decimals).toFixed(0),
     }));
 };
+
+/**
+ * Filters the token combination to get the non-swap tokens, specifically targeting the target token.
+ *
+ * This function identifies any tokens in the given combination that match the target token address. These tokens
+ * are excluded from the swap process because they are already the intended output. The amounts of these tokens are
+ * returned in a simplified form to be included directly in the final calculated output amount.
+ * @param tokenCombination Array of token objects, each containing a token address and amount.
+ * @param targetToken The token address that is the target of the swap.
+ * @return Array of amounts for the non-swap tokens, parsed as float values.
+ */
 
 const getNonSwapTokens = (tokenCombination: { token: `0x${string}`; amount: string }[], targetToken: `0x${string}`) => {
   return tokenCombination.filter(({ token }) => token === targetToken).map(({ amount }) => parseFloat(amount));
