@@ -1,5 +1,7 @@
 import { ethers } from "ethers";
 import networks from "../config/networks";
+import { publicClients } from "../config/client";
+import { erc20Abi } from "viem";
 
 export const getRpcUrlByChainId = (chainId: number): string => {
   const network = networks.find((network) => network.chainId === chainId);
@@ -11,11 +13,18 @@ export const getRpcUrlByChainId = (chainId: number): string => {
 
 export const fetchTokenDecimals = async (tokenAddress: `0x${string}`, chainId: number) => {
   try {
-    const rpcUrl = getRpcUrlByChainId(chainId);
-    const provider = new ethers.JsonRpcProvider(rpcUrl);
-    const tokenContract = new ethers.Contract(tokenAddress, ["function decimals() view returns (uint8)"], provider);
+    const publicClient = publicClients.find((client) => client.chainId === chainId);
 
-    const decimals = await tokenContract.decimals();
+    if (!publicClient) {
+      throw new Error(`Public client not found for chainId: ${chainId}`);
+    }
+
+    const decimals = await publicClient.client.readContract({
+      address: tokenAddress,
+      abi: erc20Abi,
+      functionName: "decimals",
+    });
+
     return decimals;
   } catch (error) {
     console.error(`Failed to fetch decimals for token: ${tokenAddress}`, error);
