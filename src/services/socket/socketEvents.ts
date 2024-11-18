@@ -63,7 +63,7 @@ export const handleGiveOffers = async (
       const totalFee = baseFeeValue + targetTokenTransferAmount * percentageFeeValue;
       const targetAmount = targetTokenTransferAmount - totalFee;
 
-      result = { finalTargetAmount: targetAmount, pathVizImage: null };
+      result = { finalTargetAmount: targetAmount, pathViz: null };
     } else {
       // If relayer doesn't have enough target token, find token combinations and calculate the target amount
       const tokenCombination = await findTokenCombinations(targetChainId, String(sourceAmountInUSD));
@@ -77,7 +77,7 @@ export const handleGiveOffers = async (
       status: "ok",
       walletAddress,
       targetAmount: result.finalTargetAmount,
-      pathVizImage: result.pathVizImage,
+      pathViz: result.pathViz,
     });
   } catch (error) {
     console.error("Error in giveOffers:", error);

@@ -73,18 +73,19 @@ export const getOdosQuote = async (
     legendTextColor: "#000000",
     width: 1200,
     height: 800,
-    pathVizImage: true,
+    pathViz: true,
   };
 
   try {
     const response = await axios.post(`${ODOS_API_URL}/sor/quote/v2`, body);
 
-    const { outAmounts, pathVizImage } = response.data;
+    console.log("odos response", response.data);
+    const { outAmounts, pathViz } = response.data;
     if (!outAmounts || outAmounts.length === 0) {
       throw new Error("No output returned from ODOS quote");
     }
 
-    return { pathVizImage, amount: outAmounts[0] };
+    return { pathViz, amount: outAmounts[0] };
   } catch (error) {
     console.error("Error fetching ODOS quote:", error);
     throw new Error("Failed to fetch quote from ODOS");
@@ -163,7 +164,7 @@ export const get1inchQuote = async (
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const response = await axios.get(url, config);
     const { dstAmount } = response.data;
-    return { amount: dstAmount, pathVizImage: null };
+    return { amount: dstAmount, pathViz: null };
   } catch (error) {
     console.error("Error fetching 1inch quote:", error);
     throw new Error("Failed to fetch quote from 1inch");
@@ -226,9 +227,9 @@ export const calculateAmountWithAggregator = async (
   const quote =
     inputTokens.length > 0
       ? await getQuote(parseInt(chainId), inputTokens, targetToken, walletAddress)
-      : { amount: 0, pathVizImage: null };
+      : { amount: 0, pathViz: null };
 
-  const { amount: quotedAmount, pathVizImage = null } = quote;
+  const { amount: quotedAmount, pathViz = null } = quote;
 
   console.log("quote is ", quote);
 
@@ -250,7 +251,7 @@ export const calculateAmountWithAggregator = async (
 
   console.log(`Calculated targetAmount: ${totalTargetAmount}, fee: ${fee}, finalTargetAmount: ${finalTargetAmount}`);
 
-  return { finalTargetAmount, pathVizImage };
+  return { finalTargetAmount, pathViz };
 };
 
 const getInputTokensForSwap = (
