@@ -2,12 +2,22 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   // sepolia -> mainnet
 
   // usdc
-  "0x2831d2b6b7bd5Ca9E2EEe932055a91f5a6cEBe2f": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+  "0x2831d2b6b7bd5Ca9E2EEe932055a91f5a6cEBe2f": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  // usdt
+  "0x9F1210757915bf7aEE3B5D82F99dac70828Bad77": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+  // uni
+  "0x64BC0Baad7371ece4B6467715bE75f3aa2FBBF0c": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+  // weth
+  "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
 
   // arbitrum sepolia -> arbitrum mainnet
 
   // usdc
   "0x1746FB6484647F83E27Ed43460bbE30883F8F5b5": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  // usdt
+  "0xf065447aE1b6597410c4Ef0990F83C5F37bfD5B4": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+  // weth
+  "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
 };
 
 export default testnetToMainnetToken;

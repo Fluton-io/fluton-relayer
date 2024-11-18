@@ -1,6 +1,40 @@
 {
   "aggregator": "Odos",
   "chains": {
+    "1": {
+      "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": {
+        "name": "USDC",
+        "baseFee": "0.50",
+        "percentageFee": "0.3%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 1000
+      },
+      "0xdAC17F958D2ee523a2206206994597C13D831ec7": {
+        "name": "USDT",
+        "baseFee": "0.35",
+        "percentageFee": "0.2%",
+        "swappable": false,
+        "decimals": 6,
+        "balance": 100
+      },
+      "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984": {
+        "name": "UNI",
+        "baseFee": "0.8",
+        "percentageFee": "0.4%",
+        "swappable": true,
+        "decimals": 18,
+        "balance": 20
+      },
+      "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2": {
+        "name": "WETH",
+        "baseFee": "0.01",
+        "percentageFee": "0.7%",
+        "swappable": true,
+        "decimals": 18,
+        "balance": 20
+      }
+    },
     "10": {
       "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58": {
         "name": "USDT",
