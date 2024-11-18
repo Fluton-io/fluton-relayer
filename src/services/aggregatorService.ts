@@ -34,8 +34,6 @@ export const getQuote = async (
 };
 
 export const getPrice = async (chainId: number, tokenAddresses: `0x${string}` | `0x${string}`[]) => {
-  const aggregator = feeSchema.aggregator;
-
   console.log("aggregator", aggregator);
   if (aggregator === "Odos") {
     return await getOdosPrice(chainId, tokenAddresses);
@@ -207,12 +205,11 @@ export const get1inchPrice = async (chainId: number, tokenAddresses: `0x${string
 // Calculate functions
 export const calculateAmountWithAggregator = async (
   chainId: string,
-  intent: Intent,
+  targetToken: `0x${string}`,
   walletAddress: `0x${string}`,
   tokenCombination: { token: `0x${string}`; amount: string }[]
 ) => {
   const schemaForTargetChain = feeSchema.chains[chainId];
-  const targetToken = intent.targetToken;
 
   // Get input tokens for the swap
   const inputTokens = getInputTokensForSwap(tokenCombination, targetToken, schemaForTargetChain);
@@ -228,7 +225,7 @@ export const calculateAmountWithAggregator = async (
   // Fetch quote if there are input tokens
   const quote =
     inputTokens.length > 0
-      ? await getQuote(parseInt(chainId), inputTokens, intent.targetToken, walletAddress)
+      ? await getQuote(parseInt(chainId), inputTokens, targetToken, walletAddress)
       : { amount: 0, pathVizImage: null };
 
   const { amount: quotedAmount, pathVizImage = null } = quote;
@@ -236,7 +233,7 @@ export const calculateAmountWithAggregator = async (
   console.log("quote is ", quote);
 
   // Fetch decimals for the target token
-  const targetTokenDecimals = await fetchTokenDecimals(intent.targetToken, parseInt(chainId));
+  const targetTokenDecimals = await fetchTokenDecimals(targetToken, parseInt(chainId));
 
   // Calculate target amount from quote
   const quotedTargetAmount = parseFloat(quotedAmount) / 10 ** Number(targetTokenDecimals);

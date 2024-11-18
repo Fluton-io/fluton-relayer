@@ -68,8 +68,8 @@ export const handleGiveOffers = async (
       // If relayer doesn't have enough target token, find token combinations and calculate the target amount
       const tokenCombination = await findTokenCombinations(targetChainId, String(sourceAmountInUSD));
       console.log("Token combinations:", tokenCombination);
-
-      result = await calculateAmountWithAggregator(targetChainId, intent, walletAddress, tokenCombination);
+      const targetToken = intent.targetToken;
+      result = await calculateAmountWithAggregator(targetChainId, targetToken, walletAddress, tokenCombination);
     }
 
     console.log(`Calculated targetAmount: ${result.finalTargetAmount}`);
