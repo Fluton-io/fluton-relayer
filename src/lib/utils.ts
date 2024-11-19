@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import networks from "../config/networks";
 import { publicClients } from "../config/client";
 import { erc20Abi } from "viem";
@@ -29,5 +28,26 @@ export const fetchTokenDecimals = async (tokenAddress: `0x${string}`, chainId: n
   } catch (error) {
     console.error(`Failed to fetch decimals for token: ${tokenAddress}`, error);
     throw new Error("Unable to fetch token decimals");
+  }
+};
+
+export const fetchTokenSymbol = async (tokenAddress: `0x${string}`, chainId: number) => {
+  try {
+    const publicClient = publicClients.find((client) => client.chainId === chainId);
+
+    if (!publicClient) {
+      throw new Error(`Public client not found for chainId: ${chainId}`);
+    }
+
+    const symbol = await publicClient.client.readContract({
+      address: tokenAddress,
+      abi: erc20Abi,
+      functionName: "symbol",
+    });
+
+    return symbol;
+  } catch (error) {
+    console.error(`Failed to fetch symbol for token: ${tokenAddress}`, error);
+    throw new Error("Unable to fetch token symbol");
   }
 };

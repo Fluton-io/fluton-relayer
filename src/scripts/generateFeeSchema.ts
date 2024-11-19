@@ -3,10 +3,11 @@ import networks from "../config/networks";
 import fs from "fs";
 import promptSync from "prompt-sync";
 import { isAddress } from "viem";
+import { fetchTokenDecimals, fetchTokenSymbol } from "../lib/utils";
 
 const prompt = promptSync({ sigint: true });
 
-const generateFeeSchema = () => {
+const generateFeeSchema = async () => {
   const aggregatorChoice = prompt("Select aggregator: 0 for Odos, 1 for 1inch: ");
   if (aggregatorChoice !== "0" && aggregatorChoice !== "1") {
     console.error("Invalid input. Please enter 0 for Odos or 1 for 1inch.");
@@ -14,7 +15,8 @@ const generateFeeSchema = () => {
   }
   const aggregator = aggregatorChoice === "0" ? "Odos" : "1inch";
 
-  const chains = networks.reduce((acc, targetNetwork) => {
+  const chains = await networks.reduce(async (accPromise, targetNetwork) => {
+    const acc = await accPromise;
     const targetChainId = String(targetNetwork.chainId);
 
     const numTokens = parseInt(prompt(`How many tokens for target chain ${targetChainId}? `), 10);
@@ -26,7 +28,7 @@ const generateFeeSchema = () => {
     const tokensFees: { [tokenAddress: `0x${string}`]: TokenDetails } = {};
 
     for (let i = 0; i < numTokens; i++) {
-      const tokenAddress = prompt(`Enter token address #${i + 1} for chain ${targetChainId} in 0x{string} format: `);
+      const tokenAddress = prompt(`Enter token address #${i + 1} for chain ${targetChainId} in 0x format: `);
 
       if (!isAddress(tokenAddress)) {
         console.error("Invalid token address. Please enter a valid address.");
@@ -34,7 +36,16 @@ const generateFeeSchema = () => {
         continue;
       }
 
-      const name = prompt(`Enter the symbol of the token at address ${tokenAddress} on chain ${targetChainId}: `);
+      let name;
+      let decimals;
+      try {
+        name = await fetchTokenSymbol(tokenAddress, parseInt(targetChainId));
+        decimals = await fetchTokenDecimals(tokenAddress, parseInt(targetChainId));
+      } catch (error) {
+        console.error("Failed to fetch token details from the contract. Please enter a valid token address.");
+        i--;
+        continue;
+      }
 
       const baseFee = prompt(`Enter base fee for ${tokenAddress} on chain ${targetChainId}: `);
       if (isNaN(parseFloat(baseFee))) {
@@ -44,7 +55,7 @@ const generateFeeSchema = () => {
       }
 
       const percentageFee = prompt(
-        `Enter percentage fee for ${tokenAddress} on chain ${targetChainId} (as a percentage): `
+        `Enter percentage fee for ${tokenAddress} on chain ${targetChainId} (as a percentage without % symbol): `
       );
       if (isNaN(parseFloat(percentageFee))) {
         console.error("Invalid percentage fee. Please enter a valid number.");
@@ -54,13 +65,6 @@ const generateFeeSchema = () => {
 
       const swappable =
         prompt(`Is ${tokenAddress} swappable on chain ${targetChainId}? (yes/no): `).toLowerCase() === "yes";
-
-      const decimals = parseInt(prompt(`Enter the decimals for ${tokenAddress} on chain ${targetChainId}: `), 10);
-      if (isNaN(decimals) || decimals <= 0) {
-        console.error("Invalid decimals. Please enter a positive integer.");
-        i--;
-        continue;
-      }
 
       const balance = parseInt(prompt(`Enter your balance for ${tokenAddress} on chain ${targetChainId}: `), 10);
       if (isNaN(balance) || balance < 0) {
@@ -81,7 +85,7 @@ const generateFeeSchema = () => {
 
     acc[targetChainId] = tokensFees;
     return acc;
-  }, {} as Chains);
+  }, Promise.resolve({} as Chains));
 
   const feeSchema: FeeSchema = {
     aggregator,
