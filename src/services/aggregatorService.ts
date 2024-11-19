@@ -97,6 +97,7 @@ export const getOdosPrice = async (chainId: number, tokenAddresses: `0x${string}
 
   console.log("chainId", chainId);
   tokenAddresses = Array.isArray(tokenAddresses) ? tokenAddresses : [tokenAddresses];
+  tokenAddresses = tokenAddresses.map((address) => testnetToMainnetToken[address] || address);
 
   console.log("tokenAddresses", tokenAddresses);
 

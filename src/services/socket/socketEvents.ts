@@ -3,6 +3,7 @@ import { FeeSchema, Intent } from "../../config/types";
 import { calculateAmountWithAggregator, findTokenCombinations, getPrice } from "../aggregatorService";
 import testnetToMainnet from "../../config/testnetToMainnet";
 import testnetToMainnetToken from "../../config/testnetToMainnetToken";
+import { isAddress } from "viem";
 
 export const handleConnect = (socket: Socket, walletAddress: `0x${string}`) => {
   console.log(`Relayer connected with ID: ${socket.id}, Wallet: ${walletAddress}`);
@@ -31,7 +32,22 @@ export const handleGiveOffers = async (
 ) => {
   console.log("Received intent:", intent);
   const { targetNetwork: targetChainId, targetToken, amount, sourceNetwork, sourceToken } = intent;
-  const schemaForTargetChain = feeSchema.chains[targetChainId];
+
+  if (!isAddress(targetToken)) {
+    console.error("Invalid target token address");
+    callback({ status: "error", walletAddress, message: "Invalid target token address" });
+    return;
+  }
+
+  if (!isAddress(sourceToken)) {
+    console.error("Invalid source token address");
+    callback({ status: "error", walletAddress, message: "Invalid source token address" });
+    return;
+  }
+
+  // TODO: Also check if sourceToken and targetToken are actual ERC-20 tokens
+
+  const schemaForTargetChain = feeSchema.chains[testnetToMainnet[targetChainId] || targetChainId];
 
   if (!schemaForTargetChain) {
     console.error(`Chain ID ${targetChainId} not supported by the relayer.`);
@@ -40,16 +56,20 @@ export const handleGiveOffers = async (
   }
 
   try {
-    const sourceTokenPrice = (await getPrice(parseInt(sourceNetwork), sourceToken))[sourceToken];
+    const sourceTokenPrice = (await getPrice(parseInt(sourceNetwork), sourceToken))[
+      testnetToMainnetToken[sourceToken] || sourceToken
+    ];
     console.log("Source token price:", sourceTokenPrice);
 
     const sourceAmountInUSD = sourceTokenPrice * Number(amount);
     console.log("sourceAmountInUSD:", sourceAmountInUSD);
 
     console.log("schemaForTargetChain:", schemaForTargetChain);
-    const relayerTargetToken = schemaForTargetChain[targetToken];
+    const relayerTargetToken = schemaForTargetChain[testnetToMainnetToken[targetToken] || targetToken];
     console.log("relayer target token:", relayerTargetToken);
-    const relayerTargetTokenPrice = await getPrice(parseInt(targetChainId), targetToken);
+    const relayerTargetTokenPrice = (await getPrice(parseInt(targetChainId), targetToken))[
+      testnetToMainnetToken[targetToken] || targetToken
+    ];
     console.log("relayer target token price:", relayerTargetTokenPrice);
     const relayerTargetTokenValue = relayerTargetTokenPrice * Number(relayerTargetToken.balance);
     console.log("relayer target token value:", relayerTargetTokenValue);
@@ -58,6 +78,7 @@ export const handleGiveOffers = async (
       // if relayer has enough target token, calculate the target amount
       const { baseFee, percentageFee } = relayerTargetToken;
       const targetTokenTransferAmount = sourceAmountInUSD / relayerTargetTokenPrice;
+      console.log("targetTokenTransferAmount:", targetTokenTransferAmount);
       const baseFeeValue = parseFloat(baseFee);
       const percentageFeeValue = parseFloat(percentageFee) / 100;
       const totalFee = baseFeeValue + targetTokenTransferAmount * percentageFeeValue;
