@@ -93,12 +93,7 @@ export const getOdosQuote = async (
 };
 
 export const getOdosPrice = async (chainId: number, tokenAddresses: `0x${string}` | `0x${string}`[]) => {
-  chainId = +testnetToMainnet[chainId] || chainId;
-
-  console.log("chainId", chainId);
   tokenAddresses = Array.isArray(tokenAddresses) ? tokenAddresses : [tokenAddresses];
-  tokenAddresses = tokenAddresses.map((address) => testnetToMainnetToken[address] || address);
-
   console.log("tokenAddresses", tokenAddresses);
 
   const cacheKeys = tokenAddresses.map((address) => `${chainId}-${address}`);
@@ -302,7 +297,7 @@ const calculateFees = (totalAmount: number, feePercentage: string) => {
 };
 
 const calculateFinalAmount = (totalAmount: number, fee: number) => {
-  return (totalAmount - fee).toFixed(4);
+  return +(totalAmount - fee).toFixed(4);
 };
 
 // Token combination functions

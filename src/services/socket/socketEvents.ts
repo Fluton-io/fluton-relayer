@@ -31,33 +31,45 @@ export const handleGiveOffers = async (
   feeSchema: FeeSchema
 ) => {
   console.log("Received intent:", intent);
-  const { targetNetwork: targetChainId, targetToken, amount, sourceNetwork, sourceToken } = intent;
+  const { sourceChainId, targetChainId, sourceTokenAddress, targetTokenAddress, amount } = intent;
 
-  if (!isAddress(targetToken)) {
-    console.error("Invalid target token address");
-    callback({ status: "error", walletAddress, message: "Invalid target token address" });
-    return;
-  }
+  const sourceChainIdMainnet = testnetToMainnet[sourceChainId] || sourceChainId;
+  const targetChainIdMainnet = testnetToMainnet[targetChainId] || targetChainId;
 
-  if (!isAddress(sourceToken)) {
+  console.log("sourceChainIdMainnet:", sourceChainIdMainnet);
+  console.log("targetChainIdMainnet:", targetChainIdMainnet);
+
+  const sourceTokenAddressMainnet = testnetToMainnetToken[sourceTokenAddress] || sourceTokenAddress;
+  const targetTokenAddressMainnet = testnetToMainnetToken[targetTokenAddress] || targetTokenAddress;
+
+  console.log("sourceTokenAddressMainnet:", sourceTokenAddressMainnet);
+  console.log("targetTokenAddressMainnet:", targetTokenAddressMainnet);
+
+  if (!isAddress(sourceTokenAddressMainnet)) {
     console.error("Invalid source token address");
     callback({ status: "error", walletAddress, message: "Invalid source token address" });
     return;
   }
 
+  if (!isAddress(targetTokenAddressMainnet)) {
+    console.error("Invalid target token address");
+    callback({ status: "error", walletAddress, message: "Invalid target token address" });
+    return;
+  }
+
   // TODO: Also check if sourceToken and targetToken are actual ERC-20 tokens
 
-  const schemaForTargetChain = feeSchema.chains[testnetToMainnet[targetChainId] || targetChainId];
+  const schemaForTargetChain = feeSchema.chains[targetChainIdMainnet];
 
   if (!schemaForTargetChain) {
-    console.error(`Chain ID ${targetChainId} not supported by the relayer.`);
-    callback({ status: "error", walletAddress, message: `Chain ID ${targetChainId} not supported.` });
+    console.error(`Chain ID ${targetChainIdMainnet} not supported by the relayer.`);
+    callback({ status: "error", walletAddress, message: `Chain ID ${targetChainIdMainnet} not supported.` });
     return;
   }
 
   try {
-    const sourceTokenPrice = (await getPrice(parseInt(sourceNetwork), sourceToken))[
-      testnetToMainnetToken[sourceToken] || sourceToken
+    const sourceTokenPrice = (await getPrice(+sourceChainIdMainnet, sourceTokenAddressMainnet))[
+      sourceTokenAddressMainnet
     ];
     console.log("Source token price:", sourceTokenPrice);
 
@@ -65,10 +77,10 @@ export const handleGiveOffers = async (
     console.log("sourceAmountInUSD:", sourceAmountInUSD);
 
     console.log("schemaForTargetChain:", schemaForTargetChain);
-    const relayerTargetToken = schemaForTargetChain[testnetToMainnetToken[targetToken] || targetToken];
+    const relayerTargetToken = schemaForTargetChain[targetTokenAddressMainnet];
     console.log("relayer target token:", relayerTargetToken);
-    const relayerTargetTokenPrice = (await getPrice(parseInt(targetChainId), targetToken))[
-      testnetToMainnetToken[targetToken] || targetToken
+    const relayerTargetTokenPrice = (await getPrice(parseInt(targetChainIdMainnet), targetTokenAddressMainnet))[
+      targetTokenAddressMainnet
     ];
     console.log("relayer target token price:", relayerTargetTokenPrice);
     const relayerTargetTokenValue = relayerTargetTokenPrice * Number(relayerTargetToken.balance);
@@ -87,10 +99,14 @@ export const handleGiveOffers = async (
       result = { finalTargetAmount: targetAmount, pathViz: null };
     } else {
       // If relayer doesn't have enough target token, find token combinations and calculate the target amount
-      const tokenCombination = await findTokenCombinations(targetChainId, String(sourceAmountInUSD));
+      const tokenCombination = await findTokenCombinations(targetChainIdMainnet, String(sourceAmountInUSD));
       console.log("Token combinations:", tokenCombination);
-      const targetToken = intent.targetToken;
-      result = await calculateAmountWithAggregator(targetChainId, targetToken, walletAddress, tokenCombination);
+      result = await calculateAmountWithAggregator(
+        targetChainIdMainnet,
+        targetTokenAddressMainnet,
+        walletAddress,
+        tokenCombination
+      );
     }
 
     console.log(`Calculated targetAmount: ${result.finalTargetAmount}`);

@@ -21,11 +21,11 @@ export interface FeeSchema {
 }
 
 export interface Intent {
-  sourceNetwork: string;
-  targetNetwork: string;
-  sourceToken: `0x${string}`;
+  sourceChainId: string;
+  targetChainId: string;
+  sourceTokenAddress: `0x${string}`;
   sourceTokenSymbol: string;
-  targetToken: `0x${string}`;
+  targetTokenAddress: `0x${string}`;
   targetTokenSymbol: string;
   amount: string;
 }
