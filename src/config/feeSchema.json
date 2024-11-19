@@ -80,7 +80,7 @@
       },
       "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1": {
         "name": "WETH",
-        "baseFee": "0.40",
+        "baseFee": "0.0001",
         "percentageFee": "0.25%",
         "swappable": true,
         "decimals": 18,
