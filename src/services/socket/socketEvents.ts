@@ -1,9 +1,10 @@
 import { Socket } from "socket.io-client";
 import { FeeSchema, Intent } from "../../config/types";
-import { calculateAmountWithAggregator, findTokenCombinations, getPrice } from "../aggregatorService";
+import { calculateAmountWithAggregator, findTokenCombinations } from "../aggregatorService";
 import testnetToMainnet from "../../config/testnetToMainnet";
 import testnetToMainnetToken from "../../config/testnetToMainnetToken";
 import { isAddress } from "viem";
+import { getPrice } from "../aggregator/priceUtils";
 
 export const handleConnect = (socket: Socket, walletAddress: `0x${string}`) => {
   console.log(`Relayer connected with ID: ${socket.id}, Wallet: ${walletAddress}`);

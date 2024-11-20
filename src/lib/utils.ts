@@ -1,6 +1,8 @@
 import networks from "../config/networks";
 import { publicClients } from "../config/client";
 import { erc20Abi } from "viem";
+import { FeeSchema } from "../config/types";
+import feeSchemaData from "../config/feeSchema.json";
 
 export const getRpcUrlByChainId = (chainId: number): string => {
   const network = networks.find((network) => network.chainId === chainId);
@@ -51,3 +53,6 @@ export const fetchTokenSymbol = async (tokenAddress: `0x${string}`, chainId: num
     throw new Error("Unable to fetch token symbol");
   }
 };
+
+export const feeSchema: FeeSchema = feeSchemaData;
+export const aggregator = feeSchema.aggregator;
