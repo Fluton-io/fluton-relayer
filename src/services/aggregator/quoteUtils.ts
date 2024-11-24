@@ -32,8 +32,10 @@ export const getOdosQuote = async (
   const body = {
     chainId,
     compact: true,
+    disableRFQs: false,
+    likeAsset: true,
     gasPrice: 20,
-    inputTokens: inputTokens,
+    inputTokens,
     outputTokens: [
       {
         proportion: 1,
@@ -45,12 +47,6 @@ export const getOdosQuote = async (
     sourceBlacklist: [],
     sourceWhitelist: [],
     userAddr,
-    linkColors: ["#123456"],
-    nodeColor: "#1BEEF1",
-    nodeTextColor: "#FFFFFF",
-    legendTextColor: "#000000",
-    width: 1200,
-    height: 800,
     pathViz: true,
   };
 
