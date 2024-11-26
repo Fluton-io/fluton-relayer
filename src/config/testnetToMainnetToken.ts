@@ -18,6 +18,8 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   "0xf065447aE1b6597410c4Ef0990F83C5F37bfD5B4": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
   // weth
   "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+  // uni
+  "0x31BB6bC0E8E79eF3F6C983CB145BA7677A98284F": "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0",
 };
 
 export default testnetToMainnetToken;

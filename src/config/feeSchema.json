@@ -18,7 +18,7 @@
         "decimals": 6,
         "balance": 100
       },
-      "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984": {
+      "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984": {
         "name": "UNI",
         "baseFee": "0.004",
         "percentageFee": "0.2%",
