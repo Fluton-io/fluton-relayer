@@ -9,6 +9,8 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   "0x64BC0Baad7371ece4B6467715bE75f3aa2FBBF0c": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
   // weth
   "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+  // union -> link
+  "0xb5abDd56564d96708d9E7903500CfbD68D08bd4f": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
 
   // arbitrum sepolia -> arbitrum mainnet
 
@@ -20,6 +22,8 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
   // uni
   "0x31BB6bC0E8E79eF3F6C983CB145BA7677A98284F": "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0",
+  // union -> link
+  "0xb23EF3bd650B0FfA3DD46d29b96944BD362E6B7e": "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
 };
 
 export default testnetToMainnetToken;
