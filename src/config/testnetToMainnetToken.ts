@@ -1,6 +1,6 @@
 const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   // sepolia -> mainnet
-
+ 
   // usdc
   "0x2831d2b6b7bd5Ca9E2EEe932055a91f5a6cEBe2f": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   // usdt
@@ -11,9 +11,14 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
   // union -> link
   "0xb5abDd56564d96708d9E7903500CfbD68D08bd4f": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
-
+ 
+  // holesky -> mainnet
+ 
+  // weth
+  "0x1a4b49cb5DBaa9a82F9f8054Dce210372B40376a": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+ 
   // arbitrum sepolia -> arbitrum mainnet
-
+ 
   // usdc
   "0x1746FB6484647F83E27Ed43460bbE30883F8F5b5": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
   // usdt
@@ -25,5 +30,5 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   // union -> link
   "0xb23EF3bd650B0FfA3DD46d29b96944BD362E6B7e": "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
 };
-
+ 
 export default testnetToMainnetToken;
