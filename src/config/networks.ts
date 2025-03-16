@@ -98,7 +98,7 @@ const testnets = [
     rpcUrl: `https://holesky.infura.io/v3/${INFURA_API_KEY}`,
     explorer: {
       name: "Etherscan Holesky",
-      apiKey: "",
+      apiKey: "7YEV5EZ8F9I66EU2ZJBQ4C5MWQJEZ68TZ4",
       url: "https://holesky.etherscan.io",
     },
     bridgeContract: "0x",
