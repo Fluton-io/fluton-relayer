@@ -92,6 +92,17 @@ const testnets = [
     },
     bridgeContract: "0x7198dc5a074ac365ccc4e43213522675957a8ab0",
   },
+  {
+    name: "Ethereum Holesky Testnet",
+    chainId: 17000,
+    rpcUrl: `https://holesky.infura.io/v3/${INFURA_API_KEY}`,
+    explorer: {
+      name: "Etherscan Holesky",
+      apiKey: "7YEV5EZ8F9I66EU2ZJBQ4C5MWQJEZ68TZ4",
+      url: "https://holesky.etherscan.io",
+    },
+    bridgeContract: "0x",
+  },
 ];
 
 const networks = [...mainnets, ...testnets];

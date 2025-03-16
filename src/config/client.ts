@@ -8,6 +8,7 @@ import {
   scroll,
   scrollSepolia,
   sepolia,
+  holesky,
 } from "viem/chains";
 
 //public clients
@@ -54,6 +55,11 @@ export const scrollSepoliaPublicClient = createPublicClient({
   transport: http(),
 });
 
+export const holeskyPublicClient = createPublicClient({
+  chain: holesky,
+  transport: http(),
+});
+
 export const publicClients = [
   { client: mainnetPublicClient, chainId: 1 },
   { client: arbitrumPublicClient, chainId: 42161 },
@@ -63,6 +69,7 @@ export const publicClients = [
   { client: arbitrumSepoliaPublicClient, chainId: 421614 },
   { client: optimismSepoliaPublicClient, chainId: 11155420 },
   { client: scrollSepoliaPublicClient, chainId: 534351 },
+  { client: holeskyPublicClient, chainId: 17000 },
 ];
 
 //wallet clients
@@ -109,6 +116,11 @@ export const scrollSepoliaWalletClient = createWalletClient({
   transport: http(),
 });
 
+export const holeskyWalletClient = createWalletClient({
+  chain: holesky,
+  transport: http(),
+});
+
 export const walletClients = [
   { client: mainnetWalletClient, chainId: 1 },
   { client: arbitrumWalletClient, chainId: 42161 },
@@ -118,4 +130,5 @@ export const walletClients = [
   { client: arbitrumSepoliaWalletClient, chainId: 421614 },
   { client: optimismSepoliaWalletClient, chainId: 11155420 },
   { client: scrollSepoliaWalletClient, chainId: 534351 },
+  { client: holeskyWalletClient, chainId: 17000 },
 ];
