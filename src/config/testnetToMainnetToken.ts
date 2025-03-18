@@ -1,6 +1,5 @@
 const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   // sepolia -> mainnet
-
   // usdc
   "0x2831d2b6b7bd5Ca9E2EEe932055a91f5a6cEBe2f": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   // usdt
@@ -12,8 +11,17 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   // union -> link
   "0xb5abDd56564d96708d9E7903500CfbD68D08bd4f": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
 
-  // arbitrum sepolia -> arbitrum mainnet
+  //(Permit) sepolia -> mainnet
+  // usdcPermit
+  "0xAf95bA5cAd83BA86684490986FF7637656389EB8": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  // usdtPermit
+  "0x500a0B08170B47B7b5a940BCa8d6F43dD5415003": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+  // uniPermit
+  "0x67D8c53e805f5e3B1C26d0df63a3AcfA7FEd84Ba": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+  // unionPermit -> link
+  "0x90993a366046b18a040e01efEC290F6f85Ffe3cC": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
 
+  // arbitrum sepolia -> arbitrum mainnet
   // usdc
   "0x1746FB6484647F83E27Ed43460bbE30883F8F5b5": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
   // usdt
@@ -24,6 +32,17 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   "0x31BB6bC0E8E79eF3F6C983CB145BA7677A98284F": "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0",
   // union -> link
   "0xb23EF3bd650B0FfA3DD46d29b96944BD362E6B7e": "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
+
+  //(PermitToken) arbitrum sepolia  -> arbitrum mainnet
+  // usdcPermit
+  "0xf6a2C74547d9bBe307A7ad1D9D604976D9aE9CC8": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  // usdtPermit
+  "0x623529FB0536a28708f445CB1B045786E66b0d61": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+   // uniPermit
+   "0xE28087B678F2560df304B77Bb82b4F216a220804": "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0",
+   // unionPermit -> link
+   "0x11d0228499a2a691eC03c198bDc6ea004DBd639B": "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
 };
+
 
 export default testnetToMainnetToken;
