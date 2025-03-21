@@ -57,7 +57,7 @@ const testnets = [
       apiKey: "YVGC5X6NFDNIH3C4DMX4UHYPU36XN1JGK7",
       url: "https://sepolia.etherscan.io",
     },
-    bridgeContract: "0x9329a605815dddaf5a9481be69ba65193c01f6d1",
+    bridgeContract: "0xf6a2C74547d9bBe307A7ad1D9D604976D9aE9CC8", // updated contract with bridge and bridgeWithPermit
   },
   {
     name: "Arbitrum Sepolia Testnet",
@@ -68,7 +68,7 @@ const testnets = [
       apiKey: "6DS9FIXUN1N31GG6W7BXT3FG3846MT3I5Z",
       url: "https://sepolia.arbiscan.io",
     },
-    bridgeContract: "0x9f1210757915bf7aee3b5d82f99dac70828bad77",
+    bridgeContract: "0xa0366a3e5D1f510B33C5E727FfAb3D909C8918B5", // updated contract with bridge and bridgeWithPermit
   },
   {
     name: "Optimism Sepolia Testnet",

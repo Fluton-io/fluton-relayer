@@ -1,11 +1,13 @@
 import { Socket } from "socket.io-client";
-import { FeeSchema, Intent } from "../../config/types";
+import { FeeSchema, IBridgeSignaturePayload, Intent } from "../../config/types";
 import { calculateAmountWithAggregator, findTokenCombinations } from "../aggregatorService";
 import testnetToMainnet from "../../config/testnetToMainnet";
 import testnetToMainnetToken from "../../config/testnetToMainnetToken";
-import { isAddress } from "viem";
+import { Address, erc20Abi, isAddress, PublicClient } from "viem";
 import { getPrice } from "../aggregator/priceUtils";
-
+import { publicClients, walletClients } from "../../config/client";
+import { getTokenBridgeContract } from "../../lib/utils";
+import bridgeABI from "../../config/bridgeABI";
 export const handleConnect = (socket: Socket, walletAddress: `0x${string}`) => {
   console.log(`Relayer connected with ID: ${socket.id}, Wallet: ${walletAddress}`);
 };
@@ -122,3 +124,108 @@ export const handleGiveOffers = async (
     callback({ status: "error", walletAddress, message: "Error processing the offer" });
   }
 };
+
+export const handleExecuteTransaction = async (
+  socket: Socket,
+  payload: IBridgeSignaturePayload,
+  callback: any,
+  walletAddress: `0x${string}`,
+) => {
+  try {
+
+  const sourceChainIdMainnet = testnetToMainnet[payload.sourceChainId] || payload.sourceChainId;
+  const targetChainIdMainnet = testnetToMainnet[payload.targetChainId] || payload.targetChainId;
+
+  console.log("sourceChainIdMainnet:", sourceChainIdMainnet);
+  console.log("targetChainIdMainnet:", targetChainIdMainnet);
+
+  const sourceTokenAddressMainnet = testnetToMainnetToken[payload.sourceToken] || payload.sourceToken;
+  const targetTokenAddressMainnet = testnetToMainnetToken[payload.targetToken] || payload.targetToken;
+
+  console.log("sourceTokenAddressMainnet:", sourceTokenAddressMainnet);
+  console.log("targetTokenAddressMainnet:", targetTokenAddressMainnet);
+
+  const publicClient = publicClients.find((client) => client.chainId === payload.sourceChainId);
+
+  if (!publicClient) {
+    console.error("Invalid publicClient");
+    callback({ status: "error", walletAddress, message: "Invalid publicClient" });
+    return
+  }
+
+  const walletClient = walletClients.find((wc) => wc.chainId === payload.sourceChainId)?.client;
+
+  if (!walletClient) {
+    console.error("Invalid walletClient");
+    callback({ status: "error", walletAddress, message: "Invalid walletClient" });
+    return
+  }
+
+  const bridgeContract = getTokenBridgeContract(payload.sourceChainId)
+
+  const allowance = await publicClient.client.readContract({
+    address: sourceTokenAddressMainnet as Address,
+    abi: erc20Abi,
+    functionName: 'allowance',
+    args: [payload.permitParams.owner as Address, bridgeContract as Address],
+  })
+
+  if (allowance < BigInt(payload.sourceAmount)) {
+
+    const { request } = await (publicClient.client as PublicClient).simulateContract({
+      address: sourceTokenAddressMainnet as Address,
+      abi: erc20Abi,
+      functionName: 'approve',
+      args: [bridgeContract as Address, BigInt(payload.sourceAmount)],
+      account: walletAddress
+    })
+    const txHash = await walletClient.writeContract(request)
+
+    const transaction = await publicClient.client.waitForTransactionReceipt( 
+      { hash: txHash }
+    )
+
+    if (transaction.status !== 'success') {
+      console.error("Approve transaction failed");
+      callback({ status: "error", walletAddress, message: "Approve transaction failed" });
+      return
+    }
+    console.log('Permit transaction successful');
+
+    
+  }else {
+    console.log('Allowance is sufficient, skipping permit');
+  }
+
+  const { request } = await (publicClient.client as PublicClient).simulateContract({
+    address: bridgeContract as Address,
+    abi: bridgeABI,
+    functionName: 'bridgeWithPermit',
+    args: [payload.bridgeParams],
+    account: walletAddress
+  })
+
+  const txHash = await walletClient.writeContract(request)
+
+  const transaction = await publicClient.client.waitForTransactionReceipt( 
+    { hash: txHash }
+  )
+
+  if (transaction.status !== 'success') {
+    console.error("Bridge transaction failed");
+    callback({ status: "error", walletAddress, message: "Bridge transaction failed" });
+    return
+  }
+  console.log('Bridge transaction successful');
+  
+  callback({
+    status: "ok",
+    walletAddress,
+    txHash: txHash,
+    
+  });
+  } catch (error) {
+    console.error("Error in giveOffers:", error);
+    callback({ status: "error", walletAddress, message: "Bridge transaction failed" });
+  }
+}

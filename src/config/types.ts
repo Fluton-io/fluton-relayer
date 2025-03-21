@@ -43,3 +43,36 @@ export interface ContractIntent {
   destinationChainId: number;
   filledStatus: number;
 }
+
+export type IPermitParams = {
+  owner: string
+  spender: string
+  value: bigint
+  deadline: bigint
+  v: number
+  r: string
+  s: string
+}
+
+export type IBridgeWithPermitParams = {
+  sender: `0x${string}`;
+  receiver: `0x${string}`;
+  relayer: `0x${string}`;
+  inputToken: `0x${string}`;
+  outputToken: `0x${string}`;
+  inputAmount: bigint;
+  outputAmount: bigint;
+  destinationChainId: number;
+  signature: `0x${string}`;
+}
+
+export type IBridgeSignaturePayload = {
+  permitParams: IPermitParams;
+  bridgeParams: IBridgeWithPermitParams;
+  sourceChainId: number;
+  targetChainId: number;
+  sourceToken: `0x${string}`;
+  targetToken: `0x${string}`;
+  sourceAmount: bigint;
+  targetAmount: bigint;
+};

@@ -12,6 +12,15 @@ export const getRpcUrlByChainId = (chainId: number): string => {
   return network.rpcUrl;
 };
 
+export const getTokenBridgeContract = (chainId: number) => {
+  const network = networks.find((network) => network.chainId === chainId);
+
+  if (!network) {
+    throw new Error(`Network with chainId ${chainId} not found`);
+  }
+  return network.bridgeContract;
+}
+
 export const fetchTokenDecimals = async (tokenAddress: `0x${string}`, chainId: number) => {
   try {
     const publicClient = publicClients.find((client) => client.chainId === chainId);
@@ -53,6 +62,8 @@ export const fetchTokenSymbol = async (tokenAddress: `0x${string}`, chainId: num
     throw new Error("Unable to fetch token symbol");
   }
 };
+
+
 
 export const feeSchema: FeeSchema = feeSchemaData;
 export const aggregator = feeSchema.aggregator;
