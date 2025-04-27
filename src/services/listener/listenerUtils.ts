@@ -130,6 +130,7 @@ export const handleFulfillIntentFhenix = async (
   const { publicKey, privateKey } = zamaClient.generateKeypair();
   const eip712 = zamaClient.createEIP712(publicKey, bridgeContract);
   const signature = await walletClientSource.signTypedData({
+    // @ts-expect-error string is actually 0xstring
     domain: eip712.domain,
     types: { Reencrypt: eip712.types.Reencrypt },
     message: eip712.message,
