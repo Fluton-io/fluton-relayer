@@ -2,7 +2,7 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   // sepolia -> mainnet
 
   // usdc
-  "0x2831d2b6b7bd5Ca9E2EEe932055a91f5a6cEBe2f": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   // usdt
   "0x9F1210757915bf7aEE3B5D82F99dac70828Bad77": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
   // uni
@@ -11,6 +11,8 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
   // union -> link
   "0xb5abDd56564d96708d9E7903500CfbD68D08bd4f": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+  // cUsdc
+  "0x674C2920aAfb17400101247dFc475902a40637b1": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
 
   // arbitrum sepolia -> arbitrum mainnet
 
@@ -24,6 +26,11 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   "0x31BB6bC0E8E79eF3F6C983CB145BA7677A98284F": "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0",
   // union -> link
   "0xb23EF3bd650B0FfA3DD46d29b96944BD362E6B7e": "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
+
+  // fhenix -> mainnet
+
+  // usdc
+  "0xf9B226035180AB9E3C7ec155332d79B74c9ED6D5": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
 };
 
 export default testnetToMainnetToken;
