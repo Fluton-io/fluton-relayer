@@ -1,4 +1,4 @@
-import { createPublicClient, createWalletClient, http } from "viem";
+import { createPublicClient, createWalletClient, http, webSocket } from "viem";
 import {
   arbitrum,
   arbitrumSepolia,
@@ -9,6 +9,15 @@ import {
   scrollSepolia,
   sepolia,
 } from "viem/chains";
+import { createInstance as createFhevmInstance, FhevmInstance } from "fhevmjs/node";
+import { fhenixNitrogen } from "./custom-chains";
+import { INFURA_API_KEY, PRIVATE_KEY } from "./env";
+import networks from "./networks";
+import { GATEWAY_URL } from "./constants";
+import { FhenixClient } from "fhenixjs";
+import { privateKeyToAccount } from "viem/accounts";
+
+export const account = privateKeyToAccount(PRIVATE_KEY as `0x${string}`);
 
 //public clients
 
@@ -54,6 +63,11 @@ export const scrollSepoliaPublicClient = createPublicClient({
   transport: http(),
 });
 
+export const fhenixNitrogenPublicClient = createPublicClient({
+  chain: fhenixNitrogen,
+  transport: http(),
+});
+
 export const publicClients = [
   { client: mainnetPublicClient, chainId: 1 },
   { client: arbitrumPublicClient, chainId: 42161 },
@@ -63,6 +77,7 @@ export const publicClients = [
   { client: arbitrumSepoliaPublicClient, chainId: 421614 },
   { client: optimismSepoliaPublicClient, chainId: 11155420 },
   { client: scrollSepoliaPublicClient, chainId: 534351 },
+  { client: fhenixNitrogenPublicClient, chainId: 8008148 },
 ];
 
 //wallet clients
@@ -71,42 +86,56 @@ export const publicClients = [
 export const mainnetWalletClient = createWalletClient({
   chain: mainnet,
   transport: http(),
+  account,
 });
 
 export const arbitrumWalletClient = createWalletClient({
   chain: arbitrum,
   transport: http(),
+  account,
 });
 
 export const optimismWalletClient = createWalletClient({
   chain: optimism,
   transport: http(),
+  account,
 });
 
 export const scrollWalletClient = createWalletClient({
   chain: scroll,
   transport: http(),
+  account,
 });
 
 //testnets
 export const sepoliaWalletClient = createWalletClient({
   chain: sepolia,
   transport: http(),
+  account,
 });
 
 export const arbitrumSepoliaWalletClient = createWalletClient({
   chain: arbitrumSepolia,
   transport: http(),
+  account,
 });
 
 export const optimismSepoliaWalletClient = createWalletClient({
   chain: optimismSepolia,
   transport: http(),
+  account,
 });
 
 export const scrollSepoliaWalletClient = createWalletClient({
   chain: scrollSepolia,
   transport: http(),
+  account,
+});
+
+export const fhenixNitrogenWalletClient = createWalletClient({
+  chain: fhenixNitrogen,
+  transport: http(),
+  account,
 });
 
 export const walletClients = [
@@ -118,4 +147,45 @@ export const walletClients = [
   { client: arbitrumSepoliaWalletClient, chainId: 421614 },
   { client: optimismSepoliaWalletClient, chainId: 11155420 },
   { client: scrollSepoliaWalletClient, chainId: 534351 },
+  { client: fhenixNitrogenWalletClient, chainId: 8008148 },
 ];
+
+// websocket clients
+
+//testnets
+export const sepoliaWsClient = createPublicClient({
+  chain: mainnet,
+  transport: webSocket(`wss://sepolia.infura.io/ws/v3/${INFURA_API_KEY}`),
+});
+
+export const fhenixNitrogenWsClient = createPublicClient({
+  chain: fhenixNitrogen,
+  transport: webSocket("wss://api.nitrogen.fhenix.zone:8548"),
+});
+
+export const websocketClients = [
+  { client: sepoliaWsClient, chainId: 11155111 },
+  { client: fhenixNitrogenWsClient, chainId: 8008148 },
+];
+
+// fhevm clients
+
+let zamaClient: FhevmInstance | null = null;
+
+export const getZamaClient = async () => {
+  if (!zamaClient) {
+    const network = networks.find((network) => network.chainId === sepolia.id)!;
+    zamaClient = await createFhevmInstance({
+      kmsContractAddress: network.KMSVERIFIER!,
+      aclContractAddress: network.ACL!,
+      networkUrl: process.env.SEPOLIA_RPC_URL!,
+      gatewayUrl: GATEWAY_URL,
+    });
+  }
+
+  return zamaClient;
+};
+
+getZamaClient();
+
+export const fhenixClient = new FhenixClient({ provider: fhenixNitrogenWalletClient.transport });
