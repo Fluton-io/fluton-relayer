@@ -176,8 +176,8 @@ export const getZamaClient = async () => {
   if (!zamaClient) {
     const network = networks.find((network) => network.chainId === sepolia.id)!;
     zamaClient = await createFhevmInstance({
-      kmsContractAddress: network.KMSVERIFIER!,
-      aclContractAddress: network.ACL!,
+      kmsContractAddress: network.contracts.KMSVERIFIER,
+      aclContractAddress: network.contracts.ACL!,
       networkUrl: process.env.SEPOLIA_RPC_URL!,
       gatewayUrl: GATEWAY_URL,
     });

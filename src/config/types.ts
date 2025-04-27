@@ -7,6 +7,21 @@ export interface TokenDetails {
   balance: number;
 }
 
+export interface INetwork {
+  name: string;
+  chainId: number;
+  rpcUrl: string;
+  wsUrl?: string;
+  explorer: {
+    name: string;
+    apiKey: string | null;
+    url: string;
+  };
+  contracts: {
+    [contractName: string]: `0x${string}`;
+  };
+}
+
 export interface TargetNetworkDetails {
   [tokenAddress: `0x${string}`]: TokenDetails;
 }

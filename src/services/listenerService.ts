@@ -12,29 +12,33 @@ export const listenBridgeEvents = () => {
   const unwatchList: (() => void)[] = websocketClients.map(({ client, chainId }) => {
     const network = networks.find((network) => network.chainId === chainId);
 
-    if (network && network.bridgeContract) {
-      console.log(`Listening for events on chainId: ${chainId}, contract: ${network.bridgeContract}`);
+    if (network && network.contracts.bridgeContract) {
+      console.log(`Listening for events on chainId: ${chainId}, contract: ${network.contracts.bridgeContract}`);
 
       client.watchContractEvent({
-        address: network.bridgeContract as `0x${string}`,
+        address: network.contracts.bridgeContract as `0x${string}`,
         abi: BridgeABI,
         eventName: "IntentCreated",
         onLogs: (logs) => {
           if (logs[0].args.intent!.relayer === walletAddress) {
-            handleFulfillIntent(logs[0].args.intent!, network.bridgeContract as `0x${string}`, client as PublicClient);
+            handleFulfillIntent(
+              logs[0].args.intent!,
+              network.contracts.bridgeContract as `0x${string}`,
+              client as PublicClient
+            );
           }
         },
       });
     }
 
     // confidential bridge contract
-    if (network && network.fheBridgeContract) {
-      console.log(`Listening for events on chainId: ${chainId}, contract: ${network.fheBridgeContract}`);
+    if (network && network.contracts.fheBridgeContract) {
+      console.log(`Listening for events on chainId: ${chainId}, contract: ${network.contracts.fheBridgeContract}`);
 
       if (network.chainId === fhenixNitrogen.id) {
         // fhenix co-processor
         client.watchContractEvent({
-          address: network.fheBridgeContract as `0x${string}`,
+          address: network.contracts.fheBridgeContract as `0x${string}`,
           abi: fhenixFheBridgeABI,
           eventName: "IntentCreated",
           onLogs: (logs) => {
@@ -42,7 +46,7 @@ export const listenBridgeEvents = () => {
             if (intent?.relayer === walletAddress) {
               handleFulfillIntentZama(
                 intent,
-                network.fheBridgeContract as `0x${string}`,
+                network.contracts.fheBridgeContract as `0x${string}`,
                 client as PublicClient,
                 inputAmountSealed!,
                 outputAmountSealed!
@@ -53,13 +57,17 @@ export const listenBridgeEvents = () => {
       } else {
         // zama co-processor
         client.watchContractEvent({
-          address: network.fheBridgeContract as `0x${string}`,
+          address: network.contracts.fheBridgeContract as `0x${string}`,
           abi: zamaFheBridgeABI,
           eventName: "IntentCreated",
           onLogs: (logs) => {
             const { intent } = logs[0].args;
             if (intent?.relayer === walletAddress) {
-              handleFulfillIntentFhenix(intent, network.fheBridgeContract as `0x${string}`, client as PublicClient);
+              handleFulfillIntentFhenix(
+                intent,
+                network.contracts.fheBridgeContract as `0x${string}`,
+                client as PublicClient
+              );
             }
           },
         });

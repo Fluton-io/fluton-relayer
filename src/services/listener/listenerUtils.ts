@@ -69,7 +69,8 @@ export const handleFulfillIntentZama = async (
   console.log("Clear Amount", clearAmount);
 
   const zamaClient = await getZamaClient();
-  const zamaBridgeContractAddress = networks.find((n) => n.chainId === sepolia.id)!.fheBridgeContract as `0x${string}`;
+  const zamaBridgeContractAddress = networks.find((n) => n.chainId === sepolia.id)!.contracts
+    .fheBridgeContract as `0x${string}`;
 
   const einput = zamaClient.createEncryptedInput(zamaBridgeContractAddress, walletAddress);
   const encrypted = await einput.add64(clearAmount).encrypt();
@@ -150,7 +151,7 @@ export const handleFulfillIntentFhenix = async (
   const encryptedAmount = await fhenixClient.encrypt_uint64(BigInt(readableAmount));
   console.log("Encrypted Amount", encryptedAmount);
 
-  const fhenixBridgeContractAddress = networks.find((n) => n.chainId === fhenixNitrogen.id)!
+  const fhenixBridgeContractAddress = networks.find((n) => n.chainId === fhenixNitrogen.id)!.contracts
     .fheBridgeContract as `0x${string}`;
 
   const intentArgs = {
