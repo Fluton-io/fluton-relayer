@@ -69,6 +69,17 @@ export const handleGiveOffers = async (
   }
 
   try {
+    // if the intent is encrypted, evaluate it
+    if (!intent.amount) {
+      callback({
+        status: "ok",
+        walletAddress,
+        baseFee: schemaForTargetChain[targetTokenAddressMainnet].baseFee,
+        percentageFee: schemaForTargetChain[targetTokenAddressMainnet].percentageFee,
+      });
+      return;
+    }
+
     const sourceTokenPrice = (await getPrice(+sourceChainIdMainnet, sourceTokenAddressMainnet))[
       sourceTokenAddressMainnet
     ];
@@ -87,8 +98,10 @@ export const handleGiveOffers = async (
     const relayerTargetTokenValue = relayerTargetTokenPrice * Number(relayerTargetToken.balance);
     console.log("relayer target token value:", relayerTargetTokenValue);
     let result;
+
     if (relayerTargetToken && relayerTargetTokenValue >= Number(sourceAmountInUSD)) {
       // if relayer has enough target token, calculate the target amount
+      // targetAmount = sourceAmountInUsd / relayerTargetTokenPrice - fee
       const { baseFee, percentageFee } = relayerTargetToken;
       const targetTokenTransferAmount = sourceAmountInUSD / relayerTargetTokenPrice;
       console.log("targetTokenTransferAmount:", targetTokenTransferAmount);
