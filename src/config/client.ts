@@ -154,7 +154,7 @@ export const walletClients = [
 
 //testnets
 export const sepoliaWsClient = createPublicClient({
-  chain: mainnet,
+  chain: sepolia,
   transport: webSocket(`wss://sepolia.infura.io/ws/v3/${INFURA_API_KEY}`),
 });
 

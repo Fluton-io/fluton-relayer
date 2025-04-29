@@ -4,7 +4,7 @@ import zamaFheBridgeABI from "../../config/abi/zamaFheBridgeABI";
 import fhenixFheBridgeABI from "../../config/abi/fhenixFheBridgeABI";
 import { PublicClient } from "viem";
 import { walletAddress as account } from "../../config/env";
-import { fhenixClient, getZamaClient, publicClients, walletClients } from "../../config/client";
+import { fhenixClient, getZamaClient, walletClients } from "../../config/client";
 import networks from "../../config/networks";
 import { sepolia } from "viem/chains";
 import { fhenixNitrogen } from "../../config/custom-chains";
@@ -53,8 +53,6 @@ export const handleFulfillIntent = async (
 export const handleFulfillIntentZama = async (
   intent: ContractIntent,
   bridgeContract: `0x${string}`,
-  publicClient: PublicClient,
-  inputAmountSealed: string,
   outputAmountSealed: string
 ) => {
   console.log("This intent is mine:", intent);
@@ -62,7 +60,6 @@ export const handleFulfillIntentZama = async (
 
   const walletClient = walletClients.find((wc) => wc.chainId === intent.destinationChainId)!.client;
   const walletAddress = walletClient.account.address;
-  const publicClientDest = publicClients.find((pc) => pc.chainId === intent.destinationChainId)!.client;
 
   const clearAmount = fhenixClient.unseal(bridgeContract, outputAmountSealed, walletAddress);
 
@@ -88,7 +85,13 @@ export const handleFulfillIntentZama = async (
     filledStatus: intent.filledStatus,
   };
   try {
-    const { request } = await (publicClientDest as PublicClient).simulateContract({
+    const walletClientDest = walletClients.find((wc) => wc.chainId === intent.destinationChainId)?.client;
+
+    if (!walletClientDest) {
+      throw new Error(`Wallet client for chainId ${intent.destinationChainId} not found`);
+    }
+
+    await walletClientDest.writeContract({
       address: zamaBridgeContractAddress,
       abi: zamaFheBridgeABI,
       functionName: "fulfill",
@@ -97,33 +100,19 @@ export const handleFulfillIntentZama = async (
         `0x${Buffer.from(encrypted.handles[0]).toString("hex")}`,
         `0x${Buffer.from(encrypted.inputProof).toString("hex")}`,
       ],
-      account,
     });
-
-    const walletClient = walletClients.find((wc) => wc.chainId === intent.destinationChainId)?.client;
-
-    if (!walletClient) {
-      throw new Error(`Wallet client for chainId ${intent.destinationChainId} not found`);
-    }
-
-    await walletClient.writeContract(request);
   } catch (error) {
     console.error("Error when fulfilling intent:", error);
   }
 };
 
-export const handleFulfillIntentFhenix = async (
-  intent: ContractIntent,
-  bridgeContract: `0x${string}`,
-  publicClient: PublicClient
-) => {
+export const handleFulfillIntentFhenix = async (intent: ContractIntent, bridgeContract: `0x${string}`) => {
   console.log("This intent is mine:", intent);
   console.log("Bridge contract is:", bridgeContract);
 
   const walletClientSource = walletClients.find((wc) => wc.chainId === intent.originChainId)!.client;
   const walletClientDest = walletClients.find((wc) => wc.chainId === intent.destinationChainId)!.client;
   const walletAddress = walletClientSource.account.address;
-  const publicClientDest = publicClients.find((pc) => pc.chainId === intent.destinationChainId)!.client;
 
   const zamaClient = await getZamaClient();
 

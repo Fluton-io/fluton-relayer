@@ -47,8 +47,6 @@ export const listenBridgeEvents = () => {
               handleFulfillIntentZama(
                 intent,
                 network.contracts.fheBridgeContract as `0x${string}`,
-                client as PublicClient,
-                inputAmountSealed!,
                 outputAmountSealed!
               );
             }
@@ -63,11 +61,7 @@ export const listenBridgeEvents = () => {
           onLogs: (logs) => {
             const { intent } = logs[0].args;
             if (intent?.relayer === walletAddress) {
-              handleFulfillIntentFhenix(
-                intent,
-                network.contracts.fheBridgeContract as `0x${string}`,
-                client as PublicClient
-              );
+              handleFulfillIntentFhenix(intent, network.contracts.fheBridgeContract as `0x${string}`);
             }
           },
         });
