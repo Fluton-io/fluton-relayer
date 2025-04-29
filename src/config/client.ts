@@ -11,7 +11,7 @@ import {
 } from "viem/chains";
 import { createInstance as createFhevmInstance, FhevmInstance } from "fhevmjs/node";
 import { fhenixNitrogen } from "./custom-chains";
-import { INFURA_API_KEY, PRIVATE_KEY } from "./env";
+import { INFURA_API_KEY, PRIVATE_KEY, SEPOLIA_RPC_URL } from "./env";
 import networks from "./networks";
 import { GATEWAY_URL } from "./constants";
 import { FhenixClient } from "fhenixjs";
@@ -178,7 +178,7 @@ export const getZamaClient = async () => {
     zamaClient = await createFhevmInstance({
       kmsContractAddress: network.contracts.KMSVERIFIER,
       aclContractAddress: network.contracts.ACL!,
-      networkUrl: process.env.SEPOLIA_RPC_URL!,
+      networkUrl: SEPOLIA_RPC_URL!,
       gatewayUrl: GATEWAY_URL,
     });
   }
