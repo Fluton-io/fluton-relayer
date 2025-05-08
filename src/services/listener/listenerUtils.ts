@@ -162,12 +162,13 @@ export const handleFulfillIntentFhenix = async (intent: ContractIntent, bridgeCo
       throw new Error(`Wallet client for chainId ${intent.destinationChainId} not found`);
     }
 
-    await walletClientDest.writeContract({
+    const tx = await walletClientDest.writeContract({
       address: fhenixBridgeContractAddress,
       abi: fhenixFheBridgeABI,
       functionName: "fulfill",
       args: [intentArgs, { ...encryptedAmount, data: `0x${Buffer.from(encryptedAmount.data).toString("hex")}` }],
     });
+    console.log("Transaction sent, hash:", tx);
   } catch (error) {
     console.error("Error when fulfilling intent:", error);
   }

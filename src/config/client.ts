@@ -11,7 +11,7 @@ import {
 } from "viem/chains";
 import { createInstance as createFhevmInstance, FhevmInstance } from "fhevmjs/node";
 import { fhenixNitrogen } from "./custom-chains";
-import { INFURA_API_KEY, PRIVATE_KEY, SEPOLIA_RPC_URL } from "./env";
+import { INFURA_API_KEY, PRIVATE_KEY, SEPOLIA_RPC_URL, SEPOLIA_WS_URL } from "./env";
 import networks from "./networks";
 import { GATEWAY_URL } from "./constants";
 import { FhenixClient } from "fhenixjs";
@@ -155,7 +155,7 @@ export const walletClients = [
 //testnets
 export const sepoliaWsClient = createPublicClient({
   chain: sepolia,
-  transport: webSocket(`wss://sepolia.infura.io/ws/v3/${INFURA_API_KEY}`),
+  transport: webSocket(SEPOLIA_WS_URL),
 });
 
 export const fhenixNitrogenWsClient = createPublicClient({

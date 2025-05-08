@@ -28,6 +28,9 @@ export const listenBridgeEvents = () => {
             );
           }
         },
+        onError(error) {
+          console.error("Error watching event:", error);
+        },
       });
     }
 
@@ -51,6 +54,9 @@ export const listenBridgeEvents = () => {
               );
             }
           },
+          onError(error) {
+            console.error("Error watching event:", error);
+          },
         });
       } else {
         // zama co-processor
@@ -63,6 +69,9 @@ export const listenBridgeEvents = () => {
             if (intent?.relayer === walletAddress) {
               handleFulfillIntentFhenix(intent, network.contracts.fheBridgeContract as `0x${string}`);
             }
+          },
+          onError(error) {
+            console.error("Error watching event:", error);
           },
         });
       }
