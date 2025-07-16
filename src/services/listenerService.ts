@@ -6,7 +6,7 @@ import { websocketClients } from "../config/client";
 import { walletAddress } from "../config/env";
 import { handleFulfillIntent, handleFulfillIntentFhenix, handleFulfillIntentZama } from "./listener/listenerUtils";
 import { PublicClient } from "viem";
-import { fhenixNitrogen } from "../config/custom-chains";
+import { arbitrumSepolia } from "viem/chains";
 
 export const listenBridgeEvents = () => {
   const unwatchList: (() => void)[] = websocketClients.map(({ client, chainId }) => {
@@ -20,12 +20,9 @@ export const listenBridgeEvents = () => {
         abi: BridgeABI,
         eventName: "IntentCreated",
         onLogs: (logs) => {
-          if (logs[0].args.intent!.relayer === walletAddress) {
-            handleFulfillIntent(
-              logs[0].args.intent!,
-              network.contracts.bridgeContract as `0x${string}`,
-              client as PublicClient
-            );
+          const { intent } = logs[0].args;
+          if (intent?.relayer === walletAddress) {
+            handleFulfillIntent(intent!);
           }
         },
         onError(error) {
@@ -38,7 +35,7 @@ export const listenBridgeEvents = () => {
     if (network && network.contracts.fheBridgeContract) {
       console.log(`Listening for events on chainId: ${chainId}, contract: ${network.contracts.fheBridgeContract}`);
 
-      if (network.chainId === fhenixNitrogen.id) {
+      if (network.chainId === arbitrumSepolia.id) {
         // fhenix co-processor
         client.watchContractEvent({
           address: network.contracts.fheBridgeContract as `0x${string}`,
@@ -47,11 +44,7 @@ export const listenBridgeEvents = () => {
           onLogs: (logs) => {
             const { intent, inputAmountSealed, outputAmountSealed } = logs[0].args;
             if (intent?.relayer === walletAddress) {
-              handleFulfillIntentZama(
-                intent,
-                network.contracts.fheBridgeContract as `0x${string}`,
-                outputAmountSealed!
-              );
+              handleFulfillIntentZama(intent, outputAmountSealed!);
             }
           },
           onError(error) {

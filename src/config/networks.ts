@@ -90,7 +90,7 @@ const testnets: INetwork[] = [
     },
     contracts: {
       bridgeContract: "0x9f1210757915bf7aee3b5d82f99dac70828bad77",
-      fheBridgeContract: "0x",
+      fheBridgeContract: "0xc7a4526022b9b2E1Ccf1183d3F4d84cFABa4C9E0",
     },
   },
   {

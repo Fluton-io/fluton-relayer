@@ -9,12 +9,10 @@ import {
   scrollSepolia,
   sepolia,
 } from "viem/chains";
-import { createInstance as createFhevmInstance, FhevmInstance } from "fhevmjs/node";
+import { createInstance, FhevmInstance, SepoliaConfig } from "@zama-fhe/relayer-sdk";
 import { fhenixNitrogen } from "./custom-chains";
-import { INFURA_API_KEY, PRIVATE_KEY, SEPOLIA_RPC_URL, SEPOLIA_WS_URL } from "./env";
-import networks from "./networks";
-import { GATEWAY_URL } from "./constants";
-import { FhenixClient } from "fhenixjs";
+import { PRIVATE_KEY, SEPOLIA_RPC_URL, SEPOLIA_WS_URL, ARBITRUM_SEPOLIA_WS_URL } from "./env";
+import { cofhejs, Encryptable } from "cofhejs/dist/node";
 import { privateKeyToAccount } from "viem/accounts";
 
 export const account = privateKeyToAccount(PRIVATE_KEY as `0x${string}`);
@@ -158,29 +156,29 @@ export const sepoliaWsClient = createPublicClient({
   transport: webSocket(SEPOLIA_WS_URL),
 });
 
-export const fhenixNitrogenWsClient = createPublicClient({
+export const arbitrumSepoliaWsClient = createPublicClient({
+  chain: arbitrumSepolia,
+  transport: webSocket(ARBITRUM_SEPOLIA_WS_URL),
+});
+
+/* export const fhenixNitrogenWsClient = createPublicClient({
   chain: fhenixNitrogen,
   transport: webSocket("wss://api.nitrogen.fhenix.zone:8548"),
-});
+}); */
 
 export const websocketClients = [
   { client: sepoliaWsClient, chainId: 11155111 },
-  { client: fhenixNitrogenWsClient, chainId: 8008148 },
+  { client: arbitrumSepoliaWsClient, chainId: 421614 },
+  /* { client: fhenixNitrogenWsClient, chainId: 8008148 }, */
 ];
 
 // fhevm clients
 
 let zamaClient: FhevmInstance | null = null;
 
-export const getZamaClient = async () => {
+export const getZamaClient = async (): Promise<FhevmInstance> => {
   if (!zamaClient) {
-    const network = networks.find((network) => network.chainId === sepolia.id)!;
-    zamaClient = await createFhevmInstance({
-      kmsContractAddress: network.contracts.KMSVERIFIER,
-      aclContractAddress: network.contracts.ACL!,
-      networkUrl: SEPOLIA_RPC_URL!,
-      gatewayUrl: GATEWAY_URL,
-    });
+    zamaClient = await createInstance(SepoliaConfig);
   }
 
   return zamaClient;
@@ -188,4 +186,15 @@ export const getZamaClient = async () => {
 
 getZamaClient();
 
-export const fhenixClient = new FhenixClient({ provider: fhenixNitrogenWalletClient.transport });
+// fhenix
+const initializeFhenixCofhejs = async () => {
+  await cofhejs.initializeWithViem({
+    viemClient: arbitrumSepoliaWalletClient,
+    viemWalletClient: arbitrumSepoliaWalletClient,
+    environment: "TESTNET",
+  });
+};
+
+initializeFhenixCofhejs().catch((error) => {
+  console.error("Error initializing Fhenix Cofhejs:", error);
+});

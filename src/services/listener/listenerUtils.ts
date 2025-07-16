@@ -2,20 +2,14 @@ import { ContractIntent } from "../../config/types";
 import BridgeABI from "../../config/abi/bridgeABI";
 import zamaFheBridgeABI from "../../config/abi/zamaFheBridgeABI";
 import fhenixFheBridgeABI from "../../config/abi/fhenixFheBridgeABI";
-import { PublicClient } from "viem";
-import { walletAddress as account } from "../../config/env";
-import { fhenixClient, getZamaClient, walletClients } from "../../config/client";
+import { getZamaClient, walletClients } from "../../config/client";
+import { cofhejs, FheTypes } from "cofhejs/dist/node";
 import networks from "../../config/networks";
 import { sepolia } from "viem/chains";
 import { fhenixNitrogen } from "../../config/custom-chains";
 
-export const handleFulfillIntent = async (
-  intent: ContractIntent,
-  bridgeContract: `0x${string}`,
-  publicClient: PublicClient
-) => {
+export const handleFulfillIntent = async (intent: ContractIntent) => {
   console.log("This intent is mine:", intent);
-  console.log("Bridge contract is:", bridgeContract);
   const intentArgs = {
     sender: intent.sender,
     receiver: intent.receiver,
@@ -30,47 +24,51 @@ export const handleFulfillIntent = async (
     filledStatus: intent.filledStatus,
   };
   try {
-    const { request } = await (publicClient as PublicClient).simulateContract({
-      address: bridgeContract,
-      abi: BridgeABI,
-      functionName: "fulfill",
-      args: [intentArgs],
-      account,
-    });
+    const bridgeContractDest = networks.find((n) => n.chainId === intent.destinationChainId)?.contracts
+      .bridgeContract as `0x${string}`;
+    if (!bridgeContractDest) {
+      throw new Error(`Bridge contract for chainId ${intent.destinationChainId} not found`);
+    }
+    console.log("Bridge contract is:", bridgeContractDest);
 
-    const walletClient = walletClients.find((wc) => wc.chainId === intent.destinationChainId)?.client;
-
-    if (!walletClient) {
+    const walletClientDest = walletClients.find((wc) => wc.chainId === intent.destinationChainId)?.client;
+    if (!walletClientDest) {
       throw new Error(`Wallet client for chainId ${intent.destinationChainId} not found`);
     }
 
-    await walletClient.writeContract(request);
+    await walletClientDest.writeContract({
+      address: bridgeContractDest,
+      abi: BridgeABI,
+      functionName: "fulfill",
+      args: [intentArgs],
+    });
   } catch (error) {
     console.error("Error when fulfilling intent:", error);
   }
 };
 
-export const handleFulfillIntentZama = async (
-  intent: ContractIntent,
-  bridgeContract: `0x${string}`,
-  outputAmountSealed: string
-) => {
+export const handleFulfillIntentZama = async (intent: ContractIntent, outputAmountSealed: string) => {
   console.log("This intent is mine:", intent);
-  console.log("Bridge contract is:", bridgeContract);
 
-  const walletClient = walletClients.find((wc) => wc.chainId === intent.destinationChainId)!.client;
+  const walletClient = walletClients.find((wc) => wc.chainId === intent.destinationChainId)?.client;
+  if (!walletClient) {
+    throw new Error(`Wallet client for chainId ${intent.destinationChainId} not found`);
+  }
   const walletAddress = walletClient.account.address;
 
-  const clearAmount = fhenixClient.unseal(bridgeContract, outputAmountSealed, walletAddress);
+  const clearAmountResult = await cofhejs.unseal(BigInt(outputAmountSealed), FheTypes.Uint64);
+  if (!clearAmountResult.success) {
+    throw new Error("Failed to unseal the output amount");
+  }
 
-  console.log("Clear Amount", clearAmount);
+  console.log("Clear Amount", clearAmountResult.data);
 
   const zamaClient = await getZamaClient();
   const zamaBridgeContractAddress = networks.find((n) => n.chainId === sepolia.id)!.contracts
     .fheBridgeContract as `0x${string}`;
 
-  const einput = zamaClient.createEncryptedInput(zamaBridgeContractAddress, walletAddress);
-  const encrypted = await einput.add64(clearAmount).encrypt();
+  const buffer = zamaClient.createEncryptedInput(zamaBridgeContractAddress, walletAddress);
+  const encrypted = await buffer.add64(clearAmountResult.data).encrypt();
   const intentArgs = {
     sender: intent.sender,
     receiver: intent.receiver,
@@ -106,33 +104,46 @@ export const handleFulfillIntentZama = async (
   }
 };
 
-export const handleFulfillIntentFhenix = async (intent: ContractIntent, bridgeContract: `0x${string}`) => {
+export const handleFulfillIntentFhenix = async (intent: ContractIntent) => {
   console.log("This intent is mine:", intent);
-  console.log("Bridge contract is:", bridgeContract);
 
   const walletClientSource = walletClients.find((wc) => wc.chainId === intent.originChainId)!.client;
   const walletClientDest = walletClients.find((wc) => wc.chainId === intent.destinationChainId)!.client;
+  const bridgeContractSrc = networks.find((n) => n.chainId === intent.originChainId)?.contracts
+    .fheBridgeContract as `0x${string}`;
   const walletAddress = walletClientSource.account.address;
 
   const zamaClient = await getZamaClient();
 
   const { publicKey, privateKey } = zamaClient.generateKeypair();
-  const eip712 = zamaClient.createEIP712(publicKey, bridgeContract);
+  const handleContractPairs = [
+    {
+      handle: intent.outputAmount.toString(),
+      contractAddress: bridgeContractSrc,
+    },
+  ];
+  const contractAddresses = [bridgeContractSrc];
+  const startTimeStamp = Math.floor(Date.now() / 1000).toString();
+  const durationDays = "10"; // String for consistency
+  const eip712 = zamaClient.createEIP712(publicKey, contractAddresses, startTimeStamp, durationDays);
+
   const signature = await walletClientSource.signTypedData({
     // @ts-expect-error string is actually 0xstring
     domain: eip712.domain,
-    types: { Reencrypt: eip712.types.Reencrypt },
+    types: { UserDecryptRequestVerification: eip712.types.UserDecryptRequestVerification },
     message: eip712.message,
-    primaryType: "Reencrypt",
+    primaryType: "UserDecryptRequestVerification",
   });
 
-  const userDecryptedAmount = await zamaClient.reencrypt(
-    intent.outputAmount,
+  const userDecryptedAmount = await zamaClient.userDecrypt(
+    handleContractPairs,
     privateKey,
     publicKey,
-    signature,
-    bridgeContract,
-    walletAddress
+    signature.replace("0x", ""),
+    contractAddresses,
+    walletAddress,
+    startTimeStamp,
+    durationDays
   );
 
   const readableAmount = userDecryptedAmount.toString();

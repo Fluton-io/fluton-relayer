@@ -20,14 +20,15 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
+    "@zama-fhe/relayer-sdk": "^0.1.0",
     "axios": "^1.7.7",
+    "cofhejs": "^0.3.0",
     "dotenv": "^16.4.5",
     "ethers": "^6.13.4",
     "express": "^4.21.1",
-    "fhenixjs": "^0.4.1",
-    "fhevmjs": "^0.6.2",
     "prompt-sync": "^4.2.0",
     "socket.io-client": "^4.8.0",
     "viem": "^2.21.32"
-  }
+  },
+  "packageManager": "yarn@4.9.2"
 }
