@@ -1,12 +1,10 @@
 import { ContractIntent } from "../../config/types";
 import BridgeABI from "../../config/abi/bridgeABI";
 import zamaFheBridgeABI from "../../config/abi/zamaFheBridgeABI";
-import fhenixFheBridgeABI from "../../config/abi/fhenixFheBridgeABI";
 import { getZamaClient, walletClients } from "../../config/client";
-import { cofhejs, FheTypes } from "cofhejs/dist/node";
+import { cofhejs, FheTypes } from "cofhejs/node";
 import networks from "../../config/networks";
 import { sepolia } from "viem/chains";
-import { fhenixNitrogen } from "../../config/custom-chains";
 
 export const handleFulfillIntent = async (intent: ContractIntent) => {
   console.log("This intent is mine:", intent);
@@ -75,8 +73,8 @@ export const handleFulfillIntentZama = async (intent: ContractIntent, outputAmou
     relayer: intent.relayer,
     inputToken: intent.inputToken,
     outputToken: intent.outputToken,
-    inputAmount: BigInt(0),
-    outputAmount: BigInt(0),
+    inputAmount: BigInt(0).toString(16) as `0x${string}`,
+    outputAmount: BigInt(0).toString(16) as `0x${string}`,
     id: intent.id,
     originChainId: intent.originChainId,
     destinationChainId: intent.destinationChainId,
@@ -93,11 +91,7 @@ export const handleFulfillIntentZama = async (intent: ContractIntent, outputAmou
       address: zamaBridgeContractAddress,
       abi: zamaFheBridgeABI,
       functionName: "fulfill",
-      args: [
-        intentArgs,
-        `0x${Buffer.from(encrypted.handles[0]).toString("hex")}`,
-        `0x${Buffer.from(encrypted.inputProof).toString("hex")}`,
-      ],
+      args: [intentArgs],
     });
   } catch (error) {
     console.error("Error when fulfilling intent:", error);
@@ -116,9 +110,10 @@ export const handleFulfillIntentFhenix = async (intent: ContractIntent) => {
   const zamaClient = await getZamaClient();
 
   const { publicKey, privateKey } = zamaClient.generateKeypair();
+  const outputAmountHex = "0x" + intent.outputAmount.toString(16);
   const handleContractPairs = [
     {
-      handle: intent.outputAmount.toString(),
+      handle: outputAmountHex,
       contractAddress: bridgeContractSrc,
     },
   ];
@@ -128,14 +123,13 @@ export const handleFulfillIntentFhenix = async (intent: ContractIntent) => {
   const eip712 = zamaClient.createEIP712(publicKey, contractAddresses, startTimeStamp, durationDays);
 
   const signature = await walletClientSource.signTypedData({
-    // @ts-expect-error string is actually 0xstring
     domain: eip712.domain,
     types: { UserDecryptRequestVerification: eip712.types.UserDecryptRequestVerification },
     message: eip712.message,
     primaryType: "UserDecryptRequestVerification",
   });
 
-  const userDecryptedAmount = await zamaClient.userDecrypt(
+  const userDecryptedAmountResult = await zamaClient.userDecrypt(
     handleContractPairs,
     privateKey,
     publicKey,
@@ -146,10 +140,12 @@ export const handleFulfillIntentFhenix = async (intent: ContractIntent) => {
     durationDays
   );
 
-  const readableAmount = userDecryptedAmount.toString();
+  const readableAmount = userDecryptedAmountResult[outputAmountHex];
+  console.log(userDecryptedAmountResult);
+  console.dir(userDecryptedAmountResult);
   console.log("Clear Amount", readableAmount);
 
-  const encryptedAmount = await fhenixClient.encrypt_uint64(BigInt(readableAmount));
+  /*   const encryptedAmount = await fhenixClient.encrypt_uint64(BigInt(readableAmount));
   console.log("Encrypted Amount", encryptedAmount);
 
   const fhenixBridgeContractAddress = networks.find((n) => n.chainId === fhenixNitrogen.id)!.contracts
@@ -182,5 +178,5 @@ export const handleFulfillIntentFhenix = async (intent: ContractIntent) => {
     console.log("Transaction sent, hash:", tx);
   } catch (error) {
     console.error("Error when fulfilling intent:", error);
-  }
+  } */
 };

@@ -5,7 +5,6 @@ import networks from "../config/networks";
 import { websocketClients } from "../config/client";
 import { walletAddress } from "../config/env";
 import { handleFulfillIntent, handleFulfillIntentFhenix, handleFulfillIntentZama } from "./listener/listenerUtils";
-import { PublicClient } from "viem";
 import { arbitrumSepolia } from "viem/chains";
 
 export const listenBridgeEvents = () => {
@@ -59,8 +58,13 @@ export const listenBridgeEvents = () => {
           eventName: "IntentCreated",
           onLogs: (logs) => {
             const { intent } = logs[0].args;
+            const modifiedIntent = {
+              ...intent!,
+              inputAmount: BigInt(intent!.inputAmount),
+              outputAmount: BigInt(intent!.outputAmount),
+            };
             if (intent?.relayer === walletAddress) {
-              handleFulfillIntentFhenix(intent, network.contracts.fheBridgeContract as `0x${string}`);
+              handleFulfillIntentFhenix(modifiedIntent);
             }
           },
           onError(error) {

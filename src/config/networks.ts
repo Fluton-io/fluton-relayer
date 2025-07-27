@@ -73,7 +73,7 @@ const testnets: INetwork[] = [
     },
     contracts: {
       bridgeContract: "0x9329a605815dddaf5a9481be69ba65193c01f6d1",
-      fheBridgeContract: "0xc7a4526022b9b2E1Ccf1183d3F4d84cFABa4C9E0",
+      fheBridgeContract: "0xAa845f11f61d5b6051B4dA8dEB9eb45281e886AB",
       ACL: "0xfee8407e2f5e3ee68ad77cae98c434e637f516e5",
       FHEPAYMENT: "0xfb03be574d14c256d56f09a198b586bdfc0a9de2",
       KMSVERIFIER: "0x9d6891a6240d6130c54ae243d8005063d05fe14b",

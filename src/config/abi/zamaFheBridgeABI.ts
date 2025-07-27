@@ -64,12 +64,12 @@ const abi = [
           {
             internalType: "euint64",
             name: "inputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "euint64",
             name: "outputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "uint256",
@@ -87,13 +87,13 @@ const abi = [
             type: "uint32",
           },
           {
-            internalType: "enum ZamaBridge.FilledStatus",
+            internalType: "enum FHEVMBridge.FilledStatus",
             name: "filledStatus",
             type: "uint8",
           },
         ],
         indexed: false,
-        internalType: "struct ZamaBridge.Intent",
+        internalType: "struct FHEVMBridge.Intent",
         name: "intent",
         type: "tuple",
       },
@@ -134,12 +134,12 @@ const abi = [
           {
             internalType: "euint64",
             name: "inputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "euint64",
             name: "outputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "uint256",
@@ -157,13 +157,13 @@ const abi = [
             type: "uint32",
           },
           {
-            internalType: "enum ZamaBridge.FilledStatus",
+            internalType: "enum FHEVMBridge.FilledStatus",
             name: "filledStatus",
             type: "uint8",
           },
         ],
         indexed: false,
-        internalType: "struct ZamaBridge.Intent",
+        internalType: "struct FHEVMBridge.Intent",
         name: "intent",
         type: "tuple",
       },
@@ -204,12 +204,12 @@ const abi = [
           {
             internalType: "euint64",
             name: "inputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "euint64",
             name: "outputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "uint256",
@@ -227,13 +227,13 @@ const abi = [
             type: "uint32",
           },
           {
-            internalType: "enum ZamaBridge.FilledStatus",
+            internalType: "enum FHEVMBridge.FilledStatus",
             name: "filledStatus",
             type: "uint8",
           },
         ],
         indexed: false,
-        internalType: "struct ZamaBridge.Intent",
+        internalType: "struct FHEVMBridge.Intent",
         name: "intent",
         type: "tuple",
       },
@@ -314,12 +314,12 @@ const abi = [
         type: "address",
       },
       {
-        internalType: "einput",
+        internalType: "externalEuint64",
         name: "_encInputAmount",
         type: "bytes32",
       },
       {
-        internalType: "einput",
+        internalType: "externalEuint64",
         name: "_encOutputAmount",
         type: "bytes32",
       },
@@ -416,12 +416,12 @@ const abi = [
           {
             internalType: "euint64",
             name: "inputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "euint64",
             name: "outputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "uint256",
@@ -439,92 +439,12 @@ const abi = [
             type: "uint32",
           },
           {
-            internalType: "enum ZamaBridge.FilledStatus",
+            internalType: "enum FHEVMBridge.FilledStatus",
             name: "filledStatus",
             type: "uint8",
           },
         ],
-        internalType: "struct ZamaBridge.Intent",
-        name: "intent",
-        type: "tuple",
-      },
-      {
-        internalType: "einput",
-        name: "_outputAmount",
-        type: "bytes32",
-      },
-      {
-        internalType: "bytes",
-        name: "_inputProof",
-        type: "bytes",
-      },
-    ],
-    name: "fulfill",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "sender",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "receiver",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "relayer",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "inputToken",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "outputToken",
-            type: "address",
-          },
-          {
-            internalType: "euint64",
-            name: "inputAmount",
-            type: "uint256",
-          },
-          {
-            internalType: "euint64",
-            name: "outputAmount",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "uint32",
-            name: "originChainId",
-            type: "uint32",
-          },
-          {
-            internalType: "uint32",
-            name: "destinationChainId",
-            type: "uint32",
-          },
-          {
-            internalType: "enum ZamaBridge.FilledStatus",
-            name: "filledStatus",
-            type: "uint8",
-          },
-        ],
-        internalType: "struct ZamaBridge.Intent",
+        internalType: "struct FHEVMBridge.Intent",
         name: "intent",
         type: "tuple",
       },
@@ -588,7 +508,7 @@ const abi = [
         type: "address",
       },
       {
-        internalType: "einput",
+        internalType: "externalEuint64",
         name: "_encryptedAmount",
         type: "bytes32",
       },
