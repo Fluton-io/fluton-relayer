@@ -11,8 +11,8 @@ import {
 } from "viem/chains";
 import { createInstance, FhevmInstance, SepoliaConfig } from "@zama-fhe/relayer-sdk";
 import { fhenixNitrogen } from "./custom-chains";
-import { PRIVATE_KEY, SEPOLIA_RPC_URL, SEPOLIA_WS_URL, ARBITRUM_SEPOLIA_WS_URL } from "./env";
-import { cofhejs, Encryptable } from "cofhejs/dist/node";
+import { PRIVATE_KEY, SEPOLIA_WS_URL, ARBITRUM_SEPOLIA_WS_URL } from "./env";
+import { cofhejs } from "cofhejs/node";
 import { privateKeyToAccount } from "viem/accounts";
 
 export const account = privateKeyToAccount(PRIVATE_KEY as `0x${string}`);

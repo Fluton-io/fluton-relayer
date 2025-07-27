@@ -22,7 +22,7 @@
   "dependencies": {
     "@zama-fhe/relayer-sdk": "^0.1.0",
     "axios": "^1.7.7",
-    "cofhejs": "^0.3.0",
+    "cofhejs": "^0.3.1",
     "dotenv": "^16.4.5",
     "ethers": "^6.13.4",
     "express": "^4.21.1",
