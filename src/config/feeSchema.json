@@ -18,7 +18,7 @@
         "decimals": 6,
         "balance": 100
       },
-      "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984": {
+      "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984": {
         "name": "UNI",
         "baseFee": "0.004",
         "percentageFee": "0.2%",
@@ -33,6 +33,14 @@
         "swappable": true,
         "decimals": 18,
         "balance": 20
+      },
+      "0x514910771AF9Ca656af840dff83E8264EcF986CA": {
+        "name": "U",
+        "baseFee": "0.002",
+        "percentageFee": "0.3%",
+        "swappable": true,
+        "decimals": 18,
+        "balance": 810
       }
     },
     "10": {
@@ -85,6 +93,14 @@
         "swappable": true,
         "decimals": 18,
         "balance": 3
+      },
+      "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4": {
+        "name": "U",
+        "baseFee": "0.002",
+        "percentageFee": "0.3%",
+        "swappable": true,
+        "decimals": 18,
+        "balance": 810
       }
     },
     "11155111": {
@@ -111,6 +127,14 @@
         "swappable": true,
         "decimals": 18,
         "balance": 1
+      },
+      "0x5cFe32B9B71634f1c72EF633082c52d6f41f84f7": {
+        "name": "cUSDC",
+        "baseFee": "0.50",
+        "percentageFee": "0.3%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 1000
       }
     },
     "421614": {
@@ -137,6 +161,16 @@
         "swappable": true,
         "decimals": 18,
         "balance": 1
+      }
+    },
+    "8008148": {
+      "0xb17ECAF7eDd1E4a1d568e755d6E54205731b50E1": {
+        "name": "USDC",
+        "baseFee": "0",
+        "percentageFee": "0.2%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 0
       }
     }
   }

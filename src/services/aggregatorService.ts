@@ -1,9 +1,6 @@
-import { Intent, TargetNetworkDetails } from "../config/types";
+import { TargetNetworkDetails } from "../config/types";
 import { aggregator, feeSchema, fetchTokenDecimals } from "../lib/utils";
 import { SAFE_SWAP_RATE } from "../config/constants";
-import testnetToMainnet from "../config/testnetToMainnet";
-import testnetToMainnetToken from "../config/testnetToMainnetToken";
-
 import { getPrice } from "./aggregator/priceUtils";
 import { getQuote } from "./aggregator/quoteUtils";
 
