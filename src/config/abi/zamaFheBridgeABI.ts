@@ -448,6 +448,16 @@ const abi = [
         name: "intent",
         type: "tuple",
       },
+      {
+        internalType: "externalEuint64",
+        name: "_outputAmount",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "_inputProof",
+        type: "bytes",
+      },
     ],
     name: "fulfill",
     outputs: [],

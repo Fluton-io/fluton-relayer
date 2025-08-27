@@ -41,9 +41,9 @@ export const listenBridgeEvents = () => {
           abi: fhenixFheBridgeABI,
           eventName: "IntentCreated",
           onLogs: (logs) => {
-            const { intent, inputAmountSealed, outputAmountSealed } = logs[0].args;
+            const { intent } = logs[0].args;
             if (intent?.relayer === walletAddress) {
-              handleFulfillIntentZama(intent, outputAmountSealed!);
+              handleFulfillIntentZama(intent);
             }
           },
           onError(error) {
