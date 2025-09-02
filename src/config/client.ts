@@ -9,7 +9,7 @@ import {
   scrollSepolia,
   sepolia,
 } from "viem/chains";
-import { createInstance, FhevmInstance, SepoliaConfig } from "@zama-fhe/relayer-sdk";
+import { createInstance, FhevmInstance, SepoliaConfig } from "@zama-fhe/relayer-sdk/node";
 import { fhenixNitrogen } from "./custom-chains";
 import { PRIVATE_KEY, SEPOLIA_WS_URL, ARBITRUM_SEPOLIA_WS_URL } from "./env";
 import { cofhejs } from "cofhejs/node";
