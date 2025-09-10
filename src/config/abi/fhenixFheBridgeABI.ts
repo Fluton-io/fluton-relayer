@@ -759,6 +759,133 @@ const abi = [
   {
     inputs: [
       {
+        components: [
+          {
+            internalType: "address",
+            name: "sender",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "receiver",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "relayer",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "inputToken",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "outputToken",
+            type: "address",
+          },
+          {
+            internalType: "euint128",
+            name: "inputAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "euint128",
+            name: "outputAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "id",
+            type: "uint256",
+          },
+          {
+            internalType: "uint32",
+            name: "originChainId",
+            type: "uint32",
+          },
+          {
+            internalType: "uint32",
+            name: "destinationChainId",
+            type: "uint32",
+          },
+          {
+            internalType: "enum FhenixBridge.FilledStatus",
+            name: "filledStatus",
+            type: "uint8",
+          },
+          {
+            internalType: "bool",
+            name: "solverPaid",
+            type: "bool",
+          },
+          {
+            internalType: "uint256",
+            name: "timeout",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct FhenixBridge.Intent",
+        name: "intent",
+        type: "tuple",
+      },
+      {
+        internalType: "euint128",
+        name: "_outputAmount",
+        type: "uint256",
+      },
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "spender",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "value_hash",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "deadline",
+            type: "uint256",
+          },
+          {
+            internalType: "uint8",
+            name: "v",
+            type: "uint8",
+          },
+          {
+            internalType: "bytes32",
+            name: "r",
+            type: "bytes32",
+          },
+          {
+            internalType: "bytes32",
+            name: "s",
+            type: "bytes32",
+          },
+        ],
+        internalType: "struct IFHERC20.FHERC20_EIP712_Permit",
+        name: "_permit",
+        type: "tuple",
+      },
+    ],
+    name: "fulfill",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "intentId",
         type: "uint256",

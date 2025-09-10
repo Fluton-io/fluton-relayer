@@ -9,9 +9,9 @@ import {
   scrollSepolia,
   sepolia,
 } from "viem/chains";
-import { createInstance, FhevmInstance, SepoliaConfig } from "@zama-fhe/relayer-sdk/node";
+// import { createInstance, FhevmInstance, SepoliaConfig } from "@zama-fhe/relayer-sdk/node";
 import { fhenixNitrogen } from "./custom-chains";
-import { PRIVATE_KEY, SEPOLIA_WS_URL, ARBITRUM_SEPOLIA_WS_URL } from "./env";
+import { PRIVATE_KEY, SEPOLIA_RPC_URL, SEPOLIA_WS_URL, ARBITRUM_SEPOLIA_WS_URL, ARBITRUM_SEPOLIA_RPC_URL } from "./env";
 import { cofhejs } from "cofhejs/node";
 import { privateKeyToAccount } from "viem/accounts";
 
@@ -43,12 +43,12 @@ export const scrollPublicClient = createPublicClient({
 //testnets
 export const sepoliaPublicClient = createPublicClient({
   chain: sepolia,
-  transport: http(),
+  transport: http(SEPOLIA_RPC_URL),
 });
 
 export const arbitrumSepoliaPublicClient = createPublicClient({
   chain: arbitrumSepolia,
-  transport: http(),
+  transport: http(ARBITRUM_SEPOLIA_RPC_URL),
 });
 
 export const optimismSepoliaPublicClient = createPublicClient({
@@ -108,13 +108,13 @@ export const scrollWalletClient = createWalletClient({
 //testnets
 export const sepoliaWalletClient = createWalletClient({
   chain: sepolia,
-  transport: http(),
+  transport: http(SEPOLIA_RPC_URL),
   account,
 });
 
 export const arbitrumSepoliaWalletClient = createWalletClient({
   chain: arbitrumSepolia,
-  transport: http(),
+  transport: http(ARBITRUM_SEPOLIA_RPC_URL),
   account,
 });
 
@@ -174,7 +174,7 @@ export const websocketClients = [
 
 // fhevm clients
 
-let zamaClient: FhevmInstance | null = null;
+/* let zamaClient: FhevmInstance | null = null;
 
 export const getZamaClient = async (): Promise<FhevmInstance> => {
   if (!zamaClient) {
@@ -184,17 +184,4 @@ export const getZamaClient = async (): Promise<FhevmInstance> => {
   return zamaClient;
 };
 
-getZamaClient();
-
-// fhenix
-const initializeFhenixCofhejs = async () => {
-  await cofhejs.initializeWithViem({
-    viemClient: arbitrumSepoliaWalletClient,
-    viemWalletClient: arbitrumSepoliaWalletClient,
-    environment: "TESTNET",
-  });
-};
-
-initializeFhenixCofhejs().catch((error) => {
-  console.error("Error initializing Fhenix Cofhejs:", error);
-});
+getZamaClient(); */

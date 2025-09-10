@@ -18,7 +18,10 @@ export interface INetwork {
     url: string;
   };
   contracts: {
-    [contractName: string]: `0x${string}`;
+    [contractName: string]: {
+      address: `0x${string}`;
+      coprocessor?: Coprocessor;
+    };
   };
 }
 
@@ -57,4 +60,10 @@ export interface ContractIntent {
   originChainId: number;
   destinationChainId: number;
   filledStatus: number;
+}
+
+export enum Coprocessor {
+  ZAMA,
+  FHENIX,
+  INCO,
 }

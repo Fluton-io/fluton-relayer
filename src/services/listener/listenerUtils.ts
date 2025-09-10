@@ -1,10 +1,10 @@
-import { ContractIntent } from "../../config/types";
+import { ContractIntent, Coprocessor } from "../../config/types";
 import BridgeABI from "../../config/abi/bridgeABI";
 import ZamaBridgeABI from "../../config/abi/zamaFheBridgeABI";
 import FhenixBridgeABI from "../../config/abi/fhenixFheBridgeABI";
 import zamaFheBridgeABI from "../../config/abi/zamaFheBridgeABI";
-import { getZamaClient, walletClients } from "../../config/client";
-import { cofhejs, FheTypes, Encryptable } from "cofhejs/node";
+import { /* getZamaClient, */ publicClients, walletClients } from "../../config/client";
+import { cofhejs, FheTypes, Encryptable, CoFheInUint128 } from "cofhejs/node";
 import networks from "../../config/networks";
 import { arbitrumSepolia, sepolia } from "viem/chains";
 import { appendMetadataToInput, generateTransferFromPermit } from "../../lib/utils";
@@ -25,8 +25,8 @@ export const handleFulfillIntent = async (intent: ContractIntent) => {
     filledStatus: intent.filledStatus,
   };
   try {
-    const bridgeContractDest = networks.find((n) => n.chainId === intent.destinationChainId)?.contracts
-      .bridgeContract as `0x${string}`;
+    const bridgeContractDest = networks.find((n) => n.chainId === intent.destinationChainId)?.contracts.bridgeContract
+      .address as `0x${string}`;
     if (!bridgeContractDest) {
       throw new Error(`Bridge contract for chainId ${intent.destinationChainId} not found`);
     }
@@ -48,7 +48,7 @@ export const handleFulfillIntent = async (intent: ContractIntent) => {
   }
 };
 
-export const handleFulfillIntentZama = async (intent: ContractIntent) => {
+/* export const handleFulfillIntentZama = async (intent: ContractIntent) => {
   console.log("This intent is mine:", intent);
 
   const walletClient = walletClients.find((wc) => wc.chainId === intent.destinationChainId)?.client;
@@ -66,8 +66,8 @@ export const handleFulfillIntentZama = async (intent: ContractIntent) => {
   console.log("Clear Amount", clearAmountResult.data);
 
   const zamaClient = await getZamaClient();
-  const zamaBridgeContractAddress = networks.find((n) => n.chainId === sepolia.id)!.contracts
-    .fheBridgeContract as `0x${string}`;
+  const zamaBridgeContractAddress = networks.find((n) => n.chainId === sepolia.id)!.contracts.fheBridgeContract
+    .address as `0x${string}`;
 
   const encrypted = await zamaClient
     .createEncryptedInput(zamaBridgeContractAddress, walletAddress)
@@ -106,61 +106,29 @@ export const handleFulfillIntentZama = async (intent: ContractIntent) => {
   } catch (error) {
     console.error("Error when fulfilling intent:", error);
   }
-};
+}; */
 
 export const handleFulfillIntentFhenix = async (intent: ContractIntent) => {
   console.log("This intent is mine:", intent);
 
   const walletClientSource = walletClients.find((wc) => wc.chainId === intent.originChainId)!.client;
+  const publicClientSource = publicClients.find((pc) => pc.chainId === intent.originChainId)!.client;
   const walletClientDest = walletClients.find((wc) => wc.chainId === intent.destinationChainId)!.client;
-  const bridgeContractSrc = networks.find((n) => n.chainId === intent.originChainId)?.contracts
-    .fheBridgeContract as `0x${string}`;
+  const publicClientDest = publicClients.find((pc) => pc.chainId === intent.destinationChainId)!.client;
+  const bridgeContractSrc = networks.find((n) => n.chainId === intent.originChainId)?.contracts.fheBridgeContract
+    .address as `0x${string}`;
   const walletAddress = walletClientSource.account.address;
+  const bridgeContractSrcCoprocessor = networks.find((n) => n.chainId === intent.originChainId)?.contracts
+    .fheBridgeContract.coprocessor;
 
-  const zamaClient = await getZamaClient();
+  if (!bridgeContractSrcCoprocessor) {
+    throw new Error(`Coprocessor for bridge contract on chainId ${intent.originChainId} not found`);
+  }
 
-  const { publicKey, privateKey } = zamaClient.generateKeypair();
-  const outputAmountHex = "0x" + intent.outputAmount.toString(16);
-  const handleContractPairs = [
-    {
-      handle: outputAmountHex,
-      contractAddress: bridgeContractSrc,
-    },
-  ];
-  const contractAddresses = [bridgeContractSrc];
-  const startTimeStamp = Math.floor(Date.now() / 1000).toString();
-  const durationDays = "10"; // String for consistency
-  const eip712 = zamaClient.createEIP712(publicKey, contractAddresses, startTimeStamp, durationDays);
-
-  const signature = await walletClientSource.signTypedData({
-    domain: { ...eip712.domain, verifyingContract: eip712.domain.verifyingContract as `0x${string}` },
-    types: { UserDecryptRequestVerification: eip712.types.UserDecryptRequestVerification },
-    message: eip712.message,
-    primaryType: "UserDecryptRequestVerification",
-  });
-
-  const userDecryptedAmountResult = await zamaClient.userDecrypt(
-    handleContractPairs,
-    privateKey,
-    publicKey,
-    signature.replace("0x", ""),
-    contractAddresses,
-    walletAddress,
-    startTimeStamp,
-    durationDays
-  );
-
-  const readableAmount = userDecryptedAmountResult[outputAmountHex];
-  console.log(userDecryptedAmountResult);
-  console.dir(userDecryptedAmountResult);
-  console.log("Clear Amount", readableAmount);
-
-  const encrypted = await cofhejs.encrypt([Encryptable.uint128(BigInt(readableAmount))]);
-  const encryptedAmount = encrypted.data![0];
-  const fhenixBridgeContractAddress = networks.find((n) => n.chainId === arbitrumSepolia.id)!.contracts
-    .fheBridgeContract as `0x${string}`;
-  const fhenixEERC20TokenAddress = networks.find((n) => n.chainId === arbitrumSepolia.id)!.contracts
-    .eERC20 as `0x${string}`;
+  const fhenixBridgeContractAddress = networks.find((n) => n.chainId === intent.destinationChainId)!.contracts
+    .fheBridgeContract.address as `0x${string}`;
+  const fhenixEUSDCAddress = networks.find((n) => n.chainId === intent.destinationChainId)!.contracts.eUSDC
+    .address as `0x${string}`;
 
   const intentArgs = {
     sender: intent.sender,
@@ -177,6 +145,86 @@ export const handleFulfillIntentFhenix = async (intent: ContractIntent) => {
     solverPaid: false,
     timeout: 0n,
   };
+
+  let encryptedAmount: CoFheInUint128 = {
+    ctHash: intent.outputAmount,
+    utype: FheTypes.Uint128,
+    securityZone: 0,
+    signature: "",
+  };
+  // if source coprocessor is fhenix, no need for decryption
+  if (bridgeContractSrcCoprocessor === Coprocessor.FHENIX) {
+    console.log("Fhenix to Fhenix transfer, no decryption needed, but decrypting for now");
+    const permit = await cofhejs.initializeWithViem({
+      viemClient: publicClientSource,
+      viemWalletClient: walletClientSource,
+      environment: "TESTNET",
+    });
+    if (!permit) {
+      throw new Error("Invalid Permit");
+    }
+    const clearAmountResult = await cofhejs.unseal(
+      intent.outputAmount,
+      FheTypes.Uint128,
+      walletClientSource.account.address,
+      permit.data?.getHash()
+    );
+    if (!clearAmountResult.success) {
+      throw new Error("Failed to unseal the output amount");
+    }
+
+    console.log("Clear Amount", clearAmountResult.data);
+    await cofhejs.initializeWithViem({
+      viemClient: publicClientDest,
+      viemWalletClient: walletClientDest,
+      environment: "TESTNET",
+    });
+    const encrypted = await cofhejs.encrypt([Encryptable.uint128(clearAmountResult.data)]);
+    encryptedAmount = encrypted.data![0];
+  }
+  // if source coprocessor is zama, we have to decrypt and re-encrypt
+  /* else if (bridgeContractSrcCoprocessor === Coprocessor.ZAMA) {
+    const zamaClient = await getZamaClient();
+
+    const { publicKey, privateKey } = zamaClient.generateKeypair();
+    const outputAmountHex = "0x" + intent.outputAmount.toString(16);
+    const handleContractPairs = [
+      {
+        handle: outputAmountHex,
+        contractAddress: bridgeContractSrc,
+      },
+    ];
+    const contractAddresses = [bridgeContractSrc];
+    const startTimeStamp = Math.floor(Date.now() / 1000).toString();
+    const durationDays = "10"; // String for consistency
+    const eip712 = zamaClient.createEIP712(publicKey, contractAddresses, startTimeStamp, durationDays);
+
+    const signature = await walletClientSource.signTypedData({
+      domain: { ...eip712.domain, verifyingContract: eip712.domain.verifyingContract as `0x${string}` },
+      types: { UserDecryptRequestVerification: eip712.types.UserDecryptRequestVerification },
+      message: eip712.message,
+      primaryType: "UserDecryptRequestVerification",
+    });
+
+    const userDecryptedAmountResult = await zamaClient.userDecrypt(
+      handleContractPairs,
+      privateKey,
+      publicKey,
+      signature.replace("0x", ""),
+      contractAddresses,
+      walletAddress,
+      startTimeStamp,
+      durationDays
+    );
+
+    const readableAmount = userDecryptedAmountResult[outputAmountHex];
+    console.log(userDecryptedAmountResult);
+    console.dir(userDecryptedAmountResult);
+    console.log("Clear Amount", readableAmount);
+
+    const encrypted = await cofhejs.encrypt([Encryptable.uint128(BigInt(readableAmount))]);
+    encryptedAmount = encrypted.data![0];
+  } */
   try {
     if (!walletClientDest) {
       throw new Error(`Wallet client for chainId ${intent.destinationChainId} not found`);
@@ -186,7 +234,7 @@ export const handleFulfillIntentFhenix = async (intent: ContractIntent) => {
     const encTransferCtHashWMetadata = appendMetadataToInput(encryptedAmount);
     const permit = await generateTransferFromPermit({
       walletClient: walletClientDest,
-      tokenAddress: fhenixEERC20TokenAddress,
+      tokenAddress: fhenixEUSDCAddress,
       spender: fhenixBridgeContractAddress,
       valueHash: encTransferCtHashWMetadata,
     });
