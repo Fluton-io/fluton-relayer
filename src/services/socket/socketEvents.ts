@@ -60,6 +60,7 @@ export const handleGiveOffers = async (
 
   // TODO: Also check if sourceToken and targetToken are actual ERC-20 tokens
 
+  const schemaForSourceChain = feeSchema.chains[sourceChainIdMainnet];
   const schemaForTargetChain = feeSchema.chains[targetChainIdMainnet];
 
   if (!schemaForTargetChain) {
@@ -83,9 +84,10 @@ export const handleGiveOffers = async (
     const sourceTokenPrice = (await getPrice(+sourceChainIdMainnet, sourceTokenAddressMainnet))[
       sourceTokenAddressMainnet
     ];
+    const sourceTokenDecimals = schemaForSourceChain[sourceTokenAddressMainnet]?.decimals || 18;
     console.log("Source token price:", sourceTokenPrice);
 
-    const sourceAmountInUSD = sourceTokenPrice * Number(amount);
+    const sourceAmountInUSD = sourceTokenPrice * Number(BigInt(amount) / BigInt(10 ** sourceTokenDecimals));
     console.log("sourceAmountInUSD:", sourceAmountInUSD);
 
     console.log("schemaForTargetChain:", schemaForTargetChain);
