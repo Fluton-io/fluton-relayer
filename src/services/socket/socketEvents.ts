@@ -110,7 +110,9 @@ export const handleGiveOffers = async (
       const baseFeeValue = parseFloat(baseFee);
       const percentageFeeValue = parseFloat(percentageFee) / 100;
       const totalFee = baseFeeValue + targetTokenTransferAmount * percentageFeeValue;
-      const targetAmount = targetTokenTransferAmount - totalFee;
+      const targetAmount =
+        (targetTokenTransferAmount - totalFee) *
+        10 ** (schemaForTargetChain[targetTokenAddressMainnet]?.decimals || 18);
 
       result = { finalTargetAmount: targetAmount, pathViz: null };
     } else {
