@@ -7,7 +7,7 @@
         "baseFee": "0.02",
         "percentageFee": "0.1%",
         "swappable": true,
-        "decimals": 6,
+        "decimals": 18,
         "balance": 1000
       },
       "0xdAC17F958D2ee523a2206206994597C13D831ec7": {
@@ -83,7 +83,7 @@
         "baseFee": "0.04",
         "percentageFee": "0.2%",
         "swappable": true,
-        "decimals": 6,
+        "decimals": 18,
         "balance": 1000
       },
       "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1": {
@@ -117,7 +117,7 @@
         "baseFee": "0.50",
         "percentageFee": "0.3%",
         "swappable": true,
-        "decimals": 6,
+        "decimals": 18,
         "balance": 1000
       },
       "0x7b79995e5f793a07bc00c21412e50ecae098e7f9": {
@@ -151,7 +151,7 @@
         "baseFee": "0.50",
         "percentageFee": "0.3%",
         "swappable": true,
-        "decimals": 6,
+        "decimals": 18,
         "balance": 1000
       },
       "0x64BC0Baad7371ece4B6467715bE75f3aa2FBBF0c": {
