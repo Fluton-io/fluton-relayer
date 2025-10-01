@@ -8,7 +8,6 @@ import {
   handleFulfillIntent,
   handleFulfillIntentFhenix /* , handleFulfillIntentZama */,
 } from "./listener/listenerUtils";
-import { arbitrumSepolia } from "viem/chains";
 import { Coprocessor } from "../config/types";
 
 export const listenBridgeEvents = () => {
