@@ -92,11 +92,11 @@ const testnets: INetwork[] = [
         address: "0x9329a605815dddaf5a9481be69ba65193c01f6d1",
       },
       fheBridgeContract: {
-        address: "0x034ee8bE2e6c0FF5B508B4410Ab565B6DDb33859",
+        address: "0x99b57c72154caD68Fc76f6a456bC15fb8ce37a19",
         coprocessor: Coprocessor.FHENIX,
       },
       ACL: {
-        address: "0xfee8407e2f5e3ee68ad77cae98c434e637  f516e5",
+        address: "0xfee8407e2f5e3ee68ad77cae98c434e637f516e5",
       },
       FHEPAYMENT: {
         address: "0xfb03be574d14c256d56f09a198b586bdfc0a9de2",
@@ -124,7 +124,7 @@ const testnets: INetwork[] = [
         address: "0x9f1210757915bf7aee3b5d82f99dac70828bad77",
       },
       fheBridgeContract: {
-        address: "0x76f0Bb11C92DA4F3f5375d3dc1B7EeD84f0FC22D",
+        address: "0x8f8AFfC05CFE28D76038AcDbb624DBd3d89116EE",
         coprocessor: Coprocessor.FHENIX,
       },
       eUSDC: {

@@ -96,6 +96,18 @@ const abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "relayer",
+        type: "address",
+      },
+      {
         components: [
           {
             internalType: "address",
@@ -176,6 +188,18 @@ const abi = [
     anonymous: false,
     inputs: [
       {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "relayer",
+        type: "address",
+      },
+      {
         components: [
           {
             internalType: "address",
@@ -255,6 +279,18 @@ const abi = [
   {
     anonymous: false,
     inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "relayer",
+        type: "address",
+      },
       {
         components: [
           {
