@@ -1,42 +1,52 @@
+import { arbitrum, arbitrumSepolia, mainnet, sepolia } from "viem/chains";
+import addresses from "./addresses";
+
 const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   // sepolia -> mainnet
+  [addresses[sepolia.id].WETH]: addresses[mainnet.id].WETH,
 
-  // usdc
-  "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-  // usdc
-  "0x2831d2b6b7bd5Ca9E2EEe932055a91f5a6cEBe2f": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-  // usdt
-  "0x9F1210757915bf7aEE3B5D82F99dac70828Bad77": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-  // uni
-  "0x64BC0Baad7371ece4B6467715bE75f3aa2FBBF0c": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
-  // weth
-  "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-  // union -> link
-  "0xb5abDd56564d96708d9E7903500CfbD68D08bd4f": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
-  // cUsdc
-  "0x674C2920aAfb17400101247dFc475902a40637b1": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-  // eUSDC -> usdc
-  "0x2Ce559C8836C17F2aaDB3E6eE1f976C58114E95A": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  [addresses[sepolia.id].USDC]: addresses[mainnet.id].USDC,
+  [addresses[sepolia.id].cUSDC]: addresses[mainnet.id].USDC,
+  [addresses[sepolia.id].eUSDC]: addresses[mainnet.id].USDC,
+
+  [addresses[sepolia.id].USDT]: addresses[mainnet.id].USDT,
+  [addresses[sepolia.id].eUSDT]: addresses[mainnet.id].USDT,
+
+  [addresses[sepolia.id].DAI]: addresses[mainnet.id].DAI,
+  [addresses[sepolia.id].eDAI]: addresses[mainnet.id].DAI,
+
+  [addresses[sepolia.id].UNI]: addresses[mainnet.id].UNI,
+  [addresses[sepolia.id].eUNI]: addresses[mainnet.id].UNI,
+
+  [addresses[sepolia.id].U]: addresses[mainnet.id].U,
+  [addresses[sepolia.id].eU]: addresses[mainnet.id].U,
+
+  [addresses[sepolia.id].XFL]: addresses[mainnet.id].XFL,
+  [addresses[sepolia.id].eXFL]: addresses[mainnet.id].XFL,
+
+  [addresses[sepolia.id].AAVE]: addresses[mainnet.id].AAVE,
+  [addresses[sepolia.id].eAAVE]: addresses[mainnet.id].AAVE,
 
   // arbitrum sepolia -> arbitrum mainnet
+  [addresses[arbitrumSepolia.id].WETH]: addresses[arbitrum.id].WETH,
 
-  // usdc
-  "0x1746FB6484647F83E27Ed43460bbE30883F8F5b5": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
-  // usdt
-  "0xf065447aE1b6597410c4Ef0990F83C5F37bfD5B4": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
-  // weth
-  "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-  // uni
-  "0x31BB6bC0E8E79eF3F6C983CB145BA7677A98284F": "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0",
-  // union -> link
-  "0xb23EF3bd650B0FfA3DD46d29b96944BD362E6B7e": "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4",
-  // eUSDC -> usdc
-  "0x353e69f463f78987917b5C2505eb7635B7200CFd": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  [addresses[arbitrumSepolia.id].USDC]: addresses[arbitrum.id].USDC,
+  [addresses[arbitrumSepolia.id].eUSDC]: addresses[arbitrum.id].USDC,
 
-  // fhenix -> mainnet
+  [addresses[arbitrumSepolia.id].USDT]: addresses[arbitrum.id].USDT,
+  [addresses[arbitrumSepolia.id].eUSDT]: addresses[arbitrum.id].USDT,
 
-  // usdc
-  "0xf9B226035180AB9E3C7ec155332d79B74c9ED6D5": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  [addresses[arbitrumSepolia.id].DAI]: addresses[arbitrum.id].DAI,
+  [addresses[arbitrumSepolia.id].eDAI]: addresses[arbitrum.id].DAI,
+
+  [addresses[arbitrumSepolia.id].UNI]: addresses[arbitrum.id].UNI,
+  [addresses[arbitrumSepolia.id].eUNI]: addresses[arbitrum.id].UNI,
+
+  [addresses[arbitrumSepolia.id].XFL]: addresses[arbitrum.id].XFL,
+  [addresses[arbitrumSepolia.id].eXFL]: addresses[arbitrum.id].XFL,
+
+  [addresses[arbitrumSepolia.id].AAVE]: addresses[arbitrum.id].AAVE,
+  [addresses[arbitrumSepolia.id].eAAVE]: addresses[arbitrum.id].AAVE,
 };
 
 export default testnetToMainnetToken;

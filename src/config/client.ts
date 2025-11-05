@@ -9,7 +9,7 @@ import {
   scrollSepolia,
   sepolia,
 } from "viem/chains";
-// import { createInstance, FhevmInstance, SepoliaConfig } from "@zama-fhe/relayer-sdk/node";
+import { createInstance, FhevmInstance, FhevmInstanceConfig, SepoliaConfig } from "@zama-fhe/relayer-sdk/node";
 import { fhenixNitrogen } from "./custom-chains";
 import { PRIVATE_KEY, SEPOLIA_RPC_URL, SEPOLIA_WS_URL, ARBITRUM_SEPOLIA_WS_URL, ARBITRUM_SEPOLIA_RPC_URL } from "./env";
 import { cofhejs } from "cofhejs/node";
@@ -174,14 +174,18 @@ export const websocketClients = [
 
 // fhevm clients
 
-/* let zamaClient: FhevmInstance | null = null;
+let zamaClient: FhevmInstance | null = null;
 
 export const getZamaClient = async (): Promise<FhevmInstance> => {
   if (!zamaClient) {
-    zamaClient = await createInstance(SepoliaConfig);
+    const config: FhevmInstanceConfig = {
+      ...SepoliaConfig,
+      network: SEPOLIA_RPC_URL,
+    };
+    zamaClient = await createInstance(config);
   }
 
   return zamaClient;
 };
 
-getZamaClient(); */
+getZamaClient();

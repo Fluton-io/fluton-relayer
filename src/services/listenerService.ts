@@ -14,11 +14,11 @@ export const listenBridgeEvents = () => {
   const unwatchList: (() => void)[] = websocketClients.map(({ client, chainId }) => {
     const network = networks.find((network) => network.chainId === chainId);
 
-    if (network && network.contracts.bridgeContract) {
-      console.log(`Listening for events on chainId: ${chainId}, contract: ${network.contracts.bridgeContract.address}`);
+    if (network && network.contracts.publicBridge) {
+      console.log(`Listening for events on chainId: ${chainId}, contract: ${network.contracts.publicBridge.address}`);
 
       client.watchContractEvent({
-        address: network.contracts.bridgeContract.address as `0x${string}`,
+        address: network.contracts.publicBridge.address as `0x${string}`,
         abi: BridgeABI,
         eventName: "IntentCreated",
         onLogs: (logs) => {
@@ -34,22 +34,20 @@ export const listenBridgeEvents = () => {
     }
 
     // confidential bridge contract
-    if (network && network.contracts.fheBridgeContract) {
-      console.log(
-        `Listening for events on chainId: ${chainId}, contract: ${network.contracts.fheBridgeContract.address}`
-      );
+    if (network && network.contracts.fhenixBridge) {
+      console.log(`Listening for events on chainId: ${chainId}, contract: ${network.contracts.fhenixBridge.address}`);
 
-      if (network.contracts.fheBridgeContract.coprocessor === Coprocessor.FHENIX) {
+      if (network.contracts.fhenixBridge.coprocessor === Coprocessor.FHENIX) {
         // fhenix co-processor
         client.watchContractEvent({
-          address: network.contracts.fheBridgeContract.address as `0x${string}`,
+          address: network.contracts.fhenixBridge.address as `0x${string}`,
           abi: fhenixFheBridgeABI,
           eventName: "IntentCreated",
           onLogs: (logs) => {
             const { intent } = logs[0].args;
             if (intent?.relayer === walletAddress) {
               const targetBridgeContract = networks.find((n) => n.chainId === intent.destinationChainId)?.contracts
-                ?.fheBridgeContract;
+                ?.fhenixBridge;
               if (!targetBridgeContract) {
                 return console.error(`FHE Bridge contract for chainId ${intent.destinationChainId} not found`);
               }
@@ -64,10 +62,10 @@ export const listenBridgeEvents = () => {
             console.error("Error watching event:", error);
           },
         });
-      } else if (network.contracts.fheBridgeContract.coprocessor === Coprocessor.ZAMA) {
+      } else if (network.contracts.zamaBridge.coprocessor === Coprocessor.ZAMA) {
         // zama co-processor
         client.watchContractEvent({
-          address: network.contracts.fheBridgeContract.address as `0x${string}`,
+          address: network.contracts.zamaBridge.address as `0x${string}`,
           abi: zamaFheBridgeABI,
           eventName: "IntentCreated",
           onLogs: (logs) => {

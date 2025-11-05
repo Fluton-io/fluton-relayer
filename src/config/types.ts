@@ -1,3 +1,9 @@
+export enum Coprocessor {
+  ZAMA,
+  FHENIX,
+  INCO,
+}
+
 export interface TokenDetails {
   name: string;
   baseFee: string;
@@ -7,7 +13,11 @@ export interface TokenDetails {
   balance: number;
 }
 
-export interface INetwork {
+export interface Contract {
+  [contractName: string]: { address: `0x${string}`; coprocessor?: Coprocessor };
+}
+
+export interface Network {
   name: string;
   chainId: number;
   rpcUrl: string;
@@ -17,12 +27,8 @@ export interface INetwork {
     apiKey: string | null;
     url: string;
   };
-  contracts: {
-    [contractName: string]: {
-      address: `0x${string}`;
-      coprocessor?: Coprocessor;
-    };
-  };
+  contracts: Contract;
+  coprocessors?: Coprocessor[];
 }
 
 export interface TargetNetworkDetails {
@@ -60,10 +66,4 @@ export interface ContractIntent {
   originChainId: number;
   destinationChainId: number;
   filledStatus: number;
-}
-
-export enum Coprocessor {
-  ZAMA,
-  FHENIX,
-  INCO,
 }

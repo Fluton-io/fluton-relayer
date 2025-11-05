@@ -84,8 +84,9 @@ export const handleGiveOffers = async (
     const sourceTokenPrice = (await getPrice(+sourceChainIdMainnet, sourceTokenAddressMainnet))[
       sourceTokenAddressMainnet
     ];
-    const sourceTokenDecimals = schemaForSourceChain[sourceTokenAddressMainnet]?.decimals || 18;
     console.log("Source token price:", sourceTokenPrice);
+
+    const sourceTokenDecimals = schemaForSourceChain[sourceTokenAddressMainnet]?.decimals || 18;
 
     const sourceAmountInUSD = sourceTokenPrice * Number(BigInt(amount) / BigInt(10 ** sourceTokenDecimals));
     console.log("sourceAmountInUSD:", sourceAmountInUSD);

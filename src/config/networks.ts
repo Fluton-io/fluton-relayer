@@ -1,7 +1,19 @@
+import {
+  arbitrum,
+  arbitrumSepolia,
+  mainnet,
+  optimism,
+  optimismSepolia,
+  scroll,
+  scrollSepolia,
+  sepolia,
+} from "viem/chains";
+import addresses from "./addresses";
 import { INFURA_API_KEY } from "./env";
-import { Coprocessor, INetwork } from "./types";
+import { Coprocessor, Network } from "./types";
+import contracts from "./contracts";
 
-const mainnets: INetwork[] = [
+const mainnets: Network[] = [
   {
     name: "Ethereum Mainnet",
     chainId: 1,
@@ -11,14 +23,7 @@ const mainnets: INetwork[] = [
       apiKey: "YVGC5X6NFDNIH3C4DMX4UHYPU36XN1JGK7",
       url: "https://etherscan.io",
     },
-    contracts: {
-      bridgeContract: {
-        address: "0x",
-      },
-      fheBridgeContract: {
-        address: "0x",
-      },
-    },
+    contracts: contracts[mainnet.id],
   },
   {
     name: "Arbitrum Mainnet",
@@ -29,14 +34,7 @@ const mainnets: INetwork[] = [
       apiKey: "6DS9FIXUN1N31GG6W7BXT3FG3846MT3I5Z",
       url: "https://arbiscan.io",
     },
-    contracts: {
-      bridgeContract: {
-        address: "0x",
-      },
-      fheBridgeContract: {
-        address: "0x",
-      },
-    },
+    contracts: contracts[arbitrum.id],
   },
   {
     name: "Optimism Mainnet",
@@ -47,14 +45,7 @@ const mainnets: INetwork[] = [
       apiKey: "AYQ168A34SPAA86J41QBBUGKN933TT498E",
       url: "https://optimistic.etherscan.io",
     },
-    contracts: {
-      bridgeContract: {
-        address: "0x",
-      },
-      fheBridgeContract: {
-        address: "0x",
-      },
-    },
+    contracts: contracts[optimism.id],
   },
   {
     name: "Scroll Mainnet",
@@ -65,18 +56,11 @@ const mainnets: INetwork[] = [
       apiKey: "7QWQVIXUFMZJP2R2R3YNZGJ8CYZHZ4QQZN",
       url: "https://optimistic.etherscan.io",
     },
-    contracts: {
-      bridgeContract: {
-        address: "0x",
-      },
-      fheBridgeContract: {
-        address: "0x",
-      },
-    },
+    contracts: contracts[scroll.id],
   },
 ];
 
-const testnets: INetwork[] = [
+const testnets: Network[] = [
   {
     name: "Ethereum Sepolia Testnet",
     chainId: 11155111,
@@ -87,28 +71,8 @@ const testnets: INetwork[] = [
       apiKey: "YVGC5X6NFDNIH3C4DMX4UHYPU36XN1JGK7",
       url: "https://sepolia.etherscan.io",
     },
-    contracts: {
-      bridgeContract: {
-        address: "0x9329a605815dddaf5a9481be69ba65193c01f6d1",
-      },
-      fheBridgeContract: {
-        address: "0x99b57c72154caD68Fc76f6a456bC15fb8ce37a19",
-        coprocessor: Coprocessor.FHENIX,
-      },
-      ACL: {
-        address: "0xfee8407e2f5e3ee68ad77cae98c434e637f516e5",
-      },
-      FHEPAYMENT: {
-        address: "0xfb03be574d14c256d56f09a198b586bdfc0a9de2",
-      },
-      KMSVERIFIER: {
-        address: "0x9d6891a6240d6130c54ae243d8005063d05fe14b",
-      },
-      eUSDC: {
-        address: "0x2Ce559C8836C17F2aaDB3E6eE1f976C58114E95A",
-        coprocessor: Coprocessor.FHENIX,
-      },
-    },
+    contracts: contracts[sepolia.id],
+    coprocessors: [Coprocessor.FHENIX],
   },
   {
     name: "Arbitrum Sepolia Testnet",
@@ -119,19 +83,8 @@ const testnets: INetwork[] = [
       apiKey: "6DS9FIXUN1N31GG6W7BXT3FG3846MT3I5Z",
       url: "https://sepolia.arbiscan.io",
     },
-    contracts: {
-      bridgeContract: {
-        address: "0x9f1210757915bf7aee3b5d82f99dac70828bad77",
-      },
-      fheBridgeContract: {
-        address: "0x8f8AFfC05CFE28D76038AcDbb624DBd3d89116EE",
-        coprocessor: Coprocessor.FHENIX,
-      },
-      eUSDC: {
-        address: "0x353e69f463f78987917b5C2505eb7635B7200CFd",
-        coprocessor: Coprocessor.FHENIX,
-      },
-    },
+    contracts: contracts[arbitrumSepolia.id],
+    coprocessors: [Coprocessor.FHENIX],
   },
   {
     name: "Optimism Sepolia Testnet",
@@ -142,14 +95,7 @@ const testnets: INetwork[] = [
       apiKey: "AYQ168A34SPAA86J41QBBUGKN933TT498E",
       url: "https://sepolia-optimism.etherscan.io",
     },
-    contracts: {
-      bridgeContract: {
-        address: "0x",
-      },
-      fheBridgeContract: {
-        address: "0x",
-      },
-    },
+    contracts: contracts[optimismSepolia.id],
   },
   {
     name: "Scroll Sepolia Testnet",
@@ -160,16 +106,9 @@ const testnets: INetwork[] = [
       apiKey: "7QWQVIXUFMZJP2R2R3YNZGJ8CYZHZ4QQZN",
       url: "https://sepolia.scrollscan.com",
     },
-    contracts: {
-      bridgeContract: {
-        address: "0x7198dc5a074ac365ccc4e43213522675957a8ab0",
-      },
-      fheBridgeContract: {
-        address: "0x",
-      },
-    },
+    contracts: contracts[scrollSepolia.id],
   },
-  {
+  /*   {
     name: "Fhenix Nitrogen Testnet",
     chainId: 8008148,
     rpcUrl: `https://api.nitrogen.fhenix.zone`,
@@ -186,7 +125,7 @@ const testnets: INetwork[] = [
         address: "0x353EA08f9cEB8b23A3496e6A24C019Ebb091AcA6",
       },
     },
-  },
+  }, */
 ];
 
 const networks = [...mainnets, ...testnets];

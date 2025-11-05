@@ -8,6 +8,7 @@ import { cofhejs, FheTypes, Encryptable, CoFheInUint128 } from "cofhejs/node";
 import networks from "../../config/networks";
 import { arbitrumSepolia, sepolia } from "viem/chains";
 import { appendMetadataToInput, generateTransferFromPermit } from "../../lib/utils";
+import addresses from "../../config/addresses";
 
 export const handleFulfillIntent = async (intent: ContractIntent) => {
   console.log("This intent is mine:", intent);
@@ -115,20 +116,17 @@ export const handleFulfillIntentFhenix = async (intent: ContractIntent) => {
   const publicClientSource = publicClients.find((pc) => pc.chainId === intent.originChainId)!.client;
   const walletClientDest = walletClients.find((wc) => wc.chainId === intent.destinationChainId)!.client;
   const publicClientDest = publicClients.find((pc) => pc.chainId === intent.destinationChainId)!.client;
-  const bridgeContractSrc = networks.find((n) => n.chainId === intent.originChainId)?.contracts.fheBridgeContract
-    .address as `0x${string}`;
+  const bridgeContractSrc = networks.find((n) => n.chainId === intent.originChainId)!.contracts.fhenixBridge.address;
   const walletAddress = walletClientSource.account.address;
-  const bridgeContractSrcCoprocessor = networks.find((n) => n.chainId === intent.originChainId)?.contracts
-    .fheBridgeContract.coprocessor;
+  const bridgeContractSrcCoprocessor = networks.find((n) => n.chainId === intent.originChainId)!.contracts.fhenixBridge
+    .coprocessor;
 
   if (!bridgeContractSrcCoprocessor) {
     throw new Error(`Coprocessor for bridge contract on chainId ${intent.originChainId} not found`);
   }
 
-  const fhenixBridgeContractAddress = networks.find((n) => n.chainId === intent.destinationChainId)!.contracts
-    .fheBridgeContract.address as `0x${string}`;
-  const fhenixEUSDCAddress = networks.find((n) => n.chainId === intent.destinationChainId)!.contracts.eUSDC
-    .address as `0x${string}`;
+  const fhenixBridgeContractAddress = addresses[intent.destinationChainId].fhenixBridge;
+  const fhenixEUSDCAddress = addresses[intent.destinationChainId].eUSDC;
 
   const intentArgs = {
     sender: intent.sender,
