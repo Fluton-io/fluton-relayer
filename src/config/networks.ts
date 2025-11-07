@@ -12,6 +12,7 @@ import addresses from "./addresses";
 import { INFURA_API_KEY } from "./env";
 import { Coprocessor, Network } from "./types";
 import contracts from "./contracts";
+import tokens from "./tokens";
 
 const mainnets: Network[] = [
   {
@@ -24,6 +25,7 @@ const mainnets: Network[] = [
       url: "https://etherscan.io",
     },
     contracts: contracts[mainnet.id],
+    tokens: tokens[mainnet.id],
   },
   {
     name: "Arbitrum Mainnet",
@@ -35,6 +37,7 @@ const mainnets: Network[] = [
       url: "https://arbiscan.io",
     },
     contracts: contracts[arbitrum.id],
+    tokens: tokens[arbitrum.id],
   },
   {
     name: "Optimism Mainnet",
@@ -46,6 +49,7 @@ const mainnets: Network[] = [
       url: "https://optimistic.etherscan.io",
     },
     contracts: contracts[optimism.id],
+    tokens: tokens[optimism.id],
   },
   {
     name: "Scroll Mainnet",
@@ -57,6 +61,7 @@ const mainnets: Network[] = [
       url: "https://optimistic.etherscan.io",
     },
     contracts: contracts[scroll.id],
+    tokens: tokens[scroll.id],
   },
 ];
 
@@ -72,7 +77,8 @@ const testnets: Network[] = [
       url: "https://sepolia.etherscan.io",
     },
     contracts: contracts[sepolia.id],
-    coprocessors: [Coprocessor.FHENIX],
+    tokens: tokens[sepolia.id],
+    coprocessors: [Coprocessor.FHENIX, Coprocessor.ZAMA],
   },
   {
     name: "Arbitrum Sepolia Testnet",
@@ -84,6 +90,7 @@ const testnets: Network[] = [
       url: "https://sepolia.arbiscan.io",
     },
     contracts: contracts[arbitrumSepolia.id],
+    tokens: tokens[arbitrumSepolia.id],
     coprocessors: [Coprocessor.FHENIX],
   },
   {
@@ -96,6 +103,7 @@ const testnets: Network[] = [
       url: "https://sepolia-optimism.etherscan.io",
     },
     contracts: contracts[optimismSepolia.id],
+    tokens: tokens[optimismSepolia.id],
   },
   {
     name: "Scroll Sepolia Testnet",
@@ -107,6 +115,7 @@ const testnets: Network[] = [
       url: "https://sepolia.scrollscan.com",
     },
     contracts: contracts[scrollSepolia.id],
+    tokens: tokens[scrollSepolia.id],
   },
   /*   {
     name: "Fhenix Nitrogen Testnet",

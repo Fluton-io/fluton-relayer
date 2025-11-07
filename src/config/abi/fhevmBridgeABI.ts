@@ -5,52 +5,6 @@ const abi = [
     type: "constructor",
   },
   {
-    inputs: [],
-    name: "EnforcedPause",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "ExpectedPause",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "IntentAlreadyFilled",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "IntentNotFound",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidAddress",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint8",
-        name: "got",
-        type: "uint8",
-      },
-      {
-        internalType: "uint8",
-        name: "expected",
-        type: "uint8",
-      },
-    ],
-    name: "InvalidEncryptedInput",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidToken",
-    type: "error",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -70,16 +24,6 @@ const abi = [
       },
     ],
     name: "OwnableUnauthorizedAccount",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "ReentrancyGuardReentrantCall",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "SolverAlreadyPaid",
     type: "error",
   },
   {
@@ -132,12 +76,12 @@ const abi = [
           {
             internalType: "euint64",
             name: "inputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "euint64",
             name: "outputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "uint256",
@@ -152,10 +96,10 @@ const abi = [
           {
             internalType: "euint32",
             name: "destinationChainId",
-            type: "uint256",
+            type: "bytes32",
           },
           {
-            internalType: "enum FhenixBridge.FilledStatus",
+            internalType: "enum FHEVMBridge.FilledStatus",
             name: "filledStatus",
             type: "uint8",
           },
@@ -171,7 +115,7 @@ const abi = [
           },
         ],
         indexed: false,
-        internalType: "struct FhenixBridge.Intent",
+        internalType: "struct FHEVMBridge.Intent",
         name: "intent",
         type: "tuple",
       },
@@ -224,12 +168,12 @@ const abi = [
           {
             internalType: "euint64",
             name: "inputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "euint64",
             name: "outputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "uint256",
@@ -244,10 +188,10 @@ const abi = [
           {
             internalType: "euint32",
             name: "destinationChainId",
-            type: "uint256",
+            type: "bytes32",
           },
           {
-            internalType: "enum FhenixBridge.FilledStatus",
+            internalType: "enum FHEVMBridge.FilledStatus",
             name: "filledStatus",
             type: "uint8",
           },
@@ -263,7 +207,7 @@ const abi = [
           },
         ],
         indexed: false,
-        internalType: "struct FhenixBridge.Intent",
+        internalType: "struct FHEVMBridge.Intent",
         name: "intent",
         type: "tuple",
       },
@@ -316,12 +260,12 @@ const abi = [
           {
             internalType: "euint64",
             name: "inputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "euint64",
             name: "outputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "uint256",
@@ -336,10 +280,10 @@ const abi = [
           {
             internalType: "euint32",
             name: "destinationChainId",
-            type: "uint256",
+            type: "bytes32",
           },
           {
-            internalType: "enum FhenixBridge.FilledStatus",
+            internalType: "enum FHEVMBridge.FilledStatus",
             name: "filledStatus",
             type: "uint8",
           },
@@ -355,7 +299,7 @@ const abi = [
           },
         ],
         indexed: false,
-        internalType: "struct FhenixBridge.Intent",
+        internalType: "struct FHEVMBridge.Intent",
         name: "intent",
         type: "tuple",
       },
@@ -405,19 +349,6 @@ const abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "Paused",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         indexed: true,
         internalType: "address",
         name: "relayer",
@@ -434,42 +365,10 @@ const abi = [
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "Unpaused",
-    type: "event",
-  },
-  {
     inputs: [],
     name: "acceptOwnership",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "authorizedRelayers",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -500,101 +399,27 @@ const abi = [
         type: "address",
       },
       {
-        components: [
-          {
-            internalType: "uint256",
-            name: "ctHash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "securityZone",
-            type: "uint8",
-          },
-          {
-            internalType: "uint8",
-            name: "utype",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes",
-            name: "signature",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct InEuint64",
+        internalType: "externalEuint64",
         name: "_encInputAmount",
-        type: "tuple",
+        type: "bytes32",
       },
       {
-        components: [
-          {
-            internalType: "uint256",
-            name: "ctHash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "securityZone",
-            type: "uint8",
-          },
-          {
-            internalType: "uint8",
-            name: "utype",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes",
-            name: "signature",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct InEuint64",
+        internalType: "externalEuint64",
         name: "_encOutputAmount",
-        type: "tuple",
+        type: "bytes32",
       },
       {
-        components: [
-          {
-            internalType: "uint256",
-            name: "ctHash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "securityZone",
-            type: "uint8",
-          },
-          {
-            internalType: "uint8",
-            name: "utype",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes",
-            name: "signature",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct InEuint32",
+        internalType: "externalEuint32",
         name: "_destinationChainId",
-        type: "tuple",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "_inputProof",
+        type: "bytes",
       },
     ],
     name: "bridge",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "intentId",
-        type: "uint256",
-      },
-    ],
-    name: "claimTimeout",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -619,6 +444,32 @@ const abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "fee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "feeReceiver",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         components: [
@@ -650,12 +501,12 @@ const abi = [
           {
             internalType: "euint64",
             name: "inputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "euint64",
             name: "outputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "uint256",
@@ -670,10 +521,10 @@ const abi = [
           {
             internalType: "euint32",
             name: "destinationChainId",
-            type: "uint256",
+            type: "bytes32",
           },
           {
-            internalType: "enum FhenixBridge.FilledStatus",
+            internalType: "enum FHEVMBridge.FilledStatus",
             name: "filledStatus",
             type: "uint8",
           },
@@ -688,36 +539,19 @@ const abi = [
             type: "uint256",
           },
         ],
-        internalType: "struct FhenixBridge.Intent",
+        internalType: "struct FHEVMBridge.Intent",
         name: "intent",
         type: "tuple",
       },
       {
-        components: [
-          {
-            internalType: "uint256",
-            name: "ctHash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "securityZone",
-            type: "uint8",
-          },
-          {
-            internalType: "uint8",
-            name: "utype",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes",
-            name: "signature",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct InEuint64",
-        name: "_outputAmount",
-        type: "tuple",
+        internalType: "externalEuint64",
+        name: "_encOutputAmount",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "_inputProof",
+        type: "bytes",
       },
     ],
     name: "fulfill",
@@ -757,12 +591,12 @@ const abi = [
           {
             internalType: "euint64",
             name: "inputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "euint64",
             name: "outputAmount",
-            type: "uint256",
+            type: "bytes32",
           },
           {
             internalType: "uint256",
@@ -777,10 +611,10 @@ const abi = [
           {
             internalType: "euint32",
             name: "destinationChainId",
-            type: "uint256",
+            type: "bytes32",
           },
           {
-            internalType: "enum FhenixBridge.FilledStatus",
+            internalType: "enum FHEVMBridge.FilledStatus",
             name: "filledStatus",
             type: "uint8",
           },
@@ -795,313 +629,14 @@ const abi = [
             type: "uint256",
           },
         ],
-        internalType: "struct FhenixBridge.Intent",
+        internalType: "struct FHEVMBridge.Intent",
         name: "intent",
         type: "tuple",
-      },
-      {
-        internalType: "euint64",
-        name: "_outputAmount",
-        type: "uint256",
       },
     ],
     name: "fulfill",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "intentId",
-        type: "uint256",
-      },
-    ],
-    name: "getIntent",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "sender",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "receiver",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "relayer",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "inputToken",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "outputToken",
-            type: "address",
-          },
-          {
-            internalType: "euint64",
-            name: "inputAmount",
-            type: "uint256",
-          },
-          {
-            internalType: "euint64",
-            name: "outputAmount",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "uint32",
-            name: "originChainId",
-            type: "uint32",
-          },
-          {
-            internalType: "euint32",
-            name: "destinationChainId",
-            type: "uint256",
-          },
-          {
-            internalType: "enum FhenixBridge.FilledStatus",
-            name: "filledStatus",
-            type: "uint8",
-          },
-          {
-            internalType: "bool",
-            name: "solverPaid",
-            type: "bool",
-          },
-          {
-            internalType: "uint256",
-            name: "timeout",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct FhenixBridge.Intent",
-        name: "",
-        type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "intentId",
-        type: "uint256",
-      },
-    ],
-    name: "inputAmountTransfer",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "ctHash",
-        type: "uint256",
-      },
-      {
-        internalType: "uint8",
-        name: "securityZone",
-        type: "uint8",
-      },
-      {
-        internalType: "uint8",
-        name: "utype",
-        type: "uint8",
-      },
-      {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "intentId",
-        type: "uint256",
-      },
-    ],
-    name: "intents",
-    outputs: [
-      {
-        internalType: "address",
-        name: "sender",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "relayer",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "inputToken",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "outputToken",
-        type: "address",
-      },
-      {
-        internalType: "euint64",
-        name: "inputAmount",
-        type: "uint256",
-      },
-      {
-        internalType: "euint64",
-        name: "outputAmount",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        internalType: "uint32",
-        name: "originChainId",
-        type: "uint32",
-      },
-      {
-        internalType: "euint32",
-        name: "destinationChainId",
-        type: "uint256",
-      },
-      {
-        internalType: "enum FhenixBridge.FilledStatus",
-        name: "filledStatus",
-        type: "uint8",
-      },
-      {
-        internalType: "bool",
-        name: "solverPaid",
-        type: "bool",
-      },
-      {
-        internalType: "uint256",
-        name: "timeout",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        components: [
-          {
-            internalType: "uint32",
-            name: "sourceChannelId",
-            type: "uint32",
-          },
-          {
-            internalType: "uint32",
-            name: "destinationChannelId",
-            type: "uint32",
-          },
-          {
-            internalType: "bytes",
-            name: "data",
-            type: "bytes",
-          },
-          {
-            internalType: "uint64",
-            name: "timeoutHeight",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "timeoutTimestamp",
-            type: "uint64",
-          },
-        ],
-        internalType: "struct IBCPacket",
-        name: "packet",
-        type: "tuple",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes",
-      },
-    ],
-    name: "onRecvPacket",
-    outputs: [
-      {
-        internalType: "bytes",
-        name: "",
-        type: "bytes",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "intentId",
-        type: "uint256",
-      },
-    ],
-    name: "outputAmountTransfer",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "ctHash",
-        type: "uint256",
-      },
-      {
-        internalType: "uint8",
-        name: "securityZone",
-        type: "uint8",
-      },
-      {
-        internalType: "uint8",
-        name: "utype",
-        type: "uint8",
-      },
-      {
-        internalType: "bytes",
-        name: "signature",
-        type: "bytes",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -1112,26 +647,6 @@ const abi = [
         internalType: "address",
         name: "",
         type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "pause",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "paused",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -1152,38 +667,20 @@ const abi = [
   },
   {
     inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
+    name: "protocolId",
+    outputs: [
       {
         internalType: "uint256",
-        name: "intentId",
+        name: "",
         type: "uint256",
       },
     ],
-    name: "repayRelayer",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "pure",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "relayer",
-        type: "address",
-      },
-      {
-        internalType: "bool",
-        name: "authorized",
-        type: "bool",
-      },
-    ],
-    name: "setRelayerAuthorization",
+    inputs: [],
+    name: "renounceOwnership",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1202,13 +699,6 @@ const abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "unpause",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -1216,31 +706,14 @@ const abi = [
         type: "address",
       },
       {
-        components: [
-          {
-            internalType: "uint256",
-            name: "ctHash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "securityZone",
-            type: "uint8",
-          },
-          {
-            internalType: "uint8",
-            name: "utype",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes",
-            name: "signature",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct InEuint64",
+        internalType: "externalEuint64",
         name: "_encryptedAmount",
-        type: "tuple",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "_inputProof",
+        type: "bytes",
       },
     ],
     name: "withdraw",

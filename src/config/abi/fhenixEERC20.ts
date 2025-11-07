@@ -26,33 +26,6 @@ const abi = [
     type: "error",
   },
   {
-    inputs: [],
-    name: "ECDSAInvalidSignature",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "length",
-        type: "uint256",
-      },
-    ],
-    name: "ECDSAInvalidSignatureLength",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "s",
-        type: "bytes32",
-      },
-    ],
-    name: "ECDSAInvalidSignatureS",
-    type: "error",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -141,33 +114,6 @@ const abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "deadline",
-        type: "uint256",
-      },
-    ],
-    name: "ERC2612ExpiredSignature",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "signer",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-    ],
-    name: "ERC2612InvalidSigner",
-    type: "error",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "from",
         type: "address",
@@ -178,7 +124,7 @@ const abi = [
         type: "address",
       },
     ],
-    name: "FHERC20EncTransferFromOwnerMismatch",
+    name: "FHERC20ConfidentialTransferFromOwnerMismatch",
     type: "error",
   },
   {
@@ -194,7 +140,7 @@ const abi = [
         type: "address",
       },
     ],
-    name: "FHERC20EncTransferFromSpenderMismatch",
+    name: "FHERC20ConfidentialTransferFromSpenderMismatch",
     type: "error",
   },
   {
@@ -210,7 +156,7 @@ const abi = [
         type: "uint256",
       },
     ],
-    name: "FHERC20EncTransferFromValueHashMismatch",
+    name: "FHERC20ConfidentialTransferFromValueHashMismatch",
     type: "error",
   },
   {
@@ -233,16 +179,43 @@ const abi = [
     inputs: [
       {
         internalType: "address",
-        name: "account",
+        name: "receiver",
+        type: "address",
+      },
+    ],
+    name: "FHERC20InvalidReceiver",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
         type: "address",
       },
       {
-        internalType: "uint256",
-        name: "currentNonce",
-        type: "uint256",
+        internalType: "address",
+        name: "spender",
+        type: "address",
       },
     ],
-    name: "InvalidAccountNonce",
+    name: "FHERC20UnauthorizedSpender",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "euint64",
+        name: "value",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "FHERC20UnauthorizedUseOfEncryptedAmount",
     type: "error",
   },
   {
@@ -264,11 +237,6 @@ const abi = [
   {
     inputs: [],
     name: "InvalidRecipient",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "InvalidShortString",
     type: "error",
   },
   {
@@ -332,17 +300,6 @@ const abi = [
     type: "error",
   },
   {
-    inputs: [
-      {
-        internalType: "string",
-        name: "str",
-        type: "string",
-      },
-    ],
-    name: "StringTooLong",
-    type: "error",
-  },
-  {
     anonymous: false,
     inputs: [
       {
@@ -384,18 +341,12 @@ const abi = [
       },
       {
         indexed: false,
-        internalType: "uint128",
+        internalType: "uint64",
         name: "value",
-        type: "uint128",
+        type: "uint64",
       },
     ],
     name: "ClaimedUnwrappedERC20",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [],
-    name: "EIP712DomainChanged",
     type: "event",
   },
   {
@@ -420,7 +371,32 @@ const abi = [
         type: "uint256",
       },
     ],
-    name: "EncTransfer",
+    name: "ConfidentialTransfer",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "holder",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "operator",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint48",
+        name: "until",
+        type: "uint48",
+      },
+    ],
+    name: "OperatorSet",
     type: "event",
   },
   {
@@ -497,9 +473,9 @@ const abi = [
       },
       {
         indexed: false,
-        internalType: "uint128",
+        internalType: "uint64",
         name: "value",
-        type: "uint128",
+        type: "uint64",
       },
     ],
     name: "UnwrappedERC20",
@@ -522,26 +498,13 @@ const abi = [
       },
       {
         indexed: false,
-        internalType: "uint128",
+        internalType: "uint64",
         name: "value",
-        type: "uint128",
+        type: "uint64",
       },
     ],
     name: "WrappedERC20",
     type: "event",
-  },
-  {
-    inputs: [],
-    name: "DOMAIN_SEPARATOR",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
   },
   {
     inputs: [
@@ -644,6 +607,358 @@ const abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "confidentialBalanceOf",
+    outputs: [
+      {
+        internalType: "euint64",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "confidentialTotalSupply",
+    outputs: [
+      {
+        internalType: "euint64",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "ctHash",
+            type: "uint256",
+          },
+          {
+            internalType: "uint8",
+            name: "securityZone",
+            type: "uint8",
+          },
+          {
+            internalType: "uint8",
+            name: "utype",
+            type: "uint8",
+          },
+          {
+            internalType: "bytes",
+            name: "signature",
+            type: "bytes",
+          },
+        ],
+        internalType: "struct InEuint64",
+        name: "inValue",
+        type: "tuple",
+      },
+    ],
+    name: "confidentialTransfer",
+    outputs: [
+      {
+        internalType: "euint64",
+        name: "transferred",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "euint64",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "confidentialTransfer",
+    outputs: [
+      {
+        internalType: "euint64",
+        name: "transferred",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "euint64",
+        name: "value",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
+    ],
+    name: "confidentialTransferAndCall",
+    outputs: [
+      {
+        internalType: "euint64",
+        name: "transferred",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "ctHash",
+            type: "uint256",
+          },
+          {
+            internalType: "uint8",
+            name: "securityZone",
+            type: "uint8",
+          },
+          {
+            internalType: "uint8",
+            name: "utype",
+            type: "uint8",
+          },
+          {
+            internalType: "bytes",
+            name: "signature",
+            type: "bytes",
+          },
+        ],
+        internalType: "struct InEuint64",
+        name: "inValue",
+        type: "tuple",
+      },
+      {
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
+    ],
+    name: "confidentialTransferAndCall",
+    outputs: [
+      {
+        internalType: "euint64",
+        name: "transferred",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "ctHash",
+            type: "uint256",
+          },
+          {
+            internalType: "uint8",
+            name: "securityZone",
+            type: "uint8",
+          },
+          {
+            internalType: "uint8",
+            name: "utype",
+            type: "uint8",
+          },
+          {
+            internalType: "bytes",
+            name: "signature",
+            type: "bytes",
+          },
+        ],
+        internalType: "struct InEuint64",
+        name: "inValue",
+        type: "tuple",
+      },
+    ],
+    name: "confidentialTransferFrom",
+    outputs: [
+      {
+        internalType: "euint64",
+        name: "transferred",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "euint64",
+        name: "value",
+        type: "uint256",
+      },
+    ],
+    name: "confidentialTransferFrom",
+    outputs: [
+      {
+        internalType: "euint64",
+        name: "transferred",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        internalType: "euint64",
+        name: "value",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
+    ],
+    name: "confidentialTransferFromAndCall",
+    outputs: [
+      {
+        internalType: "euint64",
+        name: "transferred",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "ctHash",
+            type: "uint256",
+          },
+          {
+            internalType: "uint8",
+            name: "securityZone",
+            type: "uint8",
+          },
+          {
+            internalType: "uint8",
+            name: "utype",
+            type: "uint8",
+          },
+          {
+            internalType: "bytes",
+            name: "signature",
+            type: "bytes",
+          },
+        ],
+        internalType: "struct InEuint64",
+        name: "inValue",
+        type: "tuple",
+      },
+      {
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
+    ],
+    name: "confidentialTransferFromAndCall",
+    outputs: [
+      {
+        internalType: "euint64",
+        name: "transferred",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "decimals",
     outputs: [
@@ -654,489 +969,6 @@ const abi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "eip712Domain",
-    outputs: [
-      {
-        internalType: "bytes1",
-        name: "fields",
-        type: "bytes1",
-      },
-      {
-        internalType: "string",
-        name: "name",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "version",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "chainId",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "verifyingContract",
-        type: "address",
-      },
-      {
-        internalType: "bytes32",
-        name: "salt",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint256[]",
-        name: "extensions",
-        type: "uint256[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-    ],
-    name: "encBalanceOf",
-    outputs: [
-      {
-        internalType: "euint128",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "encTotalSupply",
-    outputs: [
-      {
-        internalType: "euint128",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "ctHash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "securityZone",
-            type: "uint8",
-          },
-          {
-            internalType: "uint8",
-            name: "utype",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes",
-            name: "signature",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct InEuint128",
-        name: "inValue",
-        type: "tuple",
-      },
-    ],
-    name: "encTransfer",
-    outputs: [
-      {
-        internalType: "euint128",
-        name: "transferred",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "euint128",
-        name: "value",
-        type: "uint256",
-      },
-    ],
-    name: "encTransfer",
-    outputs: [
-      {
-        internalType: "euint128",
-        name: "transferred",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "euint128",
-        name: "value",
-        type: "uint256",
-      },
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "spender",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "value_hash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "deadline",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "v",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes32",
-            name: "r",
-            type: "bytes32",
-          },
-          {
-            internalType: "bytes32",
-            name: "s",
-            type: "bytes32",
-          },
-        ],
-        internalType: "struct IFHERC20.FHERC20_EIP712_Permit",
-        name: "permit",
-        type: "tuple",
-      },
-    ],
-    name: "encTransferFrom",
-    outputs: [
-      {
-        internalType: "euint128",
-        name: "transferred",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "ctHash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "securityZone",
-            type: "uint8",
-          },
-          {
-            internalType: "uint8",
-            name: "utype",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes",
-            name: "signature",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct InEuint128",
-        name: "inValue",
-        type: "tuple",
-      },
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "spender",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "value_hash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "deadline",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "v",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes32",
-            name: "r",
-            type: "bytes32",
-          },
-          {
-            internalType: "bytes32",
-            name: "s",
-            type: "bytes32",
-          },
-        ],
-        internalType: "struct IFHERC20.FHERC20_EIP712_Permit",
-        name: "permit",
-        type: "tuple",
-      },
-    ],
-    name: "encTransferFromDirect",
-    outputs: [
-      {
-        internalType: "euint128",
-        name: "transferred",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "euint128",
-        name: "value",
-        type: "uint256",
-      },
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "ctHash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "securityZone",
-            type: "uint8",
-          },
-          {
-            internalType: "uint8",
-            name: "utype",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes",
-            name: "signature",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct InEuint128",
-        name: "maxInValue",
-        type: "tuple",
-      },
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "spender",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "value_hash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "deadline",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "v",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes32",
-            name: "r",
-            type: "bytes32",
-          },
-          {
-            internalType: "bytes32",
-            name: "s",
-            type: "bytes32",
-          },
-        ],
-        internalType: "struct IFHERC20.FHERC20_EIP712_Permit",
-        name: "permit",
-        type: "tuple",
-      },
-    ],
-    name: "encTransferFromDirectWithMax",
-    outputs: [
-      {
-        internalType: "euint128",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "euint128",
-        name: "value",
-        type: "uint256",
-      },
-      {
-        internalType: "euint128",
-        name: "maxValue",
-        type: "uint256",
-      },
-      {
-        components: [
-          {
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            internalType: "address",
-            name: "spender",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "value_hash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "deadline",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "v",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes32",
-            name: "r",
-            type: "bytes32",
-          },
-          {
-            internalType: "bytes32",
-            name: "s",
-            type: "bytes32",
-          },
-        ],
-        internalType: "struct IFHERC20.FHERC20_EIP712_Permit",
-        name: "permit",
-        type: "tuple",
-      },
-    ],
-    name: "encTransferFromWithMax",
-    outputs: [
-      {
-        internalType: "euint128",
-        name: "transferred",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -1170,14 +1002,14 @@ const abi = [
             type: "uint256",
           },
           {
-            internalType: "uint128",
+            internalType: "uint64",
             name: "requestedAmount",
-            type: "uint128",
+            type: "uint64",
           },
           {
-            internalType: "uint128",
+            internalType: "uint64",
             name: "decryptedAmount",
-            type: "uint128",
+            type: "uint64",
           },
           {
             internalType: "bool",
@@ -1221,14 +1053,14 @@ const abi = [
             type: "uint256",
           },
           {
-            internalType: "uint128",
+            internalType: "uint64",
             name: "requestedAmount",
-            type: "uint128",
+            type: "uint64",
           },
           {
-            internalType: "uint128",
+            internalType: "uint64",
             name: "decryptedAmount",
-            type: "uint128",
+            type: "uint64",
           },
           {
             internalType: "bool",
@@ -1281,6 +1113,30 @@ const abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "holder",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "spender",
+        type: "address",
+      },
+    ],
+    name: "isOperator",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "name",
     outputs: [
@@ -1288,25 +1144,6 @@ const abi = [
         internalType: "string",
         name: "",
         type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-    ],
-    name: "nonces",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -1335,6 +1172,24 @@ const abi = [
   {
     inputs: [],
     name: "resetIndicatedBalance",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "operator",
+        type: "address",
+      },
+      {
+        internalType: "uint48",
+        name: "until",
+        type: "uint48",
+      },
+    ],
+    name: "setOperator",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1439,9 +1294,9 @@ const abi = [
         type: "address",
       },
       {
-        internalType: "uint128",
+        internalType: "uint64",
         name: "value",
-        type: "uint128",
+        type: "uint64",
       },
     ],
     name: "unwrap",
@@ -1470,9 +1325,9 @@ const abi = [
         type: "address",
       },
       {
-        internalType: "uint128",
+        internalType: "uint64",
         name: "value",
-        type: "uint128",
+        type: "uint64",
       },
     ],
     name: "wrap",
