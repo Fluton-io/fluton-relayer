@@ -73,11 +73,11 @@ export const handleIntentCreatedZama = async (intent: ContractIntent) => {
     const keypair = zamaClient.generateKeypair();
     const handleContractPairs = [
       {
-        handle: intent.outputAmount.toString(16) as `0x${string}`,
+        handle: ("0x" + intent.outputAmount.toString(16)) as `0x${string}`,
         contractAddress: bridgeContractSource,
       },
       {
-        handle: intent.destinationChainId.toString(16) as `0x${string}`,
+        handle: ("0x" + intent.destinationChainId.toString(16)) as `0x${string}`,
         contractAddress: bridgeContractSource,
       },
     ];

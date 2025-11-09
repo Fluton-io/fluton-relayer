@@ -10,21 +10,27 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
   [addresses[sepolia.id].eUSDC]: addresses[mainnet.id].USDC,
 
   [addresses[sepolia.id].USDT]: addresses[mainnet.id].USDT,
+  [addresses[sepolia.id].cUSDT]: addresses[mainnet.id].USDT,
   [addresses[sepolia.id].eUSDT]: addresses[mainnet.id].USDT,
 
   [addresses[sepolia.id].DAI]: addresses[mainnet.id].DAI,
+  [addresses[sepolia.id].cDAI]: addresses[mainnet.id].DAI,
   [addresses[sepolia.id].eDAI]: addresses[mainnet.id].DAI,
 
   [addresses[sepolia.id].UNI]: addresses[mainnet.id].UNI,
+  [addresses[sepolia.id].cUNI]: addresses[mainnet.id].UNI,
   [addresses[sepolia.id].eUNI]: addresses[mainnet.id].UNI,
 
   [addresses[sepolia.id].U]: addresses[mainnet.id].U,
+  [addresses[sepolia.id].cU]: addresses[mainnet.id].U,
   [addresses[sepolia.id].eU]: addresses[mainnet.id].U,
 
   [addresses[sepolia.id].XFL]: addresses[mainnet.id].XFL,
+  [addresses[sepolia.id].cXFL]: addresses[mainnet.id].XFL,
   [addresses[sepolia.id].eXFL]: addresses[mainnet.id].XFL,
 
   [addresses[sepolia.id].AAVE]: addresses[mainnet.id].AAVE,
+  [addresses[sepolia.id].cAAVE]: addresses[mainnet.id].AAVE,
   [addresses[sepolia.id].eAAVE]: addresses[mainnet.id].AAVE,
 
   // arbitrum sepolia -> arbitrum mainnet
