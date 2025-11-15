@@ -1,3 +1,20 @@
+export enum Coprocessor {
+  ZAMA,
+  FHENIX,
+  INCO,
+}
+
+export interface Token {
+  symbol: string;
+  address: `0x${string}`;
+  decimals: number;
+  chainId: number;
+  underlyingTokenAddress?: `0x${string}`;
+  isConfidential?: boolean;
+  apiPriceTokenSymbol?: string;
+  coprocessor?: Coprocessor;
+}
+
 export interface TokenDetails {
   name: string;
   baseFee: string;
@@ -6,8 +23,7 @@ export interface TokenDetails {
   decimals: number;
   balance: number;
 }
-
-export interface INetwork {
+export interface Network {
   name: string;
   chainId: number;
   rpcUrl: string;
@@ -17,9 +33,9 @@ export interface INetwork {
     apiKey: string | null;
     url: string;
   };
-  contracts: {
-    [contractName: string]: `0x${string}`;
-  };
+  contracts: Record<string, { address: `0x${string}`; coprocessor?: Coprocessor }>;
+  tokens: Token[];
+  coprocessors?: Coprocessor[];
 }
 
 export interface TargetNetworkDetails {
@@ -55,6 +71,8 @@ export interface ContractIntent {
   outputAmount: bigint;
   id: bigint;
   originChainId: number;
-  destinationChainId: number;
+  destinationChainId: bigint;
   filledStatus: number;
+  solverPaid: boolean;
+  timeout: bigint;
 }
