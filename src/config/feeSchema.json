@@ -184,7 +184,7 @@
         "decimals": 6,
         "balance": 10000
       },
-      "0x2Ce559C8836C17F2aaDB3E6eE1f976C58114E95A": {
+      "0x17A68464c69D3dbce8A058998Ef03B487cc2d60B": {
         "name": "eUSDC",
         "baseFee": "0.001",
         "percentageFee": "0.03%",
