@@ -6,7 +6,7 @@ const addresses: { [key: number]: { [key: string]: `0x${string}` } } = {
 
     USDC: "0x2831d2b6b7bd5Ca9E2EEe932055a91f5a6cEBe2f",
     cUSDC: "0x0e57e8aEA9a1545B1DA79886cDEfad0A97e6E934",
-    eUSDC: "0x2Ce559C8836C17F2aaDB3E6eE1f976C58114E95A",
+    eUSDC: "0x17A68464c69D3dbce8A058998Ef03B487cc2d60B",
 
     USDT: "0x9ba570043C7703AB644adBB757048D10e97DEcf6",
     cUSDT: "0x103BC0D8cCb2FF5BA07Ca4670a3137aAF9c6356f",
@@ -32,7 +32,7 @@ const addresses: { [key: number]: { [key: string]: `0x${string}` } } = {
     cAAVE: "0x94E16Df26a1DbEf5ab1113F35F511Ec96D8ca57a",
     eAAVE: "0x394e8D6FA146326334C623347F56d700d889fdae",
 
-    fhenixBridge: "0x27f418d8114AED5468bd37650772212E902a8757",
+    fhenixBridge: "0xdF2aCCdC66E9A6b3bC27bbf83842C54eAA2C8C49",
     fhevmBridge: "0xc143234f3A4220b8Ee91131F903c370df2f39b95",
   },
   [arbitrumSepolia.id]: {
@@ -59,7 +59,7 @@ const addresses: { [key: number]: { [key: string]: `0x${string}` } } = {
     AAVE: "0x3fD7E42d9d5dE2153724740a5e9c70Bf8b89a0Fd",
     eAAVE: "0xBe0352Da14180b6062290eE161B5e56a96FE604B",
 
-    fhenixBridge: "0x06b431D0FaB55e78320a41c62552c3a2aa9335d3",
+    fhenixBridge: "0x0956bF2c80e3aa559805e953B6D737C02e864360",
   },
   [baseSepolia.id]: {
     USDC: "0x1a4b49cb5DBaa9a82F9f8054Dce210372B40376a",

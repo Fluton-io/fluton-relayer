@@ -60,10 +60,12 @@ export const handleGiveOffers = async (
 
   // TODO: Also check if sourceToken and targetToken are actual ERC-20 tokens
 
-  const schemaForSourceChain = feeSchema.chains[sourceChainIdMainnet];
-  const schemaForTargetChain = feeSchema.chains[targetChainIdMainnet];
+  const schemaForSourceChain = feeSchema.chains[sourceChainId];
+  const schemaForTargetChain = feeSchema.chains[targetChainId];
+  const schemaForSourceChainMainnet = feeSchema.chains[sourceChainIdMainnet];
+  const schemaForTargetChainMainnet = feeSchema.chains[targetChainIdMainnet];
 
-  if (!schemaForTargetChain) {
+  if (!schemaForTargetChainMainnet) {
     console.error(`Chain ID ${targetChainIdMainnet} not supported by the relayer.`);
     callback({ status: "error", walletAddress, message: `Chain ID ${targetChainIdMainnet} not supported.` });
     return;
@@ -75,8 +77,8 @@ export const handleGiveOffers = async (
       callback({
         status: "ok",
         walletAddress,
-        baseFee: schemaForTargetChain[targetTokenAddressMainnet].baseFee,
-        percentageFee: schemaForTargetChain[targetTokenAddressMainnet].percentageFee,
+        baseFee: schemaForTargetChainMainnet[targetTokenAddressMainnet].baseFee,
+        percentageFee: schemaForTargetChainMainnet[targetTokenAddressMainnet].percentageFee,
       });
       return;
     }
@@ -86,34 +88,46 @@ export const handleGiveOffers = async (
     ];
     console.log("Source token price:", sourceTokenPrice);
 
-    const sourceTokenDecimals = schemaForSourceChain[sourceTokenAddressMainnet]?.decimals || 18;
+    const sourceTokenDecimals = schemaForSourceChain[sourceTokenAddress]?.decimals || 18;
 
     const sourceAmountInUSD = sourceTokenPrice * Number(BigInt(amount) / BigInt(10 ** sourceTokenDecimals));
     console.log("sourceAmountInUSD:", sourceAmountInUSD);
 
-    console.log("schemaForTargetChain:", schemaForTargetChain);
-    const relayerTargetToken = schemaForTargetChain[targetTokenAddressMainnet];
-    console.log("relayer target token:", relayerTargetToken);
-    const relayerTargetTokenPrice = (await getPrice(parseInt(targetChainIdMainnet), targetTokenAddressMainnet))[
+    console.log("schemaForTargetChainMainnet:", schemaForTargetChainMainnet);
+    const relayerTargetTokenMainnet = schemaForTargetChainMainnet[targetTokenAddressMainnet];
+    const relayerTargetToken = schemaForTargetChain[targetTokenAddress];
+    console.log("relayer target token mainnet:", relayerTargetTokenMainnet);
+    const relayerTargetTokenMainnetPrice = (await getPrice(parseInt(targetChainIdMainnet), targetTokenAddressMainnet))[
       targetTokenAddressMainnet
     ];
-    console.log("relayer target token price:", relayerTargetTokenPrice);
-    const relayerTargetTokenValue = relayerTargetTokenPrice * Number(relayerTargetToken.balance);
-    console.log("relayer target token value:", relayerTargetTokenValue);
+    console.log("relayer target token mainnet price:", relayerTargetTokenMainnetPrice);
+    const relayerTargetTokenMainnetValue = relayerTargetTokenMainnetPrice * Number(relayerTargetTokenMainnet.balance);
+    console.log("relayer target token mainnet value:", relayerTargetTokenMainnetValue);
     let result;
 
-    if (relayerTargetToken && relayerTargetTokenValue >= Number(sourceAmountInUSD)) {
+    if (relayerTargetTokenMainnet && relayerTargetTokenMainnetValue >= Number(sourceAmountInUSD)) {
       // if relayer has enough target token, calculate the target amount
-      // targetAmount = sourceAmountInUsd / relayerTargetTokenPrice - fee
+      // targetAmount = sourceAmountInUsd / relayerTargetTokenMainnetPrice - fee
       const { baseFee, percentageFee } = relayerTargetToken;
-      const targetTokenTransferAmount = sourceAmountInUSD / relayerTargetTokenPrice;
+      const targetTokenTransferAmount = sourceAmountInUSD / relayerTargetTokenMainnetPrice;
       console.log("targetTokenTransferAmount:", targetTokenTransferAmount);
       const baseFeeValue = parseFloat(baseFee);
       const percentageFeeValue = parseFloat(percentageFee) / 100;
       const totalFee = baseFeeValue + targetTokenTransferAmount * percentageFeeValue;
-      const targetAmount =
-        (targetTokenTransferAmount - totalFee) *
-        10 ** (schemaForTargetChain[targetTokenAddressMainnet]?.decimals || 18);
+      const targetAmount = Math.floor(
+        (targetTokenTransferAmount - totalFee) * 10 ** (schemaForTargetChain[targetTokenAddress]?.decimals || 18)
+      );
+
+      console.log(
+        "target amount: ",
+        targetAmount,
+        " totalFee: ",
+        totalFee,
+        " baseFeeValue: ",
+        baseFeeValue,
+        " percentageFeeValue: ",
+        percentageFeeValue
+      );
 
       result = { finalTargetAmount: targetAmount, pathViz: null };
     } else {

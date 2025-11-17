@@ -176,39 +176,199 @@
         "decimals": 18,
         "balance": 1
       },
-      "0x5cFe32B9B71634f1c72EF633082c52d6f41f84f7": {
+      "0x0e57e8aEA9a1545B1DA79886cDEfad0A97e6E934": {
         "name": "cUSDC",
-        "baseFee": "0.50",
-        "percentageFee": "0.3%",
+        "baseFee": "0.003",
+        "percentageFee": "0.01%",
         "swappable": true,
         "decimals": 6,
-        "balance": 1000
+        "balance": 10000
+      },
+      "0x17A68464c69D3dbce8A058998Ef03B487cc2d60B": {
+        "name": "eUSDC",
+        "baseFee": "0.001",
+        "percentageFee": "0.03%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x103BC0D8cCb2FF5BA07Ca4670a3137aAF9c6356f": {
+        "name": "cUSDT",
+        "baseFee": "0.002",
+        "percentageFee": "0.05%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x90760c190C69b2181e558BE1E33BF57541Dbe289": {
+        "name": "eUSDT",
+        "baseFee": "0.007",
+        "percentageFee": "0.02%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0xCA81571c2988aD20b65d92f8296696D03cAeA303": {
+        "name": "cDAI",
+        "baseFee": "0.004",
+        "percentageFee": "0.04%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x22ecb2895Dd3332061dF3E26c16DB5C38339Dde4": {
+        "name": "eDAI",
+        "baseFee": "0.003",
+        "percentageFee": "0.05%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x3Fd11A2524eff195036aB39376efAF50120Bcbca": {
+        "name": "cUNI",
+        "baseFee": "0.001",
+        "percentageFee": "0.03%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0xC7e3EBF1BdDC6dD5D8D9c704FA48878B08B1EeDD": {
+        "name": "eUNI",
+        "baseFee": "0.006",
+        "percentageFee": "0.02%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0xd9e6473455Bcf07d9df7820cc1107a3fF2236717": {
+        "name": "cU",
+        "baseFee": "0.005",
+        "percentageFee": "0.01%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x4645b71ed0bE51258EBeBc113734912759DaC51F": {
+        "name": "eU",
+        "baseFee": "0.008",
+        "percentageFee": "0.08%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0xB9468B1B24c8dECF502FFdB48F3AaFF09D5B218C": {
+        "name": "cXFL",
+        "baseFee": "0.002",
+        "percentageFee": "0.05%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x10Cdf8A216ff150E1a07509D4c656E3C851DA729": {
+        "name": "eXFL",
+        "baseFee": "0.004",
+        "percentageFee": "0.05%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x94E16Df26a1DbEf5ab1113F35F511Ec96D8ca57a": {
+        "name": "cAAVE",
+        "baseFee": "0.002",
+        "percentageFee": "0.025%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x394e8D6FA146326334C623347F56d700d889fdae": {
+        "name": "eAAVE",
+        "baseFee": "0.003",
+        "percentageFee": "0.05%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
       }
     },
     "421614": {
       "0xf065447aE1b6597410c4Ef0990F83C5F37bfD5B4": {
         "name": "USDT",
-        "baseFee": "0.35",
-        "percentageFee": "0.2%",
+        "baseFee": "0.005",
+        "percentageFee": "0.02%",
         "swappable": true,
         "decimals": 6,
         "balance": 0
       },
       "0x1746FB6484647F83E27Ed43460bbE30883F8F5b5": {
         "name": "USDC",
-        "baseFee": "0.50",
-        "percentageFee": "0.3%",
+        "baseFee": "0.002",
+        "percentageFee": "0.02%",
         "swappable": true,
         "decimals": 18,
         "balance": 1000
       },
       "0x64BC0Baad7371ece4B6467715bE75f3aa2FBBF0c": {
         "name": "WETH",
-        "baseFee": "0.40",
-        "percentageFee": "0.25%",
+        "baseFee": "0.0001",
+        "percentageFee": "0.05%",
         "swappable": true,
         "decimals": 18,
         "balance": 1
+      },
+      "0xb5F8102CF5CFD8E9593F2b3c4Ed55C2D90FD36DF": {
+        "name": "eUSDC",
+        "baseFee": "0.002",
+        "percentageFee": "0.03%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x3F5FdA9754F9b3bd180E3EaA6Fc19F040884F280": {
+        "name": "eUSDT",
+        "baseFee": "0.002",
+        "percentageFee": "0.02%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0xB2738Cd090FE8400cF6fB89eCC26dec913aBCBd2": {
+        "name": "eDAI",
+        "baseFee": "0.003",
+        "percentageFee": "0.05%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x62957Bc72B59bcD1DfA1a68cDE9Bf083EaaEDF16": {
+        "name": "eUNI",
+        "baseFee": "0.001",
+        "percentageFee": "0.1%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0xE5e62600231EF75E4E9d3208AD2b801F428E37C6": {
+        "name": "eU",
+        "baseFee": "0.004",
+        "percentageFee": "0.05%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x6D8d63975e94169167D70f56f45DfB7839419C54": {
+        "name": "eXFL",
+        "baseFee": "0.002",
+        "percentageFee": "0.05%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0xBe0352Da14180b6062290eE161B5e56a96FE604B": {
+        "name": "eAAVE",
+        "baseFee": "0.003",
+        "percentageFee": "0.01%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
       }
     },
     "8008148": {
