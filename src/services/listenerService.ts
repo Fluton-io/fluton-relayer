@@ -6,7 +6,7 @@ import { websocketClients } from "../config/client";
 import { walletAddress } from "../config/env";
 import {
   handleIntentCreatedFhenix,
-  handleIntentCreatedZama,
+  // handleIntentCreatedZama,
   handleIntentCreatedPublic,
 } from "./listener/listenerUtils";
 
@@ -76,7 +76,8 @@ export const listenBridgeEvents = () => {
             destinationChainId: BigInt(intent!.destinationChainId),
           };
           if (modifiedIntent && modifiedIntent?.relayer === walletAddress) {
-            handleIntentCreatedZama(modifiedIntent);
+            // handleIntentCreatedZama(modifiedIntent);
+            return;
           }
         },
         onError(error) {

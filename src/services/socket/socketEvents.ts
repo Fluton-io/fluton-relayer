@@ -101,7 +101,7 @@ export const handleGiveOffers = async (
       targetTokenAddressMainnet
     ];
     console.log("relayer target token mainnet price:", relayerTargetTokenMainnetPrice);
-    const relayerTargetTokenMainnetValue = relayerTargetTokenMainnetPrice * Number(relayerTargetTokenMainnet.balance);
+    const relayerTargetTokenMainnetValue = relayerTargetTokenMainnetPrice * Number(relayerTargetToken.balance);
     console.log("relayer target token mainnet value:", relayerTargetTokenMainnetValue);
     let result;
 

@@ -1,7 +1,7 @@
 import { ContractIntent, Coprocessor, Token } from "../../config/types";
 import FhenixBridgeABI from "../../config/abi/fhenixFheBridgeABI";
 import FhevmBridgeABI from "../../config/abi/fhevmBridgeABI";
-import { getZamaClient, getFhenixPermit, walletClients } from "../../config/client";
+import { /* getZamaClient, */ getFhenixPermit, walletClients } from "../../config/client";
 import { cofhejs, FheTypes, Encryptable } from "cofhejs/node";
 import addresses from "../../config/addresses";
 import tokens from "../../config/tokens";
@@ -51,7 +51,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent) => {
 
     if (targetCoprocessor === Coprocessor.ZAMA) {
       console.log("Fhenix to Zama transfer, decryption needed.");
-      return handleFulfillIntentZama(intent, unsealedOutputAmountResult.data, unsealedDestinationChainIdResult.data);
+      // return handleFulfillIntentZama(intent, unsealedOutputAmountResult.data, unsealedDestinationChainIdResult.data);
     } else if (targetCoprocessor === Coprocessor.FHENIX) {
       console.log("Fhenix to Fhenix transfer, no decryption needed, but decrypting for now.");
       return handleFulfillIntentFhenix(intent, unsealedOutputAmountResult.data, unsealedDestinationChainIdResult.data);
@@ -64,7 +64,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent) => {
   }
 };
 
-export const handleIntentCreatedZama = async (intent: ContractIntent) => {
+/* export const handleIntentCreatedZama = async (intent: ContractIntent) => {
   try {
     const walletClientSource = walletClients.find((wc) => wc.chainId === intent.originChainId)!.client;
     const bridgeContractSource = addresses[Number(intent.originChainId)].fhevmBridge;
@@ -128,7 +128,7 @@ export const handleIntentCreatedZama = async (intent: ContractIntent) => {
   } catch (error) {
     console.error("Error handling IntentCreated Zama:", error);
   }
-};
+}; */
 
 export const handleFulfillIntentFhenix = async (
   intent: ContractIntent,
@@ -170,7 +170,7 @@ export const handleFulfillIntentFhenix = async (
   }
 };
 
-export const handleFulfillIntentZama = async (
+/* export const handleFulfillIntentZama = async (
   intent: ContractIntent,
   outputAmount: bigint,
   destinationChainId: bigint
@@ -212,3 +212,4 @@ export const handleFulfillIntentZama = async (
     console.error("Error when fulfilling intent:", error);
   }
 };
+ */

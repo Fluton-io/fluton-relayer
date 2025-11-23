@@ -176,7 +176,7 @@ export const websocketClients = [
 
 let zamaClient: FhevmInstance | null = null;
 
-export const getZamaClient = async (): Promise<FhevmInstance> => {
+/* export const getZamaClient = async (): Promise<FhevmInstance> => {
   if (!zamaClient) {
     const config: FhevmInstanceConfig = {
       ...SepoliaConfig,
@@ -188,7 +188,7 @@ export const getZamaClient = async (): Promise<FhevmInstance> => {
   return zamaClient;
 };
 
-getZamaClient();
+getZamaClient(); */
 
 let fhenixPermits: { [chainId: number]: Permit } = {};
 export const getFhenixPermit = async (chainId: number): Promise<Permit> => {
