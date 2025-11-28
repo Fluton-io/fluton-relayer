@@ -3,7 +3,7 @@ import { FeeSchema, Intent } from "../../config/types";
 import { calculateAmountWithAggregator, findTokenCombinations } from "../aggregatorService";
 import testnetToMainnet from "../../config/testnetToMainnet";
 import testnetToMainnetToken from "../../config/testnetToMainnetToken";
-import { isAddress } from "viem";
+import { formatUnits, isAddress } from "viem";
 import { getPrice } from "../aggregator/priceUtils";
 
 export const handleConnect = (socket: Socket, walletAddress: `0x${string}`) => {
@@ -90,7 +90,9 @@ export const handleGiveOffers = async (
 
     const sourceTokenDecimals = schemaForSourceChain[sourceTokenAddress]?.decimals || 18;
 
-    const sourceAmountInUSD = sourceTokenPrice * Number(BigInt(amount) / BigInt(10 ** sourceTokenDecimals));
+    formatUnits(BigInt(amount), sourceTokenDecimals);
+
+    const sourceAmountInUSD = sourceTokenPrice * Number(formatUnits(BigInt(amount), sourceTokenDecimals));
     console.log("sourceAmountInUSD:", sourceAmountInUSD);
 
     console.log("schemaForTargetChainMainnet:", schemaForTargetChainMainnet);
