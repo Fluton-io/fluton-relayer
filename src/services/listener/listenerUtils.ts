@@ -5,6 +5,7 @@ import { /* getZamaClient, */ getFhenixPermit, walletClients } from "../../confi
 import { cofhejs, FheTypes, Encryptable } from "cofhejs/node";
 import addresses from "../../config/addresses";
 import tokens from "../../config/tokens";
+import { sleep } from "../../lib/utils";
 
 export const handleIntentCreatedPublic = async (intent: ContractIntent) => {
   console.log("To be implemented: handleIntentCreated for public bridge");
@@ -19,6 +20,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent) => {
       ...cofhejs.store.getState(),
       chainId: intent.originChainId.toString(),
     });
+    await sleep(4000); // Wait for cofhejs to be ready
     const unsealedOutputAmountResult = await cofhejs.unseal(
       BigInt(intent.outputAmount),
       FheTypes.Uint64,

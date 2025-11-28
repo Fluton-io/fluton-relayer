@@ -4,6 +4,8 @@ import { erc20Abi } from "viem";
 import { FeeSchema } from "../config/types";
 import feeSchemaData from "../config/feeSchema.json";
 
+export const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay));
+
 export const getRpcUrlByChainId = (chainId: number): string => {
   const network = networks.find((network) => network.chainId === chainId);
   if (!network) {
