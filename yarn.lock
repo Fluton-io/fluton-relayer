@@ -231,19 +231,19 @@
     "@types/node" "*"
     "@types/send" "<1"
 
-"@zama-fhe/relayer-sdk@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@zama-fhe/relayer-sdk/-/relayer-sdk-0.2.0.tgz#ed7d9267bd31342fcc58b06d6d0811c87f2d7420"
-  integrity sha512-phgpQgqdpIDYKihNdBt3JQtvkKjZpG5a2l+bwh5JJvvUuLG1jkoHbd1LGWvtxd7rF54TIAyupIEIMM0C1Qj1xw==
+"@zama-fhe/relayer-sdk@^0.3.0-6":
+  version "0.3.0-6"
+  resolved "https://registry.yarnpkg.com/@zama-fhe/relayer-sdk/-/relayer-sdk-0.3.0-6.tgz#a9a0e5d49cd16fab8211f91de5c493831d9b6171"
+  integrity sha512-lrnor1yIsC2ePHWo5XCxSsFkBr8JuaI7FvRk1azpglxkBVNECvuMD23ky04A8F6k53NDBvlh71MvHI+qvAOaQQ==
   dependencies:
     commander "^14.0.0"
     ethers "^6.15.0"
     fetch-retry "^6.0.0"
     keccak "^3.0.4"
-    node-tfhe "1.3.0"
-    node-tkms "^0.11.0"
-    tfhe "1.3.0"
-    tkms "^0.11.0"
+    node-tfhe "1.4.0-alpha.3"
+    node-tkms "^0.12.0"
+    tfhe "1.4.0-alpha.3"
+    tkms "^0.12.0"
     wasm-feature-detect "^1.8.0"
 
 abitype@1.1.0:
@@ -916,15 +916,15 @@ node-tfhe@0.11.1:
   resolved "https://registry.yarnpkg.com/node-tfhe/-/node-tfhe-0.11.1.tgz#7b3a44e97b04d5fb06e3b36a479ab851743eacad"
   integrity sha512-QFkIeIZ5IbdvhpkzImwakL2+sZFCTXCwGvOacE1NczR+zgrg5ixHU9KpjuuIi1YbbKFGJEMoSUmivDktuzFaKg==
 
-node-tfhe@1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/node-tfhe/-/node-tfhe-1.3.0.tgz#c9adf0d8f579f4717247e2ccaf5d548b49e85dd1"
-  integrity sha512-BhqHFH1sFp9bziPfar2MqtZI1NT+fsqt6w+q6l1bUFn7ENTwGbjZqZIPGuPKxgnWF6iqMhwVG5IYpKpAwil6oA==
+node-tfhe@1.4.0-alpha.3:
+  version "1.4.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/node-tfhe/-/node-tfhe-1.4.0-alpha.3.tgz#9e8d8afbd13ea7b0c00283f6929bf0a7af9787e3"
+  integrity sha512-oTcWL0OFA6t6BhScmDiGQ3VA8tU8T3EXCzIzpNxQxcuJDgQtiUF5CV6dgJLOrpWck4KCp1Bo/xLhv07uwn3q6Q==
 
-node-tkms@^0.11.0:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/node-tkms/-/node-tkms-0.11.1.tgz#b5e21803c3ea2497e94a1a4d200d7ccab9ecde3d"
-  integrity sha512-AWciFzfvjEYECHiAJXv1KLz6K28fX/0DDlaktAbslF2XpaIGsc9sCKjYPJHubrJfNrtUWUI5qfqhJOP3BD/mcw==
+node-tkms@^0.12.0:
+  version "0.12.7"
+  resolved "https://registry.yarnpkg.com/node-tkms/-/node-tkms-0.12.7.tgz#3abe817481c822972cd9be3c517a96725dfabf49"
+  integrity sha512-ttIhFVhLmQnVHkifmmdVTaEJyvxoz0V3gIc+F5klYiEYPu0QRVoT/iA4Rfb1GH8wyTtKuDE8CVKhVoHSZxGuNg==
 
 nodemon@^3.1.7:
   version "3.1.11"
@@ -1196,15 +1196,15 @@ tfhe@0.11.1:
   resolved "https://registry.yarnpkg.com/tfhe/-/tfhe-0.11.1.tgz#7821a6fb3b18cd3704a76579c8839547e362082f"
   integrity sha512-D4YeL0DYz4IOV/X7YzKFexkjbJdOdGn2M7mfDNOQW1OxA+NO/Z61BJ6ULLTvdBEQ3N6P985lNO61Drgsjf0g/w==
 
-tfhe@1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/tfhe/-/tfhe-1.3.0.tgz#148088764a9dd98992d770dc743281671fc4c1a8"
-  integrity sha512-SYySiMB/hCPJmy3K8RliVYCN4mV/p5+EJozaYfXTS0UEl3aS+1b71XqGfI1KDucYHelVS1iWgF7+uO2wNqQQ/g==
+tfhe@1.4.0-alpha.3:
+  version "1.4.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/tfhe/-/tfhe-1.4.0-alpha.3.tgz#e00e20f3e12b302b49c2fecc336faa6a05639462"
+  integrity sha512-xdla7hi2WzLFIdAx2/ihRZ/bKlKcgDDabTJGtoqp1E5oqhLM1PzTXsJE0p7tW8+ebrvxiMGfbgMAWnU3f2ZAIQ==
 
-tkms@^0.11.0:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/tkms/-/tkms-0.11.1.tgz#e54cbef9bf0721ffc67dfa5d4aa60277494d4c11"
-  integrity sha512-FNpnwZKsUUMs0q4aAwZatpw7fz1UBG9cdh3LZYgWYN3rvouS+v4zysB642dG8J35KgNF6WCFAzTyRKagdL8x7g==
+tkms@^0.12.0:
+  version "0.12.7"
+  resolved "https://registry.yarnpkg.com/tkms/-/tkms-0.12.7.tgz#2fa5a6556bfeadc25eda6a6cd9cd6b5bd8c3ca09"
+  integrity sha512-En9ZZfs8VX8YFbRdEQOgVLFvrJp4qc2VFMo13/Rdyz9Zks7tTwiZhopbyFHdz/jSsv9yPgXqFFhUHZVS7rS2Ow==
 
 to-regex-range@^5.0.1:
   version "5.0.1"
