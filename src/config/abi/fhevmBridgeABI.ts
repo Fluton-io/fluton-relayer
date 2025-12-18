@@ -32,6 +32,11 @@ const abi = [
     type: "error",
   },
   {
+    inputs: [],
+    name: "ZamaProtocolUnsupported",
+    type: "error",
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -425,6 +430,19 @@ const abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "confidentialProtocolId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
@@ -663,19 +681,6 @@ const abi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "protocolId",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "pure",
     type: "function",
   },
   {

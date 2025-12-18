@@ -59,6 +59,11 @@ const abi = [
     type: "error",
   },
   {
+    inputs: [],
+    name: "ERC7984TotalSupplyOverflow",
+    type: "error",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -114,17 +119,18 @@ const abi = [
   },
   {
     inputs: [],
-    name: "HandlesAlreadySavedForRequestID",
-    type: "error",
-  },
-  {
-    inputs: [],
     name: "InvalidKMSSignatures",
     type: "error",
   },
   {
-    inputs: [],
-    name: "NoHandleFoundForRequestID",
+    inputs: [
+      {
+        internalType: "euint64",
+        name: "amount",
+        type: "bytes32",
+      },
+    ],
+    name: "InvalidUnwrapRequest",
     type: "error",
   },
   {
@@ -153,6 +159,30 @@ const abi = [
     ],
     name: "SafeERC20FailedOperation",
     type: "error",
+  },
+  {
+    inputs: [],
+    name: "ZamaProtocolUnsupported",
+    type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "euint64",
+        name: "encryptedAmount",
+        type: "bytes32",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "requester",
+        type: "address",
+      },
+    ],
+    name: "AmountDiscloseRequested",
+    type: "event",
   },
   {
     anonymous: false,
@@ -203,19 +233,6 @@ const abi = [
     inputs: [
       {
         indexed: true,
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256",
-      },
-    ],
-    name: "DecryptionFulfilled",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
         internalType: "address",
         name: "holder",
         type: "address",
@@ -237,6 +254,69 @@ const abi = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "bytes32[]",
+        name: "handlesList",
+        type: "bytes32[]",
+      },
+      {
+        indexed: false,
+        internalType: "bytes",
+        name: "abiEncodedCleartexts",
+        type: "bytes",
+      },
+    ],
+    name: "PublicDecryptionVerified",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "euint64",
+        name: "encryptedAmount",
+        type: "bytes32",
+      },
+      {
+        indexed: false,
+        internalType: "uint64",
+        name: "cleartextAmount",
+        type: "uint64",
+      },
+    ],
+    name: "UnwrapFinalized",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "euint64",
+        name: "amount",
+        type: "bytes32",
+      },
+    ],
+    name: "UnwrapRequested",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -250,6 +330,19 @@ const abi = [
         internalType: "euint64",
         name: "",
         type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "confidentialProtocolId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -553,6 +646,16 @@ const abi = [
         name: "encryptedAmount",
         type: "bytes32",
       },
+      {
+        internalType: "uint64",
+        name: "cleartextAmount",
+        type: "uint64",
+      },
+      {
+        internalType: "bytes",
+        name: "decryptionProof",
+        type: "bytes",
+      },
     ],
     name: "discloseEncryptedAmount",
     outputs: [],
@@ -562,37 +665,14 @@ const abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "requestId",
-        type: "uint256",
+        internalType: "euint64",
+        name: "burntAmount",
+        type: "bytes32",
       },
       {
-        internalType: "bytes",
-        name: "cleartexts",
-        type: "bytes",
-      },
-      {
-        internalType: "bytes",
-        name: "decryptionProof",
-        type: "bytes",
-      },
-    ],
-    name: "finalizeDiscloseEncryptedAmount",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "requestID",
-        type: "uint256",
-      },
-      {
-        internalType: "bytes",
-        name: "cleartexts",
-        type: "bytes",
+        internalType: "uint64",
+        name: "burntAmountCleartext",
+        type: "uint64",
       },
       {
         internalType: "bytes",
@@ -624,6 +704,19 @@ const abi = [
         internalType: "bool",
         name: "",
         type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "maxTotalSupply",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -678,19 +771,6 @@ const abi = [
   },
   {
     inputs: [],
-    name: "protocolId",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "pure",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "rate",
     outputs: [
       {
@@ -700,6 +780,19 @@ const abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "euint64",
+        name: "encryptedAmount",
+        type: "bytes32",
+      },
+    ],
+    name: "requestDiscloseEncryptedAmount",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -721,6 +814,25 @@ const abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "bytes4",
+        name: "interfaceId",
+        type: "bytes4",
+      },
+    ],
+    name: "supportsInterface",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "symbol",
     outputs: [
@@ -728,6 +840,19 @@ const abi = [
         internalType: "string",
         name: "",
         type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalSupply",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",

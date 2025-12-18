@@ -1,6 +1,6 @@
 import BridgeABI from "../config/abi/bridgeABI";
 import fhevmBridgeABI from "../config/abi/fhevmBridgeABI";
-import fhenixFheBridgeABI from "../config/abi/fhenixFheBridgeABI";
+import cofheBridgeABI from "../config/abi/cofheBridgeABI";
 import networks from "../config/networks";
 import { websocketClients } from "../config/client";
 import { walletAddress } from "../config/env";
@@ -34,15 +34,15 @@ export const listenBridgeEvents = () => {
     }
 
     // fhenix bridge contract
-    if (network && network.contracts.fhenixBridge) {
+    if (network && network.contracts.cofheBridge) {
       console.log(
-        `Listening for events on chainId: ${chainId}, fhenix bridge contract: ${network.contracts.fhenixBridge.address}`
+        `Listening for events on chainId: ${chainId}, fhenix bridge contract: ${network.contracts.cofheBridge.address}`
       );
 
       // fhenix co-processor
       client.watchContractEvent({
-        address: network.contracts.fhenixBridge.address as `0x${string}`,
-        abi: fhenixFheBridgeABI,
+        address: network.contracts.cofheBridge.address as `0x${string}`,
+        abi: cofheBridgeABI,
         eventName: "IntentCreated",
         onLogs: (logs) => {
           console.log("Caught IntentCreated event on fhenix bridge");

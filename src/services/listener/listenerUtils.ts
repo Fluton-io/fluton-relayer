@@ -1,7 +1,7 @@
 import { ContractIntent, Coprocessor, Token } from "../../config/types";
-import FhenixBridgeABI from "../../config/abi/fhenixFheBridgeABI";
+import CofheBridgeABI from "../../config/abi/cofheBridgeABI";
 import FhevmBridgeABI from "../../config/abi/fhevmBridgeABI";
-import { /* getZamaClient, */ getFhenixPermit, walletClients } from "../../config/client";
+import { getZamaClient, getFhenixPermit, walletClients } from "../../config/client";
 import { cofhejs, FheTypes, Encryptable } from "cofhejs/node";
 import addresses from "../../config/addresses";
 import tokens from "../../config/tokens";
@@ -53,7 +53,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent) => {
 
     if (targetCoprocessor === Coprocessor.ZAMA) {
       console.log("Fhenix to Zama transfer, decryption needed.");
-      // return handleFulfillIntentZama(intent, unsealedOutputAmountResult.data, unsealedDestinationChainIdResult.data);
+      return handleFulfillIntentZama(intent, unsealedOutputAmountResult.data, unsealedDestinationChainIdResult.data);
     } else if (targetCoprocessor === Coprocessor.FHENIX) {
       console.log("Fhenix to Fhenix transfer, no decryption needed, but decrypting for now.");
       return handleFulfillIntentFhenix(intent, unsealedOutputAmountResult.data, unsealedDestinationChainIdResult.data);
@@ -66,7 +66,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent) => {
   }
 };
 
-/* export const handleIntentCreatedZama = async (intent: ContractIntent) => {
+export const handleIntentCreatedZama = async (intent: ContractIntent) => {
   try {
     const walletClientSource = walletClients.find((wc) => wc.chainId === intent.originChainId)!.client;
     const bridgeContractSource = addresses[Number(intent.originChainId)].fhevmBridge;
@@ -130,14 +130,14 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent) => {
   } catch (error) {
     console.error("Error handling IntentCreated Zama:", error);
   }
-}; */
+};
 
 export const handleFulfillIntentFhenix = async (
   intent: ContractIntent,
   outputAmount: bigint,
   destinationChainId: bigint
 ) => {
-  const fhenixBridgeContractAddress = addresses[Number(destinationChainId)].fhenixBridge;
+  const cofheBridgeContractAddress = addresses[Number(destinationChainId)].cofheBridge;
   const walletClientDest = walletClients.find((wc) => wc.chainId === Number(destinationChainId))!.client;
 
   const intentArgs = {
@@ -161,8 +161,8 @@ export const handleFulfillIntentFhenix = async (
     }
 
     const tx = await walletClientDest.writeContract({
-      address: fhenixBridgeContractAddress,
-      abi: FhenixBridgeABI,
+      address: cofheBridgeContractAddress,
+      abi: CofheBridgeABI,
       functionName: "fulfill",
       args: [intentArgs, { ...encryptedAmount, signature: encryptedAmount.signature as `0x${string}` }],
     });
@@ -172,7 +172,7 @@ export const handleFulfillIntentFhenix = async (
   }
 };
 
-/* export const handleFulfillIntentZama = async (
+export const handleFulfillIntentZama = async (
   intent: ContractIntent,
   outputAmount: bigint,
   destinationChainId: bigint
@@ -214,4 +214,3 @@ export const handleFulfillIntentFhenix = async (
     console.error("Error when fulfilling intent:", error);
   }
 };
- */

@@ -6,11 +6,11 @@ const contracts: {
   [chainId: number]: Record<string, { address: `0x${string}`; coprocessor?: Coprocessor }>;
 } = {
   [sepolia.id]: {
-    fhenixBridge: { address: addresses[sepolia.id].fhenixBridge, coprocessor: Coprocessor.FHENIX },
+    cofheBridge: { address: addresses[sepolia.id].cofheBridge, coprocessor: Coprocessor.FHENIX },
     fhevmBridge: { address: addresses[sepolia.id].fhevmBridge, coprocessor: Coprocessor.ZAMA },
   },
   [arbitrumSepolia.id]: {
-    fhenixBridge: { address: addresses[arbitrumSepolia.id].fhenixBridge, coprocessor: Coprocessor.FHENIX },
+    cofheBridge: { address: addresses[arbitrumSepolia.id].cofheBridge, coprocessor: Coprocessor.FHENIX },
   },
 };
 
