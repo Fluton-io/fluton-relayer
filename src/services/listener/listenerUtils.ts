@@ -47,7 +47,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent) => {
     console.log("Unsealed destination chain ID:", unsealedDestinationChainIdResult.data);
 
     const targetToken: Token = tokens[Number(unsealedDestinationChainIdResult.data)].find(
-      (t) => t.address === intent.outputToken
+      (t) => t.address.toLowerCase() === intent.outputToken.toLowerCase()
     )!;
     const targetCoprocessor = targetToken.coprocessor;
 
@@ -62,7 +62,14 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent) => {
       return console.log("Target coprocessor doesn't exist, fulfilling via public bridge (not implemented yet).");
     }
   } catch (error) {
-    console.error("Error handling IntentCreated Fhenix:", error);
+    console.error(
+      "Error handling IntentCreated Fhenix:",
+      error,
+      ", target token address:",
+      intent.outputToken.toLowerCase(),
+      " chainId:",
+      intent.destinationChainId
+    );
   }
 };
 
@@ -113,7 +120,7 @@ export const handleIntentCreatedZama = async (intent: ContractIntent) => {
     ] as bigint;
 
     const targetToken: Token = tokens[Number(decryptedDestinationChainId)].find(
-      (t) => t.address === intent.outputToken
+      (t) => t.address.toLowerCase() === intent.outputToken.toLowerCase()
     )!;
     const targetCoprocessor = targetToken.coprocessor;
 
