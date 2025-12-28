@@ -33,7 +33,7 @@ const addresses: { [key: number]: { [key: string]: `0x${string}` } } = {
     eAAVE: "0x394e8D6FA146326334C623347F56d700d889fdae",
 
     cofheBridge: "0xdF2aCCdC66E9A6b3bC27bbf83842C54eAA2C8C49",
-    fhevmBridge: "0x9C6DCCb0579fD626341354a59c24cc654232C392",
+    fhevmBridge: "0x9b4045EE1050159dF0872bBFfA37b84D3C892130",
   },
   [arbitrumSepolia.id]: {
     WETH: "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73",
