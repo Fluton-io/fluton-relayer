@@ -1,7 +1,7 @@
 export enum Coprocessor {
-  ZAMA,
-  FHENIX,
-  INCO,
+  ZAMA = "ZAMA",
+  FHENIX = "FHENIX",
+  INCO = "INCO",
 }
 
 export interface Token {
