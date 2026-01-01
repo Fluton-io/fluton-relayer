@@ -51,6 +51,18 @@ export const ARBITRUM_SEPOLIA_WS_URL = process.env.ARBITRUM_SEPOLIA_WS_URL
     : process.env.ARBITRUM_SEPOLIA_WS_URL
   : "";
 
+export const BASE_SEPOLIA_RPC_URL = process.env.BASE_SEPOLIA_RPC_URL
+  ? process.env.BASE_SEPOLIA_RPC_URL.endsWith("/")
+    ? process.env.BASE_SEPOLIA_RPC_URL.slice(0, -1)
+    : process.env.BASE_SEPOLIA_RPC_URL
+  : "";
+
+export const BASE_SEPOLIA_WS_URL = process.env.BASE_SEPOLIA_WS_URL
+  ? process.env.BASE_SEPOLIA_WS_URL.endsWith("/")
+    ? process.env.BASE_SEPOLIA_WS_URL.slice(0, -1)
+    : process.env.BASE_SEPOLIA_WS_URL
+  : "";
+
 export const INFURA_API_KEY = process.env.INFURA_API_KEY;
 export const ONEINCH_API_KEY = process.env.ONEINCH_API_KEY;
 

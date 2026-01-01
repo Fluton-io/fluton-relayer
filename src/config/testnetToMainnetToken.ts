@@ -1,4 +1,4 @@
-import { arbitrum, arbitrumSepolia, mainnet, sepolia } from "viem/chains";
+import { arbitrum, arbitrumSepolia, base, baseSepolia, mainnet, sepolia } from "viem/chains";
 import addresses from "./addresses";
 
 const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
@@ -53,6 +53,27 @@ const testnetToMainnetToken: { [key: `0x${string}`]: `0x${string}` } = {
 
   [addresses[arbitrumSepolia.id].AAVE]: addresses[arbitrum.id].AAVE,
   [addresses[arbitrumSepolia.id].eAAVE]: addresses[arbitrum.id].AAVE,
+
+  // base sepolia -> base mainnet
+  [addresses[baseSepolia.id].WETH]: addresses[base.id].WETH,
+
+  [addresses[baseSepolia.id].USDC]: addresses[base.id].USDC,
+  [addresses[baseSepolia.id].eUSDC]: addresses[base.id].USDC,
+
+  [addresses[baseSepolia.id].USDT]: addresses[base.id].USDT,
+  [addresses[baseSepolia.id].eUSDT]: addresses[base.id].USDT,
+
+  [addresses[baseSepolia.id].DAI]: addresses[base.id].DAI,
+  [addresses[baseSepolia.id].eDAI]: addresses[base.id].DAI,
+
+  [addresses[baseSepolia.id].UNI]: addresses[base.id].UNI,
+  [addresses[baseSepolia.id].eUNI]: addresses[base.id].UNI,
+
+  [addresses[baseSepolia.id].XFL]: addresses[base.id].XFL,
+  [addresses[baseSepolia.id].eXFL]: addresses[base.id].XFL,
+
+  [addresses[baseSepolia.id].AAVE]: addresses[base.id].AAVE,
+  [addresses[baseSepolia.id].eAAVE]: addresses[base.id].AAVE,
 };
 
 export default testnetToMainnetToken;

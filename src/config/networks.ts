@@ -1,6 +1,7 @@
 import {
   arbitrum,
   arbitrumSepolia,
+  baseSepolia,
   mainnet,
   optimism,
   optimismSepolia,
@@ -91,6 +92,19 @@ const testnets: Network[] = [
     },
     contracts: contracts[arbitrumSepolia.id],
     tokens: tokens[arbitrumSepolia.id],
+    coprocessors: [Coprocessor.FHENIX],
+  },
+  {
+    name: "Base Sepolia Testnet",
+    chainId: 84532,
+    rpcUrl: `https://arbitrum-sepolia.infura.io/v3/${INFURA_API_KEY}`,
+    explorer: {
+      name: "Base Sepolia",
+      apiKey: "6DS9FIXUN1N31GG6W7BXT3FG3846MT3I5Z",
+      url: "https://sepolia.arbiscan.io",
+    },
+    contracts: contracts[baseSepolia.id],
+    tokens: tokens[baseSepolia.id],
     coprocessors: [Coprocessor.FHENIX],
   },
   {

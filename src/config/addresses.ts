@@ -1,4 +1,4 @@
-import { arbitrum, arbitrumSepolia, baseSepolia, mainnet, sepolia } from "viem/chains";
+import { arbitrum, arbitrumSepolia, base, baseSepolia, mainnet, sepolia } from "viem/chains";
 
 const addresses: { [key: number]: { [key: string]: `0x${string}` } } = {
   [sepolia.id]: {
@@ -62,7 +62,27 @@ const addresses: { [key: number]: { [key: string]: `0x${string}` } } = {
     cofheBridge: "0x0956bF2c80e3aa559805e953B6D737C02e864360",
   },
   [baseSepolia.id]: {
-    USDC: "0x1a4b49cb5DBaa9a82F9f8054Dce210372B40376a",
+    WETH: "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73",
+
+    USDC: "0x64BC0Baad7371ece4B6467715bE75f3aa2FBBF0c",
+    eUSDC: "0x70D5B235aC69Ea4CC4379546A9feA2b53192d74a",
+
+    USDT: "0xb23EF3bd650B0FfA3DD46d29b96944BD362E6B7e",
+    eUSDT: "0xDeDee73b121d70A5D15eA9145c955b5b1c6E7aEF",
+
+    DAI: "0xfd4ce7573A2DF25eF43664fcF99D858286528f29",
+    eDAI: "0xacbc363642821d7d7dC1e160fB4dC39F4fb2fB24",
+
+    UNI: "0x7198Dc5a074Ac365cCc4e43213522675957a8Ab0",
+    eUNI: "0x80bdD416C4eE39CFc7997538bB2F6E8fe57c09Cb",
+
+    XFL: "0xaAE0c50e075a9c2D4e199Ab8b00c06329ecCD958",
+    eXFL: "0x0aA8D751EeC2427286Ad9a9A01dcCD238324aFa0",
+
+    AAVE: "0x846266D77AC4c63A689A1dE32c82Ede74974c2e9",
+    eAAVE: "0xe52f3EE1092f4aE18AcAFDaAEa925645BB367F29",
+
+    cofheBridge: "0x9Dba974212d4d4199e731408996F9026c3162678",
   },
 
   // MAINNETS
@@ -84,6 +104,15 @@ const addresses: { [key: number]: { [key: string]: `0x${string}` } } = {
     UNI: "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0",
     XFL: "0xf97f4df75117a78c1A5a0DBb814Af92458539FB4", // LINK
     AAVE: "0xba5DdD1f9d7F570dc94a51479a000E3BCE967196",
+  },
+  [base.id]: {
+    WETH: "0x4200000000000000000000000000000000000006",
+    USDC: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    USDT: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
+    DAI: "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
+    UNI: "0xc3De830EA07524a0761646a6a4e4be0e114a3C83",
+    XFL: "0xd403D1624DAEF243FbcBd4A80d8A6F36afFe32b2", // LINK
+    AAVE: "0x63706e401c06ac8513145b7687A14804d17f814b",
   },
   /*   [fhenixNitrogen.id]: {
     USDC: "0xf9B226035180AB9E3C7ec155332d79B74c9ED6D5",

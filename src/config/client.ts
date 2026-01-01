@@ -2,6 +2,7 @@ import { createPublicClient, createWalletClient, http, webSocket } from "viem";
 import {
   arbitrum,
   arbitrumSepolia,
+  baseSepolia,
   mainnet,
   optimism,
   optimismSepolia,
@@ -11,7 +12,15 @@ import {
 } from "viem/chains";
 import { createInstance, FhevmInstance, FhevmInstanceConfig, SepoliaConfig } from "@zama-fhe/relayer-sdk/node";
 import { fhenixNitrogen } from "./custom-chains";
-import { PRIVATE_KEY, SEPOLIA_RPC_URL, SEPOLIA_WS_URL, ARBITRUM_SEPOLIA_WS_URL, ARBITRUM_SEPOLIA_RPC_URL } from "./env";
+import {
+  PRIVATE_KEY,
+  SEPOLIA_RPC_URL,
+  SEPOLIA_WS_URL,
+  ARBITRUM_SEPOLIA_WS_URL,
+  ARBITRUM_SEPOLIA_RPC_URL,
+  BASE_SEPOLIA_RPC_URL,
+  BASE_SEPOLIA_WS_URL,
+} from "./env";
 import { cofhejs, Permit } from "cofhejs/node";
 import { privateKeyToAccount } from "viem/accounts";
 
@@ -51,6 +60,11 @@ export const arbitrumSepoliaPublicClient = createPublicClient({
   transport: http(ARBITRUM_SEPOLIA_RPC_URL),
 });
 
+export const baseSepoliaPublicClient = createPublicClient({
+  chain: baseSepolia,
+  transport: http(BASE_SEPOLIA_RPC_URL),
+});
+
 export const optimismSepoliaPublicClient = createPublicClient({
   chain: optimismSepolia,
   transport: http(),
@@ -69,6 +83,7 @@ export const fhenixNitrogenPublicClient = createPublicClient({
 export const publicClients = [
   { client: mainnetPublicClient, chainId: 1 },
   { client: arbitrumPublicClient, chainId: 42161 },
+  { client: baseSepoliaPublicClient, chainId: 84532 },
   { client: optimismPublicClient, chainId: 10 },
   { client: scrollPublicClient, chainId: 534352 },
   { client: sepoliaPublicClient, chainId: 11155111 },
@@ -118,6 +133,12 @@ export const arbitrumSepoliaWalletClient = createWalletClient({
   account,
 });
 
+export const baseSepoliaWalletClient = createWalletClient({
+  chain: baseSepolia,
+  transport: http(BASE_SEPOLIA_RPC_URL),
+  account,
+});
+
 export const optimismSepoliaWalletClient = createWalletClient({
   chain: optimismSepolia,
   transport: http(),
@@ -143,6 +164,7 @@ export const walletClients = [
   { client: scrollWalletClient, chainId: 534352 },
   { client: sepoliaWalletClient, chainId: 11155111 },
   { client: arbitrumSepoliaWalletClient, chainId: 421614 },
+  { client: baseSepoliaWalletClient, chainId: 84532 },
   { client: optimismSepoliaWalletClient, chainId: 11155420 },
   { client: scrollSepoliaWalletClient, chainId: 534351 },
   { client: fhenixNitrogenWalletClient, chainId: 8008148 },
@@ -161,6 +183,11 @@ export const arbitrumSepoliaWsClient = createPublicClient({
   transport: webSocket(ARBITRUM_SEPOLIA_WS_URL),
 });
 
+export const baseSepoliaWsClient = createPublicClient({
+  chain: baseSepolia,
+  transport: webSocket(BASE_SEPOLIA_WS_URL),
+});
+
 /* export const fhenixNitrogenWsClient = createPublicClient({
   chain: fhenixNitrogen,
   transport: webSocket("wss://api.nitrogen.fhenix.zone:8548"),
@@ -169,6 +196,7 @@ export const arbitrumSepoliaWsClient = createPublicClient({
 export const websocketClients = [
   { client: sepoliaWsClient, chainId: 11155111 },
   { client: arbitrumSepoliaWsClient, chainId: 421614 },
+  { client: baseSepoliaWsClient, chainId: 84532 },
   /* { client: fhenixNitrogenWsClient, chainId: 8008148 }, */
 ];
 

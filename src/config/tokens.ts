@@ -1,4 +1,4 @@
-import { arbitrumSepolia, sepolia } from "viem/chains";
+import { arbitrumSepolia, baseSepolia, sepolia } from "viem/chains";
 import { Coprocessor, Token } from "./types";
 import addresses from "./addresses";
 
@@ -195,6 +195,62 @@ export const tokensMap: {
       decimals: 6,
       isConfidential: true,
       underlyingTokenAddress: addresses[arbitrumSepolia.id].AAVE,
+      coprocessor: Coprocessor.FHENIX,
+    },
+  },
+  [baseSepolia.id]: {
+    eUSDC: {
+      symbol: "eUSDC",
+      address: addresses[baseSepolia.id].eUSDC,
+      chainId: baseSepolia.id,
+      decimals: 6,
+      isConfidential: true,
+      underlyingTokenAddress: addresses[baseSepolia.id].USDC,
+      coprocessor: Coprocessor.FHENIX,
+    },
+    eUSDT: {
+      symbol: "eUSDT",
+      address: addresses[baseSepolia.id].eUSDT,
+      chainId: baseSepolia.id,
+      decimals: 6,
+      isConfidential: true,
+      underlyingTokenAddress: addresses[baseSepolia.id].USDT,
+      coprocessor: Coprocessor.FHENIX,
+    },
+    eDAI: {
+      symbol: "eDAI",
+      address: addresses[baseSepolia.id].eDAI,
+      chainId: baseSepolia.id,
+      decimals: 6,
+      isConfidential: true,
+      underlyingTokenAddress: addresses[baseSepolia.id].DAI,
+      coprocessor: Coprocessor.FHENIX,
+    },
+    eUNI: {
+      symbol: "eUNI",
+      address: addresses[baseSepolia.id].eUNI,
+      chainId: baseSepolia.id,
+      decimals: 6,
+      isConfidential: true,
+      underlyingTokenAddress: addresses[baseSepolia.id].UNI,
+      coprocessor: Coprocessor.FHENIX,
+    },
+    eXFL: {
+      symbol: "eXFL",
+      address: addresses[baseSepolia.id].eXFL,
+      chainId: baseSepolia.id,
+      decimals: 6,
+      isConfidential: true,
+      underlyingTokenAddress: addresses[baseSepolia.id].XFL,
+      coprocessor: Coprocessor.FHENIX,
+    },
+    eAAVE: {
+      symbol: "eAAVE",
+      address: addresses[baseSepolia.id].eAAVE,
+      chainId: baseSepolia.id,
+      decimals: 6,
+      isConfidential: true,
+      underlyingTokenAddress: addresses[baseSepolia.id].AAVE,
       coprocessor: Coprocessor.FHENIX,
     },
   },

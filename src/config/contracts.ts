@@ -1,4 +1,4 @@
-import { arbitrumSepolia, sepolia } from "viem/chains";
+import { arbitrumSepolia, baseSepolia, sepolia } from "viem/chains";
 import { Coprocessor } from "./types";
 import addresses from "./addresses";
 
@@ -11,6 +11,9 @@ const contracts: {
   },
   [arbitrumSepolia.id]: {
     cofheBridge: { address: addresses[arbitrumSepolia.id].cofheBridge, coprocessor: Coprocessor.FHENIX },
+  },
+  [baseSepolia.id]: {
+    cofheBridge: { address: addresses[baseSepolia.id].cofheBridge, coprocessor: Coprocessor.FHENIX },
   },
 };
 
