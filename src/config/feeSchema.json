@@ -371,6 +371,56 @@
         "balance": 10000
       }
     },
+    "84532": {
+      "0x70D5B235aC69Ea4CC4379546A9feA2b53192d74a": {
+        "name": "eUSDC",
+        "baseFee": "0.002",
+        "percentageFee": "0.03%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0xDeDee73b121d70A5D15eA9145c955b5b1c6E7aEF": {
+        "name": "eUSDT",
+        "baseFee": "0.002",
+        "percentageFee": "0.02%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0xacbc363642821d7d7dC1e160fB4dC39F4fb2fB24": {
+        "name": "eDAI",
+        "baseFee": "0.003",
+        "percentageFee": "0.05%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x80bdD416C4eE39CFc7997538bB2F6E8fe57c09Cb": {
+        "name": "eUNI",
+        "baseFee": "0.001",
+        "percentageFee": "0.1%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x0aA8D751EeC2427286Ad9a9A01dcCD238324aFa0": {
+        "name": "eXFL",
+        "baseFee": "0.002",
+        "percentageFee": "0.05%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0xe52f3EE1092f4aE18AcAFDaAEa925645BB367F29": {
+        "name": "eAAVE",
+        "baseFee": "0.003",
+        "percentageFee": "0.01%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      }
+    },
     "8008148": {
       "0xb17ECAF7eDd1E4a1d568e755d6E54205731b50E1": {
         "name": "USDC",
