@@ -151,6 +151,56 @@
         "balance": 810
       }
     },
+    "8453": {
+      "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913": {
+        "name": "USDC",
+        "baseFee": "0.02",
+        "percentageFee": "0.2%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2": {
+        "name": "USDT",
+        "baseFee": "0.03",
+        "percentageFee": "0.25%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 10000
+      },
+      "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb": {
+        "name": "DAI",
+        "baseFee": "0.04",
+        "percentageFee": "0.3%",
+        "swappable": true,
+        "decimals": 18,
+        "balance": 10000
+      },
+      "0xc3De830EA07524a0761646a6a4e4be0e114a3C83": {
+        "name": "UNI",
+        "baseFee": "0.002",
+        "percentageFee": "0.1%",
+        "swappable": true,
+        "decimals": 18,
+        "balance": 1000
+      },
+      "0xd403D1624DAEF243FbcBd4A80d8A6F36afFe32b2": {
+        "name": "XFL",
+        "baseFee": "0.002",
+        "percentageFee": "0.15%",
+        "swappable": true,
+        "decimals": 18,
+        "balance": 1000
+      },
+      "0x63706e401c06ac8513145b7687A14804d17f814b": {
+        "name": "AAVE",
+        "baseFee": "0.002",
+        "percentageFee": "0.2%",
+        "swappable": true,
+        "decimals": 18,
+        "balance": 1000
+      }
+    },
     "11155111": {
       "0x9F1210757915bf7aEE3B5D82F99dac70828Bad77": {
         "name": "USDT",
@@ -158,7 +208,7 @@
         "percentageFee": "0.2%",
         "swappable": true,
         "decimals": 6,
-        "balance": 0
+        "balance": 10000
       },
       "0x2831d2b6b7bd5Ca9E2EEe932055a91f5a6cEBe2f": {
         "name": "USDC",
