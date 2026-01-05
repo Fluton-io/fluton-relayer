@@ -11,7 +11,9 @@ export const handleIntentCreatedPublic = async (intent: ContractIntent) => {
   console.log("To be implemented: handleIntentCreated for public bridge");
 };
 
-export const handleIntentCreatedFhenix = async (intent: ContractIntent) => {
+let tryCountIntentCreated: Record<string, number> = {};
+
+export const handleIntentCreatedFhenix = async (intent: ContractIntent): Promise<any> => {
   try {
     const walletClientSource = walletClients.find((wc) => wc.chainId === intent.originChainId)!.client;
 
@@ -35,12 +37,25 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent) => {
     );
 
     if (!unsealedOutputAmountResult.success || !unsealedDestinationChainIdResult.success) {
-      throw new Error(
-        "Failed to unseal the output amount" +
-          unsealedOutputAmountResult.error +
-          " " +
-          unsealedDestinationChainIdResult.error
-      );
+      if (!tryCountIntentCreated[String(intent.id)]) {
+        tryCountIntentCreated[String(intent.id)] = 1;
+      } else {
+        tryCountIntentCreated[String(intent.id)]++;
+      }
+
+      if (tryCountIntentCreated[String(intent.id)] > 5) {
+        throw new Error(
+          "Failed to unseal the output amount" +
+            unsealedOutputAmountResult.error +
+            " " +
+            unsealedDestinationChainIdResult.error
+        );
+      } else {
+        console.log(
+          `Unsealing failed for intent ${intent.id}, retrying... Attempt ${tryCountIntentCreated[String(intent.id)]}`
+        );
+        return handleIntentCreatedFhenix(intent);
+      }
     }
 
     console.log("Unsealed output amount:", unsealedOutputAmountResult.data);
