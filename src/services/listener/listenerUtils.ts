@@ -20,7 +20,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent) => {
       ...cofhejs.store.getState(),
       chainId: intent.originChainId.toString(),
     });
-    await sleep(4000); // Wait for cofhejs to be ready
+    await sleep(8000); // Wait for cofhejs to be ready
     const unsealedOutputAmountResult = await cofhejs.unseal(
       BigInt(intent.outputAmount),
       FheTypes.Uint64,
@@ -103,6 +103,7 @@ export const handleIntentCreatedZama = async (intent: ContractIntent) => {
       primaryType: "UserDecryptRequestVerification",
       message: eip712.message,
     });
+    await sleep(8000); // Wait for ciphertext to be ready
     const decrypted = await zamaClient.userDecrypt(
       handleContractPairs,
       keypair.privateKey,
