@@ -1,11 +1,13 @@
+import { cofhejs, FheTypes, Encryptable } from "cofhejs/node";
+import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { ContractIntent, Coprocessor, Token } from "../../config/types";
 import CofheBridgeABI from "../../config/abi/cofheBridgeABI";
 import FhevmBridgeABI from "../../config/abi/fhevmBridgeABI";
-import { getZamaClient, getFhenixPermit, walletClients } from "../../config/client";
-import { cofhejs, FheTypes, Encryptable } from "cofhejs/node";
+import { getZamaClient, getFhenixPermit, walletClients, publicClients } from "../../config/client";
 import addresses from "../../config/addresses";
 import tokens from "../../config/tokens";
 import { sleep } from "../../lib/utils";
+import networks from "../../config/networks";
 
 export const handleIntentCreatedPublic = async (intent: ContractIntent) => {
   console.log("To be implemented: handleIntentCreated for public bridge");
@@ -162,6 +164,7 @@ export const handleFulfillIntentFhenix = async (
 ) => {
   const cofheBridgeContractAddress = addresses[Number(destinationChainId)].cofheBridge;
   const walletClientDest = walletClients.find((wc) => wc.chainId === Number(destinationChainId))!.client;
+  const publicClientDest = publicClients.find((pc) => pc.chainId === Number(destinationChainId))!.client;
 
   const intentArgs = {
     ...intent,
@@ -183,11 +186,27 @@ export const handleFulfillIntentFhenix = async (
       throw new Error(`Wallet client for chainId ${destinationChainId} not found`);
     }
 
+    const sourceChainEid = networks.find((n) => n.chainId === Number(intent.originChainId))?.layerzeroEid;
+
+    if (!sourceChainEid) {
+      throw new Error(`LayerZero EID for chainId ${destinationChainId} not found`);
+    }
+
+    const optionsHex = Options.newOptions().addExecutorLzReceiveOption(500_000, 0).toHex() as `0x${string}`;
+
+    const { nativeFee } = await publicClientDest.readContract({
+      address: cofheBridgeContractAddress,
+      abi: CofheBridgeABI,
+      functionName: "quote",
+      args: [sourceChainEid, intent.id.toString(), optionsHex, false],
+    });
+
     const tx = await walletClientDest.writeContract({
       address: cofheBridgeContractAddress,
       abi: CofheBridgeABI,
       functionName: "fulfill",
-      args: [intentArgs, { ...encryptedAmount, signature: encryptedAmount.signature as `0x${string}` }],
+      args: [intentArgs, { ...encryptedAmount, signature: encryptedAmount.signature as `0x${string}` }, optionsHex],
+      value: nativeFee,
     });
     console.log("Transaction sent, hash:", tx);
   } catch (error) {
@@ -202,6 +221,8 @@ export const handleFulfillIntentZama = async (
 ) => {
   const fhevmBridgeContractAddress = addresses[Number(destinationChainId)].fhevmBridge;
   const walletClientDest = walletClients.find((wc) => wc.chainId === Number(destinationChainId))!.client;
+
+  const publicClientDest = publicClients.find((pc) => pc.chainId === Number(destinationChainId))!.client;
 
   const zamaClient = await getZamaClient();
 
@@ -222,6 +243,21 @@ export const handleFulfillIntentZama = async (
       throw new Error(`Wallet client for chainId ${destinationChainId} not found`);
     }
 
+    const sourceChainEid = networks.find((n) => n.chainId === Number(intent.originChainId))?.layerzeroEid;
+
+    if (!sourceChainEid) {
+      throw new Error(`LayerZero EID for chainId ${destinationChainId} not found`);
+    }
+
+    const optionsHex = Options.newOptions().addExecutorLzReceiveOption(500_000, 0).toHex() as `0x${string}`;
+
+    const { nativeFee } = await publicClientDest.readContract({
+      address: fhevmBridgeContractAddress,
+      abi: FhevmBridgeABI,
+      functionName: "quote",
+      args: [sourceChainEid, intent.id.toString(), optionsHex, false],
+    });
+
     const tx = await walletClientDest.writeContract({
       address: fhevmBridgeContractAddress,
       abi: FhevmBridgeABI,
@@ -230,7 +266,9 @@ export const handleFulfillIntentZama = async (
         intentArgs,
         `0x${Buffer.from(encrypted.handles[0]).toString("hex")}`,
         `0x${Buffer.from(encrypted.inputProof).toString("hex")}`,
+        optionsHex,
       ],
+      value: nativeFee,
     });
     console.log("Transaction sent, hash:", tx);
   } catch (error) {

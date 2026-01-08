@@ -80,6 +80,7 @@ const testnets: Network[] = [
     contracts: contracts[sepolia.id],
     tokens: tokens[sepolia.id],
     coprocessors: [Coprocessor.FHENIX, Coprocessor.ZAMA],
+    layerzeroEid: 40161,
   },
   {
     name: "Arbitrum Sepolia Testnet",
@@ -93,6 +94,7 @@ const testnets: Network[] = [
     contracts: contracts[arbitrumSepolia.id],
     tokens: tokens[arbitrumSepolia.id],
     coprocessors: [Coprocessor.FHENIX],
+    layerzeroEid: 40231,
   },
   {
     name: "Base Sepolia Testnet",
@@ -106,6 +108,7 @@ const testnets: Network[] = [
     contracts: contracts[baseSepolia.id],
     tokens: tokens[baseSepolia.id],
     coprocessors: [Coprocessor.FHENIX],
+    layerzeroEid: 40245,
   },
   {
     name: "Optimism Sepolia Testnet",
@@ -142,7 +145,7 @@ const testnets: Network[] = [
     },
     contracts: {
       bridgeContract: {
-        address: "0x7198dc5a074ac365ccc4e43213522675957a8ab0",
+        address: "0xF8c2D4B68F93f3E332B30FD32a59d5C5e6358A83",
       },
       fheBridgeContract: {
         address: "0x353EA08f9cEB8b23A3496e6A24C019Ebb091AcA6",

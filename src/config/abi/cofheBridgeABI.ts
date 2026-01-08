@@ -1,6 +1,12 @@
 const abi = [
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: "address",
+        name: "_endpoint",
+        type: "address",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "constructor",
   },
@@ -30,6 +36,16 @@ const abi = [
     type: "error",
   },
   {
+    inputs: [],
+    name: "InvalidChainId",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InvalidDelegate",
+    type: "error",
+  },
+  {
     inputs: [
       {
         internalType: "uint8",
@@ -47,7 +63,77 @@ const abi = [
   },
   {
     inputs: [],
+    name: "InvalidEndpointCall",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes",
+        name: "options",
+        type: "bytes",
+      },
+    ],
+    name: "InvalidOptions",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "InvalidToken",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "LzTokenUnavailable",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "eid",
+        type: "uint32",
+      },
+    ],
+    name: "NoPeer",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "msgValue",
+        type: "uint256",
+      },
+    ],
+    name: "NotEnoughNative",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "addr",
+        type: "address",
+      },
+    ],
+    name: "OnlyEndpoint",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "eid",
+        type: "uint32",
+      },
+      {
+        internalType: "bytes32",
+        name: "sender",
+        type: "bytes32",
+      },
+    ],
+    name: "OnlyPeer",
     type: "error",
   },
   {
@@ -78,6 +164,17 @@ const abi = [
     type: "error",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
+    ],
+    name: "SafeERC20FailedOperation",
+    type: "error",
+  },
+  {
     inputs: [],
     name: "SolverAlreadyPaid",
     type: "error",
@@ -86,6 +183,36 @@ const abi = [
     inputs: [],
     name: "UnauthorizedRelayer",
     type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "uint32",
+            name: "eid",
+            type: "uint32",
+          },
+          {
+            internalType: "uint16",
+            name: "msgType",
+            type: "uint16",
+          },
+          {
+            internalType: "bytes",
+            name: "options",
+            type: "bytes",
+          },
+        ],
+        indexed: false,
+        internalType: "struct EnforcedOptionParam[]",
+        name: "_enforcedOptions",
+        type: "tuple[]",
+      },
+    ],
+    name: "EnforcedOptionSet",
+    type: "event",
   },
   {
     anonymous: false,
@@ -379,25 +506,6 @@ const abi = [
         type: "address",
       },
     ],
-    name: "OwnershipTransferStarted",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
     name: "OwnershipTransferred",
     type: "event",
   },
@@ -412,6 +520,25 @@ const abi = [
       },
     ],
     name: "Paused",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint32",
+        name: "eid",
+        type: "uint32",
+      },
+      {
+        indexed: false,
+        internalType: "bytes32",
+        name: "peer",
+        type: "bytes32",
+      },
+    ],
+    name: "PeerSet",
     type: "event",
   },
   {
@@ -448,20 +575,72 @@ const abi = [
   },
   {
     inputs: [],
-    name: "acceptOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
+    name: "SEND",
+    outputs: [
+      {
+        internalType: "uint16",
+        name: "",
+        type: "uint16",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
+        internalType: "uint32",
+        name: "eid",
+        type: "uint32",
+      },
+      {
+        internalType: "uint16",
+        name: "msgType",
+        type: "uint16",
+      },
+      {
+        internalType: "bytes",
+        name: "extraOptions",
+        type: "bytes",
       },
     ],
-    name: "authorizedRelayers",
+    name: "_combineOptionsExternal",
+    outputs: [
+      {
+        internalType: "bytes",
+        name: "",
+        type: "bytes",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "uint32",
+            name: "srcEid",
+            type: "uint32",
+          },
+          {
+            internalType: "bytes32",
+            name: "sender",
+            type: "bytes32",
+          },
+          {
+            internalType: "uint64",
+            name: "nonce",
+            type: "uint64",
+          },
+        ],
+        internalType: "struct Origin",
+        name: "origin",
+        type: "tuple",
+      },
+    ],
+    name: "allowInitializePath",
     outputs: [
       {
         internalType: "bool",
@@ -589,14 +768,49 @@ const abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "intentId",
-        type: "uint256",
+        internalType: "uint32",
+        name: "chainId",
+        type: "uint32",
       },
     ],
-    name: "claimTimeout",
-    outputs: [],
-    stateMutability: "nonpayable",
+    name: "chainIdToEid",
+    outputs: [
+      {
+        internalType: "uint32",
+        name: "eid",
+        type: "uint32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "_eid",
+        type: "uint32",
+      },
+      {
+        internalType: "uint16",
+        name: "_msgType",
+        type: "uint16",
+      },
+      {
+        internalType: "bytes",
+        name: "_extraOptions",
+        type: "bytes",
+      },
+    ],
+    name: "combineOptions",
+    outputs: [
+      {
+        internalType: "bytes",
+        name: "",
+        type: "bytes",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -613,6 +827,43 @@ const abi = [
         internalType: "bool",
         name: "exists",
         type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "endpoint",
+    outputs: [
+      {
+        internalType: "contract ILayerZeroEndpointV2",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "eid",
+        type: "uint32",
+      },
+      {
+        internalType: "uint16",
+        name: "msgType",
+        type: "uint16",
+      },
+    ],
+    name: "enforcedOptions",
+    outputs: [
+      {
+        internalType: "bytes",
+        name: "enforcedOption",
+        type: "bytes",
       },
     ],
     stateMutability: "view",
@@ -719,10 +970,15 @@ const abi = [
         name: "_outputAmount",
         type: "tuple",
       },
+      {
+        internalType: "bytes",
+        name: "_options",
+        type: "bytes",
+      },
     ],
     name: "fulfill",
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -804,10 +1060,15 @@ const abi = [
         name: "_outputAmount",
         type: "uint256",
       },
+      {
+        internalType: "bytes",
+        name: "_options",
+        type: "bytes",
+      },
     ],
     name: "fulfill",
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -1012,62 +1273,139 @@ const abi = [
   {
     inputs: [
       {
-        internalType: "address",
+        components: [
+          {
+            internalType: "uint32",
+            name: "srcEid",
+            type: "uint32",
+          },
+          {
+            internalType: "bytes32",
+            name: "sender",
+            type: "bytes32",
+          },
+          {
+            internalType: "uint64",
+            name: "nonce",
+            type: "uint64",
+          },
+        ],
+        internalType: "struct Origin",
         name: "",
+        type: "tuple",
+      },
+      {
+        internalType: "bytes",
+        name: "",
+        type: "bytes",
+      },
+      {
+        internalType: "address",
+        name: "_sender",
         type: "address",
       },
+    ],
+    name: "isComposeMsgSender",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
       {
         components: [
           {
             internalType: "uint32",
-            name: "sourceChannelId",
+            name: "srcEid",
             type: "uint32",
           },
           {
-            internalType: "uint32",
-            name: "destinationChannelId",
-            type: "uint32",
-          },
-          {
-            internalType: "bytes",
-            name: "data",
-            type: "bytes",
+            internalType: "bytes32",
+            name: "sender",
+            type: "bytes32",
           },
           {
             internalType: "uint64",
-            name: "timeoutHeight",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "timeoutTimestamp",
+            name: "nonce",
             type: "uint64",
           },
         ],
-        internalType: "struct IBCPacket",
-        name: "packet",
+        internalType: "struct Origin",
+        name: "_origin",
         type: "tuple",
       },
       {
+        internalType: "bytes32",
+        name: "_guid",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "_message",
+        type: "bytes",
+      },
+      {
         internalType: "address",
-        name: "",
+        name: "_executor",
         type: "address",
       },
       {
         internalType: "bytes",
-        name: "",
+        name: "_extraData",
         type: "bytes",
       },
     ],
-    name: "onRecvPacket",
+    name: "lzReceive",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "",
+        type: "uint32",
+      },
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    name: "nextNonce",
     outputs: [
       {
-        internalType: "bytes",
-        name: "",
-        type: "bytes",
+        internalType: "uint64",
+        name: "nonce",
+        type: "uint64",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "oAppVersion",
+    outputs: [
+      {
+        internalType: "uint64",
+        name: "senderVersion",
+        type: "uint64",
+      },
+      {
+        internalType: "uint64",
+        name: "receiverVersion",
+        type: "uint64",
+      },
+    ],
+    stateMutability: "pure",
     type: "function",
   },
   {
@@ -1138,13 +1476,65 @@ const abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "pendingOwner",
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "eid",
+        type: "uint32",
+      },
+    ],
+    name: "peers",
     outputs: [
       {
-        internalType: "address",
-        name: "",
-        type: "address",
+        internalType: "bytes32",
+        name: "peer",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "_dstEid",
+        type: "uint32",
+      },
+      {
+        internalType: "string",
+        name: "_string",
+        type: "string",
+      },
+      {
+        internalType: "bytes",
+        name: "_options",
+        type: "bytes",
+      },
+      {
+        internalType: "bool",
+        name: "_payInLzToken",
+        type: "bool",
+      },
+    ],
+    name: "quote",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "nativeFee",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "lzTokenFee",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct MessagingFee",
+        name: "fee",
+        type: "tuple",
       },
     ],
     stateMutability: "view",
@@ -1160,12 +1550,17 @@ const abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "intentId",
-        type: "uint256",
+        internalType: "uint32",
+        name: "_chainId",
+        type: "uint32",
+      },
+      {
+        internalType: "uint32",
+        name: "_eid",
+        type: "uint32",
       },
     ],
-    name: "repayRelayer",
+    name: "setChainIdToEid",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1174,16 +1569,59 @@ const abi = [
     inputs: [
       {
         internalType: "address",
-        name: "relayer",
+        name: "_delegate",
         type: "address",
       },
+    ],
+    name: "setDelegate",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
       {
-        internalType: "bool",
-        name: "authorized",
-        type: "bool",
+        components: [
+          {
+            internalType: "uint32",
+            name: "eid",
+            type: "uint32",
+          },
+          {
+            internalType: "uint16",
+            name: "msgType",
+            type: "uint16",
+          },
+          {
+            internalType: "bytes",
+            name: "options",
+            type: "bytes",
+          },
+        ],
+        internalType: "struct EnforcedOptionParam[]",
+        name: "_enforcedOptions",
+        type: "tuple[]",
       },
     ],
-    name: "setRelayerAuthorization",
+    name: "setEnforcedOptions",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "_eid",
+        type: "uint32",
+      },
+      {
+        internalType: "bytes32",
+        name: "_peer",
+        type: "bytes32",
+      },
+    ],
+    name: "setPeer",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1204,46 +1642,6 @@ const abi = [
   {
     inputs: [],
     name: "unpause",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "tokenAddress",
-        type: "address",
-      },
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "ctHash",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "securityZone",
-            type: "uint8",
-          },
-          {
-            internalType: "uint8",
-            name: "utype",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes",
-            name: "signature",
-            type: "bytes",
-          },
-        ],
-        internalType: "struct InEuint64",
-        name: "_encryptedAmount",
-        type: "tuple",
-      },
-    ],
-    name: "withdraw",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

@@ -36,6 +36,7 @@ export interface Network {
   contracts: Record<string, { address: `0x${string}`; coprocessor?: Coprocessor }>;
   tokens: Token[];
   coprocessors?: Coprocessor[];
+  layerzeroEid?: number;
 }
 
 export interface TargetNetworkDetails {
