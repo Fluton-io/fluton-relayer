@@ -95,10 +95,8 @@ export const handleGiveOffers = async (
     const sourceAmountInUSD = sourceTokenPrice * Number(formatUnits(BigInt(amount), sourceTokenDecimals));
     console.log("sourceAmountInUSD:", sourceAmountInUSD);
 
-    console.log("schemaForTargetChainMainnet:", schemaForTargetChainMainnet);
     const relayerTargetTokenMainnet = schemaForTargetChainMainnet[targetTokenAddressMainnet];
     const relayerTargetToken = schemaForTargetChain[targetTokenAddress];
-    console.log("relayer target token mainnet:", relayerTargetTokenMainnet);
     const relayerTargetTokenMainnetPrice = (await getPrice(parseInt(targetChainIdMainnet), targetTokenAddressMainnet))[
       targetTokenAddressMainnet
     ];
