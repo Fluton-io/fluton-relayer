@@ -209,7 +209,6 @@ export const getZamaClient = async (): Promise<FhevmInstance> => {
     const config: FhevmInstanceConfig = {
       ...SepoliaConfig,
       network: SEPOLIA_RPC_URL,
-      relayerRouteVersion: 2,
       relayerUrl: `${SepoliaConfig.relayerUrl}/v2`,
     };
     zamaClient = await createInstance(config);

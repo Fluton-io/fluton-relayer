@@ -8,7 +8,7 @@ parentPort.on("message", async (payload) => {
     const config = {
       ...SepoliaConfig,
       network: process.env.SEPOLIA_RPC_URL,
-      relayerRouteVersion: 1,
+      relayerUrl: `${SepoliaConfig.relayerUrl}/v2`,
     };
 
     const zamaClient = await createInstance(config);
