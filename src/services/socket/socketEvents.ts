@@ -37,9 +37,6 @@ export const handleGiveOffers = async (
   const sourceChainIdMainnet = testnetToMainnet[sourceChainId] || sourceChainId;
   const targetChainIdMainnet = testnetToMainnet[targetChainId] || targetChainId;
 
-  console.log("sourceChainIdMainnet:", sourceChainIdMainnet);
-  console.log("targetChainIdMainnet:", targetChainIdMainnet);
-
   const sourceTokenAddressMainnet = testnetToMainnetToken[sourceTokenAddress] || sourceTokenAddress;
   const targetTokenAddressMainnet = testnetToMainnetToken[targetTokenAddress] || targetTokenAddress;
 
@@ -62,7 +59,6 @@ export const handleGiveOffers = async (
 
   const schemaForSourceChain = feeSchema.chains[sourceChainId];
   const schemaForTargetChain = feeSchema.chains[targetChainId];
-  const schemaForSourceChainMainnet = feeSchema.chains[sourceChainIdMainnet];
   const schemaForTargetChainMainnet = feeSchema.chains[targetChainIdMainnet];
 
   if (!schemaForTargetChainMainnet) {

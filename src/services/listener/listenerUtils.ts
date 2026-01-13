@@ -8,6 +8,7 @@ import addresses from "../../config/addresses";
 import tokens from "../../config/tokens";
 import { sleep } from "../../lib/utils";
 import networks from "../../config/networks";
+import { decryptInWorker, encryptInWorker } from "../worker/workerService";
 
 export const handleIntentCreatedPublic = async (intent: ContractIntent) => {
   console.log("To be implemented: handleIntentCreated for public bridge");
@@ -107,8 +108,8 @@ export const handleIntentCreatedZama = async (intent: ContractIntent) => {
         contractAddress: bridgeContractSource,
       },
     ];
-    const startTimeStamp = Math.floor(Date.now() / 1000).toString();
-    const durationDays = "10"; // String for consistency
+    const startTimeStamp = Math.floor(Date.now() / 1000);
+    const durationDays = 365;
     const contractAddresses = [bridgeContractSource];
 
     const eip712 = zamaClient.createEIP712(keypair.publicKey, contractAddresses, startTimeStamp, durationDays);
@@ -121,33 +122,32 @@ export const handleIntentCreatedZama = async (intent: ContractIntent) => {
       message: eip712.message,
     });
     await sleep(8000); // Wait for ciphertext to be ready
-    const decrypted = await zamaClient.userDecrypt(
+    const decrypted = (await decryptInWorker({
       handleContractPairs,
-      keypair.privateKey,
-      keypair.publicKey,
-      signature.replace("0x", ""),
+      privateKey: keypair.privateKey,
+      publicKey: keypair.publicKey,
+      signature: signature.replace("0x", ""),
       contractAddresses,
-      walletClientSource.account.address,
+      userAddress: walletClientSource.account.address,
       startTimeStamp,
-      durationDays
-    );
+      durationDays,
+    })) as Record<`0x${string}`, bigint>;
 
-    const decryptedOutputAmount = decrypted[("0x" + intent.outputAmount.toString(16)) as `0x${string}`] as bigint;
-    const decryptedDestinationChainId = decrypted[
-      ("0x" + intent.destinationChainId.toString(16)) as `0x${string}`
-    ] as bigint;
+    const decryptedOutputAmount = decrypted[("0x" + intent.outputAmount.toString(16)) as `0x${string}`];
+    const decryptedDestinationChainId = decrypted[("0x" + intent.destinationChainId.toString(16)) as `0x${string}`];
 
-    const targetToken: Token = tokens[Number(decryptedDestinationChainId)].find(
-      (t) => t.address.toLowerCase() === intent.outputToken.toLowerCase()
-    )!;
+    const targetToken: Token = tokens[Number(decryptedDestinationChainId)].find((t) => {
+      console.log("Target token:", t.address.toLowerCase(), intent.outputToken.toLowerCase());
+      return t.address.toLowerCase() === intent.outputToken.toLowerCase();
+    })!;
     const targetCoprocessor = targetToken.coprocessor;
 
     if (targetCoprocessor === Coprocessor.ZAMA) {
       console.log("Zama to Zama transfer, no decryption needed, but decrypting for now.");
-      return handleFulfillIntentZama(intent, decryptedOutputAmount, decryptedDestinationChainId);
+      return handleFulfillIntentZama(intent, BigInt(decryptedOutputAmount), BigInt(decryptedDestinationChainId));
     } else if (targetCoprocessor === Coprocessor.FHENIX) {
       console.log("Zama to Fhenix transfer, decryption needed.");
-      return handleFulfillIntentFhenix(intent, decryptedOutputAmount, decryptedDestinationChainId);
+      return handleFulfillIntentFhenix(intent, BigInt(decryptedOutputAmount), BigInt(decryptedDestinationChainId));
     } else {
       // return handleFulfillIntentPublic(intent);
       return console.log("Target coprocessor doesn't exist, fulfilling via public bridge (not implemented yet).");
@@ -224,12 +224,11 @@ export const handleFulfillIntentZama = async (
 
   const publicClientDest = publicClients.find((pc) => pc.chainId === Number(destinationChainId))!.client;
 
-  const zamaClient = await getZamaClient();
-
-  const encrypted = await zamaClient
-    .createEncryptedInput(fhevmBridgeContractAddress, walletClientDest.account.address)
-    .add64(outputAmount)
-    .encrypt();
+  const encrypted = await encryptInWorker({
+    fhevmBridgeContractAddress,
+    userAddress: walletClientDest.account.address,
+    outputAmount: outputAmount.toString(),
+  });
 
   const intentArgs = {
     ...intent,
@@ -257,6 +256,13 @@ export const handleFulfillIntentZama = async (
       functionName: "quote",
       args: [sourceChainEid, intent.id.toString(), optionsHex, false],
     });
+
+    console.log("Encrypted:", encrypted.handles[0], encrypted.inputProof);
+    console.log(
+      "Encrypted:",
+      `0x${Buffer.from(encrypted.handles[0]).toString("hex")}`,
+      `0x${Buffer.from(encrypted.inputProof).toString("hex")}`
+    );
 
     const tx = await walletClientDest.writeContract({
       address: fhevmBridgeContractAddress,

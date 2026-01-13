@@ -21,16 +21,10 @@ export const getOdosPrice = async (chainId: number, tokenAddresses: `0x${string}
   console.log("tokenAddresses", tokenAddresses);
 
   const cacheKeys = tokenAddresses.map((address) => `${chainId}-${address}`);
-  console.log("cacheKeys", cacheKeys);
 
   const cachedPrices = cacheKeys.map((key) => getCachedPrice(key));
-  console.log("cachedPrices", cachedPrices);
 
   if (cachedPrices.every((price) => price !== null)) {
-    console.log(
-      "using cached prices with",
-      Object.fromEntries(tokenAddresses.map((address, index) => [address, cachedPrices[index]]))
-    );
     return Object.fromEntries(tokenAddresses.map((address, index) => [address, cachedPrices[index]]));
   }
 
