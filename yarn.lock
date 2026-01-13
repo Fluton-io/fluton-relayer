@@ -443,10 +443,10 @@
     "@types/node" "*"
     "@types/send" "<1"
 
-"@zama-fhe/relayer-sdk@^0.4.0-3":
-  version "0.4.0-3"
-  resolved "https://registry.yarnpkg.com/@zama-fhe/relayer-sdk/-/relayer-sdk-0.4.0-3.tgz#899cab05c60cb1ad0ce06e90a53197140abc6991"
-  integrity sha512-o1FMIB9wcOcws+us9MCspdwijHv1hzrVVTgHvMk/flEoKdLgC1y8rmqnQnp6vLZ1XMilU192/aTMyp0OIj51qQ==
+"@zama-fhe/relayer-sdk@^0.4.0-4":
+  version "0.4.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@zama-fhe/relayer-sdk/-/relayer-sdk-0.4.0-alpha.4.tgz#56957844a4ae007f0ce16a9ae030098d2c7ef1b9"
+  integrity sha512-a9qF1mECthRzjlzvGywgSU68/Nj1FizJZLXFYdoQkXnr2vJOrP6ooQZyIrMdtnfmZIX9l3TYlgk+SIHwiLifXw==
   dependencies:
     commander "^14.0.0"
     ethers "^6.15.0"
