@@ -91,7 +91,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent): Promise
   }
 };
 
-export const handleIntentCreatedZama = async (intent: ContractIntent) => {
+export const handleIntentCreatedZama = async (intent: ContractIntent): Promise<any> => {
   try {
     const walletClientSource = walletClients.find((wc) => wc.chainId === intent.originChainId)!.client;
     const bridgeContractSource = addresses[Number(intent.originChainId)].fhevmBridge;
@@ -119,7 +119,11 @@ export const handleIntentCreatedZama = async (intent: ContractIntent) => {
         UserDecryptRequestVerification: eip712.types.UserDecryptRequestVerification,
       },
       primaryType: "UserDecryptRequestVerification",
-      message: eip712.message,
+      message: {
+        ...eip712.message,
+        startTimestamp: BigInt(eip712.message.startTimestamp),
+        durationDays: BigInt(eip712.message.durationDays),
+      },
     });
     await sleep(8000); // Wait for ciphertext to be ready
     const decrypted = (await decryptInWorker({
@@ -234,57 +238,61 @@ export const handleFulfillIntentZama = async (
   outputAmount: bigint,
   destinationChainId: bigint
 ) => {
-  const fhevmBridgeContractAddress = addresses[Number(destinationChainId)].fhevmBridge;
-  const walletClientDest = walletClients.find((wc) => wc.chainId === Number(destinationChainId))!.client;
-
-  const publicClientDest = publicClients.find((pc) => pc.chainId === Number(destinationChainId))!.client;
-
-  const encrypted = await encryptInWorker({
-    fhevmBridgeContractAddress,
-    userAddress: walletClientDest.account.address,
-    outputAmount: outputAmount.toString(),
-  });
-
-  const intentArgs = {
-    ...intent,
-    inputAmount: ("0x" + BigInt(intent.inputAmount).toString(16)) as `0x${string}`,
-    outputAmount: ("0x" + BigInt(intent.outputAmount).toString(16)) as `0x${string}`,
-    destinationChainId: ("0x" + BigInt(intent.destinationChainId).toString(16)) as `0x${string}`,
-  };
-
   try {
-    if (!walletClientDest) {
-      throw new Error(`Wallet client for chainId ${destinationChainId} not found`);
-    }
+    const fhevmBridgeContractAddress = addresses[Number(destinationChainId)].fhevmBridge;
+    const walletClientDest = walletClients.find((wc) => wc.chainId === Number(destinationChainId))!.client;
 
-    const sourceChainEid = networks.find((n) => n.chainId === Number(intent.originChainId))?.layerzeroEid;
+    const publicClientDest = publicClients.find((pc) => pc.chainId === Number(destinationChainId))!.client;
 
-    if (!sourceChainEid) {
-      throw new Error(`LayerZero EID for chainId ${destinationChainId} not found`);
-    }
-
-    const optionsHex = Options.newOptions().addExecutorLzReceiveOption(500_000, 0).toHex() as `0x${string}`;
-
-    const { nativeFee } = await publicClientDest.readContract({
-      address: fhevmBridgeContractAddress,
-      abi: FhevmBridgeABI,
-      functionName: "quote",
-      args: [sourceChainEid, intent.id.toString(), optionsHex, false],
+    const encrypted = await encryptInWorker({
+      fhevmBridgeContractAddress,
+      userAddress: walletClientDest.account.address,
+      outputAmount: outputAmount.toString(),
     });
 
-    const tx = await walletClientDest.writeContract({
-      address: fhevmBridgeContractAddress,
-      abi: FhevmBridgeABI,
-      functionName: "fulfill",
-      args: [
-        intentArgs,
-        `0x${Buffer.from(encrypted.handles[0]).toString("hex")}`,
-        `0x${Buffer.from(encrypted.inputProof).toString("hex")}`,
-        optionsHex,
-      ],
-      value: nativeFee,
-    });
-    console.log("Transaction sent, hash:", tx);
+    const intentArgs = {
+      ...intent,
+      inputAmount: ("0x" + BigInt(intent.inputAmount).toString(16)) as `0x${string}`,
+      outputAmount: ("0x" + BigInt(intent.outputAmount).toString(16)) as `0x${string}`,
+      destinationChainId: ("0x" + BigInt(intent.destinationChainId).toString(16)) as `0x${string}`,
+    };
+
+    try {
+      if (!walletClientDest) {
+        throw new Error(`Wallet client for chainId ${destinationChainId} not found`);
+      }
+
+      const sourceChainEid = networks.find((n) => n.chainId === Number(intent.originChainId))?.layerzeroEid;
+
+      if (!sourceChainEid) {
+        throw new Error(`LayerZero EID for chainId ${destinationChainId} not found`);
+      }
+
+      const optionsHex = Options.newOptions().addExecutorLzReceiveOption(500_000, 0).toHex() as `0x${string}`;
+
+      const { nativeFee } = await publicClientDest.readContract({
+        address: fhevmBridgeContractAddress,
+        abi: FhevmBridgeABI,
+        functionName: "quote",
+        args: [sourceChainEid, intent.id.toString(), optionsHex, false],
+      });
+
+      const tx = await walletClientDest.writeContract({
+        address: fhevmBridgeContractAddress,
+        abi: FhevmBridgeABI,
+        functionName: "fulfill",
+        args: [
+          intentArgs,
+          `0x${Buffer.from(encrypted.handles[0]).toString("hex")}`,
+          `0x${Buffer.from(encrypted.inputProof).toString("hex")}`,
+          optionsHex,
+        ],
+        value: nativeFee,
+      });
+      console.log("Transaction sent, hash:", tx);
+    } catch (error) {
+      console.error("Error when fulfilling intent:", error);
+    }
   } catch (error) {
     console.error("Error when fulfilling intent:", error);
   }
