@@ -136,10 +136,25 @@ export const handleIntentCreatedZama = async (intent: ContractIntent) => {
     const decryptedOutputAmount = decrypted[("0x" + intent.outputAmount.toString(16)) as `0x${string}`];
     const decryptedDestinationChainId = decrypted[("0x" + intent.destinationChainId.toString(16)) as `0x${string}`];
 
-    const targetToken: Token = tokens[Number(decryptedDestinationChainId)].find((t) => {
-      console.log("Target token:", t.address.toLowerCase(), intent.outputToken.toLowerCase());
-      return t.address.toLowerCase() === intent.outputToken.toLowerCase();
-    })!;
+    if (!decryptedOutputAmount || !decryptedDestinationChainId) {
+      if (!tryCountIntentCreated[String(intent.id)]) {
+        tryCountIntentCreated[String(intent.id)] = 1;
+      } else {
+        tryCountIntentCreated[String(intent.id)]++;
+      }
+      if (tryCountIntentCreated[String(intent.id)] > 5) {
+        throw new Error("Failed to decrypt the output amount or destination chain ID");
+      } else {
+        console.log(
+          `Decryption failed for intent ${intent.id}, retrying... Attempt ${tryCountIntentCreated[String(intent.id)]}`
+        );
+        return handleIntentCreatedZama(intent);
+      }
+    }
+
+    const targetToken: Token = tokens[Number(decryptedDestinationChainId)].find(
+      (t) => t.address.toLowerCase() === intent.outputToken.toLowerCase()
+    )!;
     const targetCoprocessor = targetToken.coprocessor;
 
     if (targetCoprocessor === Coprocessor.ZAMA) {
@@ -256,13 +271,6 @@ export const handleFulfillIntentZama = async (
       functionName: "quote",
       args: [sourceChainEid, intent.id.toString(), optionsHex, false],
     });
-
-    console.log("Encrypted:", encrypted.handles[0], encrypted.inputProof);
-    console.log(
-      "Encrypted:",
-      `0x${Buffer.from(encrypted.handles[0]).toString("hex")}`,
-      `0x${Buffer.from(encrypted.inputProof).toString("hex")}`
-    );
 
     const tx = await walletClientDest.writeContract({
       address: fhevmBridgeContractAddress,
