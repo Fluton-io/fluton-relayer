@@ -9,6 +9,7 @@ import tokens from "../../config/tokens";
 import { sleep } from "../../lib/utils";
 import networks from "../../config/networks";
 import { decryptInWorker, encryptInWorker } from "../worker/workerService";
+import { nonceManager } from "../nonceManager";
 
 export const handleIntentCreatedPublic = async (intent: ContractIntent) => {
   console.log("To be implemented: handleIntentCreated for public bridge");
@@ -180,12 +181,13 @@ export const handleFulfillIntentFhenix = async (
   const cofheBridgeContractAddress = addresses[Number(destinationChainId)].cofheBridge;
   const walletClientDest = walletClients.find((wc) => wc.chainId === Number(destinationChainId))!.client;
   const publicClientDest = publicClients.find((pc) => pc.chainId === Number(destinationChainId))!.client;
+  const chainId = Number(destinationChainId);
 
   const intentArgs = {
     ...intent,
   };
 
-  const permit = await getFhenixPermit(Number(destinationChainId));
+  const permit = await getFhenixPermit(chainId);
   cofhejs.store.setState({
     ...cofhejs.store.getState(),
     chainId: destinationChainId.toString(),
@@ -195,6 +197,8 @@ export const handleFulfillIntentFhenix = async (
     throw new Error("Failed to encrypt the output amount");
   }
   const [encryptedAmount] = encrypted.data!;
+
+  let nonce: number | undefined;
 
   try {
     if (!walletClientDest) {
@@ -216,16 +220,28 @@ export const handleFulfillIntentFhenix = async (
       args: [sourceChainEid, intent.id.toString(), optionsHex, false],
     });
 
+    // Get the next nonce from the nonce manager
+    nonce = await nonceManager.getNextNonce(chainId);
+
     const tx = await walletClientDest.writeContract({
       address: cofheBridgeContractAddress,
       abi: CofheBridgeABI,
       functionName: "fulfill",
       args: [intentArgs, { ...encryptedAmount, signature: encryptedAmount.signature as `0x${string}` }, optionsHex],
       value: nativeFee,
+      nonce,
     });
     console.log("Transaction sent, hash:", tx);
+
+    // Confirm the transaction was submitted successfully
+    nonceManager.confirmTransaction(chainId);
   } catch (error) {
     console.error("Error when fulfilling intent:", error);
+
+    // Handle nonce failure if we had acquired one
+    if (nonce !== undefined) {
+      await nonceManager.handleTransactionFailure(chainId, nonce);
+    }
   }
 };
 
@@ -234,11 +250,14 @@ export const handleFulfillIntentZama = async (
   outputAmount: bigint,
   destinationChainId: bigint
 ) => {
-  try {
-    const fhevmBridgeContractAddress = addresses[Number(destinationChainId)].fhevmBridge;
-    const walletClientDest = walletClients.find((wc) => wc.chainId === Number(destinationChainId))!.client;
+  const chainId = Number(destinationChainId);
+  let nonce: number | undefined;
 
-    const publicClientDest = publicClients.find((pc) => pc.chainId === Number(destinationChainId))!.client;
+  try {
+    const fhevmBridgeContractAddress = addresses[chainId].fhevmBridge;
+    const walletClientDest = walletClients.find((wc) => wc.chainId === chainId)!.client;
+
+    const publicClientDest = publicClients.find((pc) => pc.chainId === chainId)!.client;
 
     const encrypted = await encryptInWorker({
       fhevmBridgeContractAddress,
@@ -253,43 +272,51 @@ export const handleFulfillIntentZama = async (
       destinationChainId: ("0x" + BigInt(intent.destinationChainId).toString(16)) as `0x${string}`,
     };
 
-    try {
-      if (!walletClientDest) {
-        throw new Error(`Wallet client for chainId ${destinationChainId} not found`);
-      }
-
-      const sourceChainEid = networks.find((n) => n.chainId === Number(intent.originChainId))?.layerzeroEid;
-
-      if (!sourceChainEid) {
-        throw new Error(`LayerZero EID for chainId ${destinationChainId} not found`);
-      }
-
-      const optionsHex = Options.newOptions().addExecutorLzReceiveOption(500_000, 0).toHex() as `0x${string}`;
-
-      const { nativeFee } = await publicClientDest.readContract({
-        address: fhevmBridgeContractAddress,
-        abi: FhevmBridgeABI,
-        functionName: "quote",
-        args: [sourceChainEid, intent.id.toString(), optionsHex, false],
-      });
-
-      const tx = await walletClientDest.writeContract({
-        address: fhevmBridgeContractAddress,
-        abi: FhevmBridgeABI,
-        functionName: "fulfill",
-        args: [
-          intentArgs,
-          `0x${Buffer.from(encrypted.handles[0]).toString("hex")}`,
-          `0x${Buffer.from(encrypted.inputProof).toString("hex")}`,
-          optionsHex,
-        ],
-        value: nativeFee,
-      });
-      console.log("Transaction sent, hash:", tx);
-    } catch (error) {
-      console.error("Error when fulfilling intent:", error);
+    if (!walletClientDest) {
+      throw new Error(`Wallet client for chainId ${destinationChainId} not found`);
     }
+
+    const sourceChainEid = networks.find((n) => n.chainId === Number(intent.originChainId))?.layerzeroEid;
+
+    if (!sourceChainEid) {
+      throw new Error(`LayerZero EID for chainId ${destinationChainId} not found`);
+    }
+
+    const optionsHex = Options.newOptions().addExecutorLzReceiveOption(500_000, 0).toHex() as `0x${string}`;
+
+    const { nativeFee } = await publicClientDest.readContract({
+      address: fhevmBridgeContractAddress,
+      abi: FhevmBridgeABI,
+      functionName: "quote",
+      args: [sourceChainEid, intent.id.toString(), optionsHex, false],
+    });
+
+    // Get the next nonce from the nonce manager
+    nonce = await nonceManager.getNextNonce(chainId);
+
+    const tx = await walletClientDest.writeContract({
+      address: fhevmBridgeContractAddress,
+      abi: FhevmBridgeABI,
+      functionName: "fulfill",
+      args: [
+        intentArgs,
+        `0x${Buffer.from(encrypted.handles[0]).toString("hex")}`,
+        `0x${Buffer.from(encrypted.inputProof).toString("hex")}`,
+        optionsHex,
+      ],
+      value: nativeFee,
+      nonce,
+    });
+    console.log("Transaction sent, hash:", tx);
+
+    // Confirm the transaction was submitted successfully
+    nonceManager.confirmTransaction(chainId);
   } catch (error) {
     console.error("Error when fulfilling intent:", error);
+
+    // Handle nonce failure if we had acquired one
+    if (nonce !== undefined) {
+      await nonceManager.handleTransactionFailure(chainId, nonce);
+    }
   }
 };
