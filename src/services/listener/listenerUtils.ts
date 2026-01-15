@@ -1,14 +1,18 @@
-import { cofhejs, FheTypes, Encryptable } from "cofhejs/node";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { ContractIntent, Coprocessor, Token } from "../../config/types";
 import CofheBridgeABI from "../../config/abi/cofheBridgeABI";
 import FhevmBridgeABI from "../../config/abi/fhevmBridgeABI";
-import { getZamaClient, getFhenixPermit, walletClients, publicClients } from "../../config/client";
+import { getZamaClient, walletClients, publicClients } from "../../config/client";
 import addresses from "../../config/addresses";
 import tokens from "../../config/tokens";
 import { sleep } from "../../lib/utils";
 import networks from "../../config/networks";
-import { decryptInWorker, encryptInWorker } from "../worker/workerService";
+import {
+  decryptInWorker,
+  encryptInWorker,
+  fhenixDecryptInWorker,
+  fhenixEncryptInWorker,
+} from "../worker/workerService";
 import { nonceManager } from "../nonceManager";
 
 export const handleIntentCreatedPublic = async (intent: ContractIntent) => {
@@ -19,28 +23,19 @@ let tryCountIntentCreated: Record<string, number> = {};
 
 export const handleIntentCreatedFhenix = async (intent: ContractIntent): Promise<any> => {
   try {
-    const walletClientSource = walletClients.find((wc) => wc.chainId === intent.originChainId)!.client;
+    await sleep(8000); // Wait for ciphertext to be ready
+    const decrypted = (await fhenixDecryptInWorker({
+      chainId: intent.originChainId,
+      valuesToUnseal: [
+        { key: "outputAmount", handle: intent.outputAmount.toString(), type: "Uint64" },
+        { key: "destinationChainId", handle: intent.destinationChainId.toString(), type: "Uint32" },
+      ],
+    })) as { outputAmount: string; destinationChainId: string };
 
-    const permit = await getFhenixPermit(intent.originChainId);
-    cofhejs.store.setState({
-      ...cofhejs.store.getState(),
-      chainId: intent.originChainId.toString(),
-    });
-    await sleep(8000); // Wait for cofhejs to be ready
-    const unsealedOutputAmountResult = await cofhejs.unseal(
-      BigInt(intent.outputAmount),
-      FheTypes.Uint64,
-      walletClientSource.account.address,
-      permit.getHash()
-    );
-    const unsealedDestinationChainIdResult = await cofhejs.unseal(
-      BigInt(intent.destinationChainId),
-      FheTypes.Uint32,
-      walletClientSource.account.address,
-      permit.getHash()
-    );
+    const unsealedOutputAmount = BigInt(decrypted.outputAmount);
+    const unsealedDestinationChainId = BigInt(decrypted.destinationChainId);
 
-    if (!unsealedOutputAmountResult.success || !unsealedDestinationChainIdResult.success) {
+    if (!unsealedOutputAmount || !unsealedDestinationChainId) {
       if (!tryCountIntentCreated[String(intent.id)]) {
         tryCountIntentCreated[String(intent.id)] = 1;
       } else {
@@ -48,12 +43,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent): Promise
       }
 
       if (tryCountIntentCreated[String(intent.id)] > 5) {
-        throw new Error(
-          "Failed to unseal the output amount" +
-            unsealedOutputAmountResult.error +
-            " " +
-            unsealedDestinationChainIdResult.error
-        );
+        throw new Error("Failed to unseal the output amount or destination chain ID");
       } else {
         console.log(
           `Unsealing failed for intent ${intent.id}, retrying... Attempt ${tryCountIntentCreated[String(intent.id)]}`
@@ -62,20 +52,20 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent): Promise
       }
     }
 
-    console.log("Unsealed output amount:", unsealedOutputAmountResult.data);
-    console.log("Unsealed destination chain ID:", unsealedDestinationChainIdResult.data);
+    console.log("Unsealed output amount:", unsealedOutputAmount);
+    console.log("Unsealed destination chain ID:", unsealedDestinationChainId);
 
-    const targetToken: Token = tokens[Number(unsealedDestinationChainIdResult.data)].find(
+    const targetToken: Token = tokens[Number(unsealedDestinationChainId)].find(
       (t) => t.address.toLowerCase() === intent.outputToken.toLowerCase()
     )!;
     const targetCoprocessor = targetToken.coprocessor;
 
     if (targetCoprocessor === Coprocessor.ZAMA) {
       console.log("Fhenix to Zama transfer, decryption needed.");
-      return handleFulfillIntentZama(intent, unsealedOutputAmountResult.data, unsealedDestinationChainIdResult.data);
+      return handleFulfillIntentZama(intent, unsealedOutputAmount, unsealedDestinationChainId);
     } else if (targetCoprocessor === Coprocessor.FHENIX) {
       console.log("Fhenix to Fhenix transfer, no decryption needed, but decrypting for now.");
-      return handleFulfillIntentFhenix(intent, unsealedOutputAmountResult.data, unsealedDestinationChainIdResult.data);
+      return handleFulfillIntentFhenix(intent, unsealedOutputAmount, unsealedDestinationChainId);
     } else {
       // return handleFulfillIntentPublic(intent);
       return console.log("Target coprocessor doesn't exist, fulfilling via public bridge (not implemented yet).");
@@ -187,16 +177,12 @@ export const handleFulfillIntentFhenix = async (
     ...intent,
   };
 
-  const permit = await getFhenixPermit(chainId);
-  cofhejs.store.setState({
-    ...cofhejs.store.getState(),
-    chainId: destinationChainId.toString(),
+  const encryptedAmount = await fhenixEncryptInWorker({
+    chainId,
+    outputAmount: outputAmount.toString(),
   });
-  const encrypted = await cofhejs.encrypt([Encryptable.uint64(outputAmount)]);
-  if (!encrypted.success) {
-    throw new Error("Failed to encrypt the output amount");
-  }
-  const [encryptedAmount] = encrypted.data!;
+
+  console.log("Encrypted amount:", encryptedAmount);
 
   let nonce: number | undefined;
 
