@@ -182,8 +182,6 @@ export const handleFulfillIntentFhenix = async (
     outputAmount: outputAmount.toString(),
   });
 
-  console.log("Encrypted amount:", encryptedAmount);
-
   let nonce: number | undefined;
 
   try {
