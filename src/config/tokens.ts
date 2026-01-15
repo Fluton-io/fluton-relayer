@@ -152,15 +152,6 @@ export const tokensMap: {
       underlyingTokenAddress: addresses[arbitrumSepolia.id].UNI,
       coprocessor: Coprocessor.FHENIX,
     },
-    eU: {
-      symbol: "eU",
-      address: addresses[arbitrumSepolia.id].eU,
-      chainId: arbitrumSepolia.id,
-      decimals: 6,
-      isConfidential: true,
-      underlyingTokenAddress: addresses[arbitrumSepolia.id].U,
-      coprocessor: Coprocessor.FHENIX,
-    },
     eXFL: {
       symbol: "eXFL",
       address: addresses[arbitrumSepolia.id].eXFL,
