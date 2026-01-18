@@ -46,7 +46,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent): Promise
         throw new Error("Failed to unseal the output amount or destination chain ID");
       } else {
         console.log(
-          `Unsealing failed for intent ${intent.id}, retrying... Attempt ${tryCountIntentCreated[String(intent.id)]}`
+          `Unsealing failed for intent ${intent.id}, retrying... Attempt ${tryCountIntentCreated[String(intent.id)]}`,
         );
         return handleIntentCreatedFhenix(intent);
       }
@@ -56,7 +56,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent): Promise
     console.log("Unsealed destination chain ID:", unsealedDestinationChainId);
 
     const targetToken: Token = tokens[Number(unsealedDestinationChainId)].find(
-      (t) => t.address.toLowerCase() === intent.outputToken.toLowerCase()
+      (t) => t.address.toLowerCase() === intent.outputToken.toLowerCase(),
     )!;
     const targetCoprocessor = targetToken.coprocessor;
 
@@ -77,7 +77,7 @@ export const handleIntentCreatedFhenix = async (intent: ContractIntent): Promise
       ", target token address:",
       intent.outputToken.toLowerCase(),
       " chainId:",
-      intent.destinationChainId
+      intent.destinationChainId,
     );
   }
 };
@@ -137,14 +137,14 @@ export const handleIntentCreatedZama = async (intent: ContractIntent): Promise<a
         throw new Error("Failed to decrypt the output amount or destination chain ID");
       } else {
         console.log(
-          `Decryption failed for intent ${intent.id}, retrying... Attempt ${tryCountIntentCreated[String(intent.id)]}`
+          `Decryption failed for intent ${intent.id}, retrying... Attempt ${tryCountIntentCreated[String(intent.id)]}`,
         );
         return handleIntentCreatedZama(intent);
       }
     }
 
     const targetToken: Token = tokens[Number(decryptedDestinationChainId)].find(
-      (t) => t.address.toLowerCase() === intent.outputToken.toLowerCase()
+      (t) => t.address.toLowerCase() === intent.outputToken.toLowerCase(),
     )!;
     const targetCoprocessor = targetToken.coprocessor;
 
@@ -166,7 +166,7 @@ export const handleIntentCreatedZama = async (intent: ContractIntent): Promise<a
 export const handleFulfillIntentFhenix = async (
   intent: ContractIntent,
   outputAmount: bigint,
-  destinationChainId: bigint
+  destinationChainId: bigint,
 ) => {
   const cofheBridgeContractAddress = addresses[Number(destinationChainId)].cofheBridge;
   const walletClientDest = walletClients.find((wc) => wc.chainId === Number(destinationChainId))!.client;
@@ -177,14 +177,14 @@ export const handleFulfillIntentFhenix = async (
     ...intent,
   };
 
-  const encryptedAmount = await fhenixEncryptInWorker({
-    chainId,
-    outputAmount: outputAmount.toString(),
-  });
-
-  let nonce: number | undefined;
-
   try {
+    const encryptedAmount = await fhenixEncryptInWorker({
+      chainId,
+      outputAmount: outputAmount.toString(),
+    });
+
+    let nonce: number | undefined;
+
     if (!walletClientDest) {
       throw new Error(`Wallet client for chainId ${destinationChainId} not found`);
     }
@@ -232,7 +232,7 @@ export const handleFulfillIntentFhenix = async (
 export const handleFulfillIntentZama = async (
   intent: ContractIntent,
   outputAmount: bigint,
-  destinationChainId: bigint
+  destinationChainId: bigint,
 ) => {
   const chainId = Number(destinationChainId);
   let nonce: number | undefined;
