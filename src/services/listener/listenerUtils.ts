@@ -177,13 +177,13 @@ export const handleFulfillIntentFhenix = async (
     ...intent,
   };
 
+  let nonce: number | undefined;
+
   try {
     const encryptedAmount = await fhenixEncryptInWorker({
       chainId,
       outputAmount: outputAmount.toString(),
     });
-
-    let nonce: number | undefined;
 
     if (!walletClientDest) {
       throw new Error(`Wallet client for chainId ${destinationChainId} not found`);
