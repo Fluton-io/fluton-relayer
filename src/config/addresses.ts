@@ -28,6 +28,15 @@ const addresses: { [key: number]: { [key: string]: `0x${string}` } } = {
     cAAVE: "0xd3D6B9dd47092Ffc217c7F1FD26AccD855562986",
     eAAVE: "0x42a57eE9650a5624147273E57C994C7DEa1B7e14",
 
+    TSLA: "0x6Cc810b1C3e4Ff21D0F0b94cC043c33cb35d5a9f",
+    cTSLA: "0xD6d78361aa1f2067216A6Fc53398C695C32ec80C",
+
+    GOLD: "0x4Fd5682BF037116530D1C3F86F65038f4B233cD9",
+    cGOLD: "0xa15162cEa5382c5b307356d74399aae7180770e7",
+
+    SILVER: "0x6Cc810b1C3e4Ff21D0F0b94cC043c33cb35d5a9f",
+    cSILVER: "0x2C480E8Aa9b49f94E5970d7fF3404fd41aaD4CC0",
+
     cofheBridge: "0xdF2aCCdC66E9A6b3bC27bbf83842C54eAA2C8C49",
     fhevmBridge: "0xB8DBD4BFd2741E95E3Ae6BE76a4b8014E409e7ca",
   },
@@ -52,6 +61,15 @@ const addresses: { [key: number]: { [key: string]: `0x${string}` } } = {
     AAVE: "0xF069e4AF0B6Fa84363Cd53380bacE78385Ad1b6B",
     eAAVE: "0x353EA08f9cEB8b23A3496e6A24C019Ebb091AcA6",
 
+    TSLA: "0x39233c471E90Fd6Aa78BF4a9eDF225E5B203a2e5",
+    eTSLA: "0x60E8AEfC7B9fc6062526c7eb31C0F5074317d108",
+
+    GOLD: "0xee3a0800DD525EE653fcAE68F01168B7bE0501aB",
+    eGOLD: "0x57008194B842f6108DaFBfaD00056218f47835E3",
+
+    SILVER: "0xF569793307A26D74a26f725FE77972684aF212D4",
+    eSILVER: "0x18925C0c77265eCC81E1c98aAFCB8B7E8023C4b6",
+
     cofheBridge: "0x65CB6b9390c31ae0A1aC77b9Fa39e966Bc1548a3",
   },
   [baseSepolia.id]: {
@@ -74,6 +92,15 @@ const addresses: { [key: number]: { [key: string]: `0x${string}` } } = {
 
     AAVE: "0xE25f846f653e4A14B9A175B6a9b6a061698D41a4",
     eAAVE: "0x638C1654b1ea3B65677f1B295e763778a49A1532",
+
+    TSLA: "0x14E75689741644CcdcdF302A6fD45BE46FA58DE8",
+    eTSLA: "0x77013FE4db98BB40B8d3f69E234bD59C2D3a575D",
+
+    GOLD: "0x1f23963fa6735E06802A33E58C3D9A970CffB849",
+    eGOLD: "0xe467885Dd39Ae8c0bc675CF8ff3875405d594aE4",
+
+    SILVER: "0x7d561e7a14338Efa5542c019BB17488280BDBECD",
+    eSILVER: "0xAA01A7f668B2a61CFf6e16D02a01C82900f26957",
 
     cofheBridge: "0x0f1c0D23f70DcbcE6D6139B93A1ab0271052e07A",
   },
@@ -113,6 +140,112 @@ const addresses: { [key: number]: { [key: string]: `0x${string}` } } = {
     bridge: "0xF41561BF42418B69791f026a97CF9e4F8BC95703",
     relayer: "0xA139Bcfb689926ebCF2AABDbd32FBaFC250e70d9",
     faucet: "0x0f1c0D23f70DcbcE6D6139B93A1ab0271052e07A",
+  }, */
+} as const;
+
+export const tokenAddresses: {
+  [chainId: number]: { [symbol: string]: `0x${string}` };
+} = {
+  [sepolia.id]: {
+    USDC: addresses[sepolia.id].USDC,
+    cUSDC: addresses[sepolia.id].cUSDC,
+    eUSDC: addresses[sepolia.id].eUSDC,
+
+    USDT: addresses[sepolia.id].USDT,
+    cUSDT: addresses[sepolia.id].cUSDT,
+    eUSDT: addresses[sepolia.id].eUSDT,
+
+    DAI: addresses[sepolia.id].DAI,
+    cDAI: addresses[sepolia.id].cDAI,
+    eDAI: addresses[sepolia.id].eDAI,
+
+    UNI: addresses[sepolia.id].UNI,
+    cUNI: addresses[sepolia.id].cUNI,
+    eUNI: addresses[sepolia.id].eUNI,
+
+    U: addresses[sepolia.id].U,
+    cU: addresses[sepolia.id].cU,
+    eU: addresses[sepolia.id].eU,
+
+    XFL: addresses[sepolia.id].XFL,
+    cXFL: addresses[sepolia.id].cXFL,
+    eXFL: addresses[sepolia.id].eXFL,
+
+    AAVE: addresses[sepolia.id].AAVE,
+    cAAVE: addresses[sepolia.id].cAAVE,
+    eAAVE: addresses[sepolia.id].eAAVE,
+
+    TSLA: addresses[sepolia.id].TSLA,
+    cTSLA: addresses[sepolia.id].cTSLA,
+
+    GOLD: addresses[sepolia.id].GOLD,
+    cGOLD: addresses[sepolia.id].cGOLD,
+
+    SILVER: addresses[sepolia.id].SILVER,
+    cSILVER: addresses[sepolia.id].cSILVER,
+  },
+  [arbitrumSepolia.id]: {
+    USDC: addresses[arbitrumSepolia.id].USDC,
+    eUSDC: addresses[arbitrumSepolia.id].eUSDC,
+
+    USDT: addresses[arbitrumSepolia.id].USDT,
+    eUSDT: addresses[arbitrumSepolia.id].eUSDT,
+
+    DAI: addresses[arbitrumSepolia.id].DAI,
+    eDAI: addresses[arbitrumSepolia.id].eDAI,
+
+    UNI: addresses[arbitrumSepolia.id].UNI,
+    eUNI: addresses[arbitrumSepolia.id].eUNI,
+
+    U: addresses[arbitrumSepolia.id].U,
+    eU: addresses[arbitrumSepolia.id].eU,
+
+    XFL: addresses[arbitrumSepolia.id].XFL,
+    eXFL: addresses[arbitrumSepolia.id].eXFL,
+
+    AAVE: addresses[arbitrumSepolia.id].AAVE,
+    eAAVE: addresses[arbitrumSepolia.id].eAAVE,
+
+    TSLA: addresses[arbitrumSepolia.id].TSLA,
+    eTSLA: addresses[arbitrumSepolia.id].eTSLA,
+
+    GOLD: addresses[arbitrumSepolia.id].GOLD,
+    eGOLD: addresses[arbitrumSepolia.id].eGOLD,
+
+    SILVER: addresses[arbitrumSepolia.id].SILVER,
+    eSILVER: addresses[arbitrumSepolia.id].eSILVER,
+  },
+  [baseSepolia.id]: {
+    USDC: addresses[baseSepolia.id].USDC,
+    eUSDC: addresses[baseSepolia.id].eUSDC,
+
+    USDT: addresses[baseSepolia.id].USDT,
+    eUSDT: addresses[baseSepolia.id].eUSDT,
+
+    DAI: addresses[baseSepolia.id].DAI,
+    eDAI: addresses[baseSepolia.id].eDAI,
+
+    UNI: addresses[baseSepolia.id].UNI,
+    eUNI: addresses[baseSepolia.id].eUNI,
+
+    XFL: addresses[baseSepolia.id].XFL,
+    eXFL: addresses[baseSepolia.id].eXFL,
+
+    AAVE: addresses[baseSepolia.id].AAVE,
+    eAAVE: addresses[baseSepolia.id].eAAVE,
+
+    TSLA: addresses[baseSepolia.id].TSLA,
+    eTSLA: addresses[baseSepolia.id].eTSLA,
+
+    GOLD: addresses[baseSepolia.id].GOLD,
+    eGOLD: addresses[baseSepolia.id].eGOLD,
+
+    SILVER: addresses[baseSepolia.id].SILVER,
+    eSILVER: addresses[baseSepolia.id].eSILVER,
+  },
+  /*   [fhenixNitrogen.id]: {
+    USDC: addresses[fhenixNitrogen.id].USDC,
+    cUSDC: addresses[fhenixNitrogen.id].cUSDC,
   }, */
 } as const;
 

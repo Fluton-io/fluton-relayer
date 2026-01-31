@@ -1,18 +1,34 @@
+import { Address } from "viem";
+
 export enum Coprocessor {
   ZAMA = "ZAMA",
   FHENIX = "FHENIX",
   INCO = "INCO",
 }
 
+export type PriceSource = "DEX" | "PYTH";
+
+export interface AssetPriceConfig {
+  source: PriceSource;
+  chainId?: number;
+  tokenAddress?: `0x${string}`;
+  pythPriceId?: `${string}`;
+}
+
 export interface Token {
+  name: string;
   symbol: string;
-  address: `0x${string}`;
+  address: Address;
   decimals: number;
+  icon: string;
+  color?: string;
   chainId: number;
-  underlyingTokenAddress?: `0x${string}`;
+  underlyingToken?: Token;
   isConfidential?: boolean;
   apiPriceTokenSymbol?: string;
   coprocessor?: Coprocessor;
+  price?: string;
+  priceConfig?: AssetPriceConfig;
 }
 
 export interface TokenDetails {
@@ -23,6 +39,7 @@ export interface TokenDetails {
   decimals: number;
   balance: number;
 }
+
 export interface Network {
   name: string;
   chainId: number;

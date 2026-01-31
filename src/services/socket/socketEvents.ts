@@ -1,10 +1,35 @@
 import { Socket } from "socket.io-client";
-import { FeeSchema, Intent } from "../../config/types";
+import { AssetPriceConfig, FeeSchema, Intent } from "../../config/types";
 import { calculateAmountWithAggregator, findTokenCombinations } from "../aggregatorService";
 import testnetToMainnet from "../../config/testnetToMainnet";
 import testnetToMainnetToken from "../../config/testnetToMainnetToken";
 import { formatUnits, isAddress } from "viem";
 import { getPrice } from "../aggregator/priceUtils";
+import { tokensMap } from "../../config/tokens";
+
+// Helper to get price config for a token, defaults to DEX if not specified
+const getPriceConfigForToken = (
+  chainId: number,
+  tokenAddress: `0x${string}`,
+  mainnetChainId: number,
+  mainnetTokenAddress: `0x${string}`
+): AssetPriceConfig => {
+  // Look up token in tokensMap by address
+  const chainTokens = tokensMap[chainId];
+  if (chainTokens) {
+    const token = Object.values(chainTokens).find((t) => t.address.toLowerCase() === tokenAddress.toLowerCase());
+    if (token?.priceConfig) {
+      return token.priceConfig;
+    }
+  }
+
+  // Default to DEX with mainnet chain/address for price lookup
+  return {
+    source: "DEX",
+    chainId: mainnetChainId,
+    tokenAddress: mainnetTokenAddress,
+  };
+};
 
 export const handleConnect = (socket: Socket, walletAddress: `0x${string}`) => {
   console.log(`Relayer connected with ID: ${socket.id}, Wallet: ${walletAddress}`);
@@ -55,7 +80,7 @@ export const handleGiveOffers = async (
     return;
   }
 
-  // TODO: Also check if sourceToken and targetToken are actual ERC-20 tokens
+  // TODO: Also check if sourceToken and targetToken are <actual> ERC-20 tokens
 
   const schemaForSourceChain = feeSchema.chains[sourceChainId];
   const schemaForTargetChain = feeSchema.chains[targetChainId];
@@ -79,9 +104,15 @@ export const handleGiveOffers = async (
       return;
     }
 
-    const sourceTokenPrice = (await getPrice(+sourceChainIdMainnet, sourceTokenAddressMainnet))[
+    const sourcePriceConfig = getPriceConfigForToken(
+      +sourceChainId,
+      sourceTokenAddress,
+      +sourceChainIdMainnet,
       sourceTokenAddressMainnet
-    ];
+    );
+    const sourcePriceKey =
+      sourcePriceConfig.source === "PYTH" ? sourcePriceConfig.pythPriceId! : sourceTokenAddressMainnet;
+    const sourceTokenPrice = (await getPrice([sourcePriceConfig]))[sourcePriceKey];
     console.log("Source token price:", sourceTokenPrice);
 
     const sourceTokenDecimals = schemaForSourceChain[sourceTokenAddress]?.decimals || 18;
@@ -93,15 +124,23 @@ export const handleGiveOffers = async (
 
     const relayerTargetTokenMainnet = schemaForTargetChainMainnet[targetTokenAddressMainnet];
     const relayerTargetToken = schemaForTargetChain[targetTokenAddress];
-    const relayerTargetTokenMainnetPrice = (await getPrice(parseInt(targetChainIdMainnet), targetTokenAddressMainnet))[
+    const targetPriceConfig = getPriceConfigForToken(
+      +targetChainId,
+      targetTokenAddress,
+      parseInt(targetChainIdMainnet),
       targetTokenAddressMainnet
-    ];
+    );
+    console.log("targetPriceConfig:", targetPriceConfig);
+    const targetPriceKey =
+      targetPriceConfig.source === "PYTH" ? targetPriceConfig.pythPriceId! : targetTokenAddressMainnet;
+    console.log("targetPriceKey:", targetPriceKey);
+    const relayerTargetTokenMainnetPrice = (await getPrice([targetPriceConfig]))[targetPriceKey];
     console.log("relayer target token mainnet price:", relayerTargetTokenMainnetPrice);
     const relayerTargetTokenMainnetValue = relayerTargetTokenMainnetPrice * Number(relayerTargetToken.balance);
     console.log("relayer target token mainnet value:", relayerTargetTokenMainnetValue);
     let result;
 
-    if (relayerTargetTokenMainnet && relayerTargetTokenMainnetValue >= Number(sourceAmountInUSD)) {
+    if (relayerTargetTokenMainnetValue >= Number(sourceAmountInUSD)) {
       // if relayer has enough target token, calculate the target amount
       // targetAmount = sourceAmountInUsd / relayerTargetTokenMainnetPrice - fee
       const { baseFee, percentageFee } = relayerTargetToken;

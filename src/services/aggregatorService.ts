@@ -1,8 +1,34 @@
-import { TargetNetworkDetails } from "../config/types";
+import { AssetPriceConfig, TargetNetworkDetails } from "../config/types";
 import { aggregator, feeSchema, fetchTokenDecimals } from "../lib/utils";
 import { SAFE_SWAP_RATE } from "../config/constants";
 import { getPrice } from "./aggregator/priceUtils";
 import { getQuote } from "./aggregator/quoteUtils";
+import { tokensMap } from "../config/tokens";
+
+// Helper to get price config for a token, defaults to DEX if not specified
+const getPriceConfigForToken = (
+  chainId: number,
+  tokenAddress: `0x${string}`
+): { config: AssetPriceConfig; priceKey: string } => {
+  const chainTokens = tokensMap[chainId];
+  if (chainTokens) {
+    const token = Object.values(chainTokens).find((t) => t.address.toLowerCase() === tokenAddress.toLowerCase());
+    if (token?.priceConfig) {
+      const priceKey = token.priceConfig.source === "PYTH" ? token.priceConfig.pythPriceId! : tokenAddress;
+      return { config: token.priceConfig, priceKey };
+    }
+  }
+
+  // Default to DEX
+  return {
+    config: {
+      source: "DEX",
+      chainId,
+      tokenAddress,
+    },
+    priceKey: tokenAddress,
+  };
+};
 
 // Fetch functions
 
@@ -134,14 +160,25 @@ const getTokenPricesForSchema = async (chainId: string) => {
   }
 
   const tokenAddresses = Object.keys(schemaForTargetChain) as `0x${string}`[];
-  const tokenPrices = await getPrice(parseInt(chainId), tokenAddresses);
+
+  // Build price configs and track price keys for each token
+  const tokenPriceConfigs: { tokenAddress: `0x${string}`; config: AssetPriceConfig; priceKey: string }[] =
+    tokenAddresses.map((tokenAddress) => {
+      const { config, priceKey } = getPriceConfigForToken(parseInt(chainId), tokenAddress);
+      return { tokenAddress, config, priceKey };
+    });
+
+  // Get all prices in one call
+  const allConfigs = tokenPriceConfigs.map(({ config }) => config);
+  const tokenPrices = await getPrice(allConfigs);
 
   console.log("token addresses here are", tokenAddresses);
   console.log("token prices here are", tokenPrices);
 
   return tokenAddresses.map((tokenAddress) => {
     const tokenData = schemaForTargetChain[tokenAddress];
-    const tokenPriceInUSD = tokenPrices[tokenAddress];
+    const priceConfig = tokenPriceConfigs.find((t) => t.tokenAddress === tokenAddress)!;
+    const tokenPriceInUSD = tokenPrices[priceConfig.priceKey];
     console.log("token data here is", tokenData);
     console.log("token price in USD here is", tokenPriceInUSD);
     return {

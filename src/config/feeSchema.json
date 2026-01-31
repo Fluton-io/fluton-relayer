@@ -311,6 +311,30 @@
         "swappable": true,
         "decimals": 6,
         "balance": 1000000000
+      },
+      "0xD6d78361aa1f2067216A6Fc53398C695C32ec80C": {
+        "name": "cTSLA",
+        "baseFee": "0.0002",
+        "percentageFee": "0.025%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 1000000000
+      },
+      "0xa15162cEa5382c5b307356d74399aae7180770e7": {
+        "name": "cGOLD",
+        "baseFee": "0.000002",
+        "percentageFee": "0.025%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 1000000000
+      },
+      "0x2C480E8Aa9b49f94E5970d7fF3404fd41aaD4CC0": {
+        "name": "cSILVER",
+        "baseFee": "0.0002",
+        "percentageFee": "0.025%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 1000000000
       }
     },
     "421614": {
@@ -393,6 +417,30 @@
         "swappable": true,
         "decimals": 6,
         "balance": 1000000000
+      },
+      "0x60E8AEfC7B9fc6062526c7eb31C0F5074317d108": {
+        "name": "eTSLA",
+        "baseFee": "0.0002",
+        "percentageFee": "0.025%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 1000000000
+      },
+      "0x57008194B842f6108DaFBfaD00056218f47835E3": {
+        "name": "cGOLD",
+        "baseFee": "0.000002",
+        "percentageFee": "0.025%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 1000000000
+      },
+      "0x18925C0c77265eCC81E1c98aAFCB8B7E8023C4b6": {
+        "name": "eSILVER",
+        "baseFee": "0.0002",
+        "percentageFee": "0.025%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 1000000000
       }
     },
     "84532": {
@@ -440,6 +488,30 @@
         "name": "eAAVE",
         "baseFee": "0.0003",
         "percentageFee": "0.01%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 1000000000
+      },
+      "0x77013FE4db98BB40B8d3f69E234bD59C2D3a575D": {
+        "name": "eTSLA",
+        "baseFee": "0.0002",
+        "percentageFee": "0.025%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 1000000000
+      },
+      "0xe467885Dd39Ae8c0bc675CF8ff3875405d594aE4": {
+        "name": "cGOLD",
+        "baseFee": "0.000002",
+        "percentageFee": "0.025%",
+        "swappable": true,
+        "decimals": 6,
+        "balance": 1000000000
+      },
+      "0xAA01A7f668B2a61CFf6e16D02a01C82900f26957": {
+        "name": "eSILVER",
+        "baseFee": "0.0002",
+        "percentageFee": "0.025%",
         "swappable": true,
         "decimals": 6,
         "balance": 1000000000
