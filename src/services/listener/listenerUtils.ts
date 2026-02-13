@@ -110,7 +110,11 @@ export const handleIntentCreatedZama = async (intent: ContractIntent): Promise<a
         UserDecryptRequestVerification: eip712.types.UserDecryptRequestVerification,
       },
       primaryType: "UserDecryptRequestVerification",
-      message: eip712.message as Record<string, unknown>,
+      message: {
+        ...eip712.message,
+        startTimestamp: BigInt(eip712.message.startTimestamp),
+        durationDays: BigInt(eip712.message.durationDays),
+      },
     });
     await sleep(8000); // Wait for ciphertext to be ready
     const decrypted = (await decryptInWorker({
