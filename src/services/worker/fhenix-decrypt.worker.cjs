@@ -1,5 +1,7 @@
 const { parentPort } = require("worker_threads");
-const { cofhejs, FheTypes } = require("cofhejs/node");
+const { FheTypes } = require("@cofhe/sdk");
+const { createCofheConfig, createCofheClient } = require("@cofhe/sdk/node");
+const { chains } = require("@cofhe/sdk/chains");
 const { createPublicClient, createWalletClient, http } = require("viem");
 const { privateKeyToAccount } = require("viem/accounts");
 const { sepolia, arbitrumSepolia, baseSepolia } = require("viem/chains");
@@ -13,9 +15,9 @@ const FHE_TYPE_MAP = {
 };
 
 const chainMap = {
-  11155111: { chain: sepolia, rpcEnvKey: "SEPOLIA_RPC_URL" },
-  421614: { chain: arbitrumSepolia, rpcEnvKey: "ARBITRUM_SEPOLIA_RPC_URL" },
-  84532: { chain: baseSepolia, rpcEnvKey: "BASE_SEPOLIA_RPC_URL" },
+  11155111: { chain: sepolia, cofheChain: chains.sepolia, rpcEnvKey: "SEPOLIA_RPC_URL" },
+  421614: { chain: arbitrumSepolia, cofheChain: chains.arbSepolia, rpcEnvKey: "ARBITRUM_SEPOLIA_RPC_URL" },
+  84532: { chain: baseSepolia, cofheChain: chains.baseSepolia, rpcEnvKey: "BASE_SEPOLIA_RPC_URL" },
 };
 
 parentPort.on("message", async (payload) => {
@@ -39,32 +41,23 @@ parentPort.on("message", async (payload) => {
       account,
     });
 
-    const permit = await cofhejs.initializeWithViem({
-      viemClient: publicClient,
-      viemWalletClient: walletClient,
-      environment: "TESTNET",
+    const cofheConfig = createCofheConfig({
+      supportedChains: [chainConfig.cofheChain],
     });
+    const cofheClient = createCofheClient(cofheConfig);
+    await cofheClient.connect(publicClient, walletClient);
 
-    if (!permit || !permit.success || !permit.data) {
-      throw new Error("Failed to create Fhenix permit");
-    }
+    const permit = await cofheClient.permits.getOrCreateSelfPermit();
 
-    cofhejs.store.setState({
-      ...cofhejs.store.getState(),
-      chainId: payload.chainId.toString(),
-    });
-
-    // Unseal each value
     const results = {};
     for (const item of payload.valuesToUnseal) {
       const fheType = FHE_TYPE_MAP[item.type] || FheTypes.Uint64;
-      const unsealedResult = await cofhejs.unseal(BigInt(item.handle), fheType, account.address, permit.data.getHash());
+      const unsealed = await cofheClient
+        .decryptForView(BigInt(item.handle), fheType)
+        .withPermit(permit)
+        .execute();
 
-      if (!unsealedResult.success) {
-        throw new Error(`Failed to unseal value: ${unsealedResult.error}`);
-      }
-
-      results[item.key] = unsealedResult.data.toString();
+      results[item.key] = unsealed.toString();
     }
 
     parentPort.postMessage({

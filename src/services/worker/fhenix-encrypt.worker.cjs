@@ -1,14 +1,16 @@
 const { parentPort } = require("worker_threads");
-const { cofhejs, Encryptable } = require("cofhejs/node");
+const { Encryptable } = require("@cofhe/sdk");
+const { createCofheConfig, createCofheClient } = require("@cofhe/sdk/node");
+const { chains } = require("@cofhe/sdk/chains");
 const { createPublicClient, createWalletClient, http } = require("viem");
 const { privateKeyToAccount } = require("viem/accounts");
 const { sepolia, arbitrumSepolia, baseSepolia } = require("viem/chains");
 require("dotenv").config();
 
 const chainMap = {
-  11155111: { chain: sepolia, rpcEnvKey: "SEPOLIA_RPC_URL" },
-  421614: { chain: arbitrumSepolia, rpcEnvKey: "ARBITRUM_SEPOLIA_RPC_URL" },
-  84532: { chain: baseSepolia, rpcEnvKey: "BASE_SEPOLIA_RPC_URL" },
+  11155111: { chain: sepolia, cofheChain: chains.sepolia, rpcEnvKey: "SEPOLIA_RPC_URL" },
+  421614: { chain: arbitrumSepolia, cofheChain: chains.arbSepolia, rpcEnvKey: "ARBITRUM_SEPOLIA_RPC_URL" },
+  84532: { chain: baseSepolia, cofheChain: chains.baseSepolia, rpcEnvKey: "BASE_SEPOLIA_RPC_URL" },
 };
 
 parentPort.on("message", async (payload) => {
@@ -32,28 +34,15 @@ parentPort.on("message", async (payload) => {
       account,
     });
 
-    const permit = await cofhejs.initializeWithViem({
-      viemClient: publicClient,
-      viemWalletClient: walletClient,
-      environment: "TESTNET",
+    const cofheConfig = createCofheConfig({
+      supportedChains: [chainConfig.cofheChain],
     });
+    const cofheClient = createCofheClient(cofheConfig);
+    await cofheClient.connect(publicClient, walletClient);
 
-    if (!permit || !permit.success || !permit.data) {
-      throw new Error("Failed to create Fhenix permit");
-    }
-
-    cofhejs.store.setState({
-      ...cofhejs.store.getState(),
-      chainId: payload.chainId.toString(),
-    });
-
-    const encrypted = await cofhejs.encrypt([Encryptable.uint64(BigInt(payload.outputAmount))]);
-
-    if (!encrypted.success) {
-      throw new Error("Failed to encrypt the output amount");
-    }
-
-    const [encryptedAmount] = encrypted.data;
+    const [encryptedAmount] = await cofheClient
+      .encryptInputs([Encryptable.uint64(BigInt(payload.outputAmount))])
+      .execute();
 
     parentPort.postMessage({
       ok: true,

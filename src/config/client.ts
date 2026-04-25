@@ -21,7 +21,6 @@ import {
   BASE_SEPOLIA_RPC_URL,
   BASE_SEPOLIA_WS_URL,
 } from "./env";
-import { cofhejs, Permit } from "cofhejs/node";
 import { privateKeyToAccount } from "viem/accounts";
 
 export const account = privateKeyToAccount(PRIVATE_KEY as `0x${string}`);
@@ -218,25 +217,3 @@ export const getZamaClient = async (): Promise<FhevmInstance> => {
 };
 
 getZamaClient();
-
-let fhenixPermits: { [chainId: number]: Permit } = {};
-export const getFhenixPermit = async (chainId: number): Promise<Permit> => {
-  if (fhenixPermits[chainId]) {
-    return fhenixPermits[chainId];
-  }
-
-  const walletClientSource = walletClients.find((wc) => wc.chainId === chainId)!.client;
-  const publicClientSource = publicClients.find((pc) => pc.chainId === chainId)!.client;
-  const permit = await cofhejs.initializeWithViem({
-    viemClient: publicClientSource,
-    viemWalletClient: walletClientSource,
-    environment: "TESTNET",
-  });
-
-  if (!permit || !permit.success || !permit.data) {
-    throw new Error(`Failed to create Fhenix permit for chainId: ${chainId}`);
-  }
-
-  fhenixPermits[chainId] = permit.data;
-  return permit.data;
-};
